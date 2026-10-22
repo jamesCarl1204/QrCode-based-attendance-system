@@ -1,84 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="teacher.css">
-
+  <script>
+    // Apply saved theme before paint (no flash)
+    (function () {
+      try {
+        var t = localStorage.getItem("eduqr_theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
   <header class="navbar">
     <div class="navbar-left">
-    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-    </button>
-  <!--  <div class="logo-icon"><img src="100.png" alt="School logo" class="logo-img"></div>
- <h1>QR Code-Based Student Attendance Monitoring System with Email Notification</h1>
-      <span class="navbar-subtitle"></span>-->
-  </div>
-   <div class="navbar-right">
-  <button class="btn btn-primary" id="createClassBtn">+ Create class</button>
-  <button class="btn btn-outline" id="logoutBtn">Log out</button>
-</div>
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <h1 class="page-title" id="pageTitle">Dashboard</h1>
+    </div>
+
+    <div class="navbar-right">
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+        <i id="themeIcon" class="fa-solid fa-sun"></i>
+        <span id="themeText">Light Mode</span>
+      </button>
+      <div class="nav-clock" title="Philippine time">
+        <i class="fa-regular fa-clock"></i>
+        <span id="navClock">--:--:-- --</span>
+      </div>
+      <button class="btn btn-primary" id="createClassBtn"><i class="fa-solid fa-plus"></i> <span class="btn-label">Create class</span></button>
+      <button class="btn btn-outline" id="logoutBtn">Log out</button>
+    </div>
   </header>
 
   <div class="app-shell" id="appShell">
 
     <nav class="sidebar" id="sidebar">
-      <button class="sidebar-link active" data-filter="active">My Classes</button>
-      <button class="sidebar-link" data-filter="archived">Archived Classes</button>
-      <button class="sidebar-link" id="aiAssistantBtn">
-        <span class="icon">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        </span>
-        AI Assistant
-      </button>
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-qrcode"></i></div>
+        <div>
+          <span class="sidebar-brand-name">Teacher Portal</span>
+          <span class="sidebar-brand-sub">Attendance System</span>
+        </div>
+      </div>
 
- 
+      <div class="sidebar-links">
+        <button class="sidebar-link active" id="dashboardLink">
+          <span class="icon"><i class="fa-solid fa-chart-pie"></i></span>
+          Dashboard
+        </button>
+        <button class="sidebar-link" data-filter="active">
+          <span class="icon"><i class="fa-solid fa-book-open"></i></span>
+          My Classes
+        </button>
+        <button class="sidebar-link" data-filter="archived">
+          <span class="icon"><i class="fa-solid fa-box-archive"></i></span>
+          Archived Classes
+        </button>
+        <button class="sidebar-link" id="aiAssistantBtn">
+          <span class="icon"><i class="fa-solid fa-robot"></i></span>
+          AI Assistant
+          <span class="sidebar-tag">AI</span>
+        </button>
+      </div>
+
+      <div class="sidebar-profile">
+        <div class="profile-avatar" id="profileAvatar">T</div>
+        <div class="profile-meta">
+          <p class="profile-name" id="profileName">Teacher</p>
+          <p class="profile-email" id="profileEmail">&nbsp;</p>
+        </div>
+      </div>
     </nav>
 
-  <main class="main-content">
-  <div class="section-header" id="sectionHeader">
-      <h2 id="sectionHeading">My Subjects</h2>
-      <p id="classSummary">0 classes · School Year 2025–2026</p>
-      <input
-        type="text"
-        id="archiveSearchInput"
-        class="archive-search-input"
-        placeholder="Search archived classes…"
-        style="display:none;"
-      >
-    </div>
+    <main class="main-content">
 
-    <div class="empty-state" id="emptyState">
-      <div class="empty-icon"></div>
-      <h3>No classes yet</h3>
-      <p>Add a class to get started</p>
-      <div class="empty-actions">
-        <button class="btn btn-primary" id="emptyCreateBtn">+ Create class</button>
+      <!-- DASHBOARD VIEW (UI only — functionality coming next) -->
+      <div id="dashboardView">
+        <div class="section-header">
+          <h2>Dashboard Overview</h2>
+          <p>Summary of your classes and attendance.</p>
+        </div>
+
+        <div class="stat-grid">
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Active Classes</span>
+              <div class="stat-icon stat-green"><i class="fa-solid fa-book"></i></div>
+            </div>
+            <span class="stat-value" id="statActiveClasses">—</span>
+          </div>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Students</span>
+              <div class="stat-icon stat-indigo"><i class="fa-solid fa-user-graduate"></i></div>
+            </div>
+            <span class="stat-value" id="statTotalStudents">—</span>
+          </div>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Rate</span>
+              <div class="stat-icon stat-emerald"><i class="fa-solid fa-chart-line"></i></div>
+            </div>
+            <span class="stat-value" id="statTodayRate">—</span>
+          </div>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Scans</span>
+              <div class="stat-icon stat-amber"><i class="fa-solid fa-qrcode"></i></div>
+            </div>
+            <span class="stat-value" id="statTodayScans">—</span>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-wide">
+          <div class="panel">
+            <h3 class="panel-title">Weekly Attendance Trends</h3>
+            <p class="panel-sub">Average check-in performance over the past week</p>
+            <div class="chart-box"><canvas id="chartWeeklyTrend"></canvas></div>
+          </div>
+          <div class="panel">
+            <h3 class="panel-title">Status Breakdown</h3>
+            <p class="panel-sub">Present, late and absent</p>
+            <div class="chart-box chart-box-sm"><canvas id="chartStatusBreakdown"></canvas></div>
+            <div class="status-legend">
+              <div><span>Present</span><strong class="c-present" id="statPresentPct">—</strong></div>
+              <div><span>Late</span><strong class="c-late" id="statLatePct">—</strong></div>
+              <div><span>Absent</span><strong class="c-absent" id="statAbsentPct">—</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dash-row dash-row-wide">
+          <div class="panel">
+            <h3 class="panel-title">Recent Check-In Activity</h3>
+            <p class="panel-sub">Latest student scans across your classes</p>
+            <div class="activity-feed" id="activityFeed">
+              <p class="muted-text activity-empty">No check-ins to show yet.</p>
+            </div>
+          </div>
+          <div class="panel panel-cta">
+            <div class="cta-icon"><i class="fa-solid fa-qrcode"></i></div>
+            <h3 class="panel-title">Start Attendance</h3>
+            <p class="panel-sub">Open a class, then tap <strong>Create Attendance</strong> to generate the QR code for your students.</p>
+            <button class="btn btn-primary" id="dashGoClassesBtn">Go to My Classes</button>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="empty-state" id="archivedEmptyState">
-      <div class="empty-icon"></div>
-      <h3>No archived classes</h3>
-      <p>Classes you archive will show up here.</p>
-    </div>
+      <!-- CLASSES VIEW (existing functionality) -->
+      <div id="classesView" hidden>
+        <div class="section-header" id="sectionHeader">
+          <h2 id="sectionHeading">My Subjects</h2>
+          <p id="classSummary">0 classes · School Year 2025–2026</p>
+          <input
+            type="text"
+            id="archiveSearchInput"
+            class="archive-search-input"
+            placeholder="Search archived classes…"
+            style="display:none;"
+          >
+        </div>
 
-    <div class="subject-grid" id="subjectGrid">
-    </div>
-  </main>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon"><i class="fa-solid fa-book-open"></i></div>
+          <h3>No classes yet</h3>
+          <p>Add a class to get started</p>
+          <div class="empty-actions">
+            <button class="btn btn-primary" id="emptyCreateBtn">+ Create class</button>
+          </div>
+        </div>
 
-  </div> 
+        <div class="empty-state" id="archivedEmptyState">
+          <div class="empty-icon"><i class="fa-solid fa-box-archive"></i></div>
+          <h3>No archived classes</h3>
+          <p>Classes you archive will show up here.</p>
+        </div>
+
+        <div class="subject-grid" id="subjectGrid"></div>
+      </div>
+    </main>
+
+  </div>
 
   <div class="detail-page" id="detailPage">
     <div class="detail-banner" id="detailBanner">
-    <div class="detail-top-row">
+      <div class="detail-top-row">
         <a class="back-link" id="backToClasses">← All classes</a>
         <button class="btn btn-outline archive-toggle-btn" id="archiveClassBtn"> Archive class</button>
       </div>
@@ -106,7 +223,7 @@
         </div>
 
         <div class="empty-state" id="attendanceEmptyState">
-          <div class="empty-icon"></div>
+          <div class="empty-icon"><i class="fa-solid fa-qrcode"></i></div>
           <h3>No attendance sessions yet</h3>
           <p>Tap <strong>Create Attendance</strong> to open a session for today.</p>
         </div>
@@ -131,17 +248,17 @@
         </div>
 
         <div class="empty-state" id="membersEmptyState">
-          <div class="empty-icon"></div>
+          <div class="empty-icon"><i class="fa-solid fa-user-group"></i></div>
           <h3>No students yet</h3>
           <p>Share your class code so students can join.</p>
         </div>
 
         <div class="session-list" id="membersList"></div>
       </div>
-    </div> 
-  </div> 
+    </div>
+  </div>
 
-  
+
   <div class="modal-overlay" id="createAttendanceModal">
     <div class="modal">
       <div class="modal-header attendance-modal-header">
@@ -182,7 +299,7 @@
     </div>
   </div>
 
- 
+
   <div class="modal-overlay" id="sessionQrModal">
     <div class="modal">
       <div class="modal-header">
@@ -205,27 +322,25 @@
     </div>
   </div>
 
- 
-<div class="modal-overlay" id="viewSessionModal">
-  <div class="modal">
-    <div class="modal-header">
-      <div>
-        <p class="modal-eyebrow">SESSION RECORDS</p>
-        <h3 id="viewSessionDate">—</h3>
-        <p class="modal-subtext" id="viewSessionTimeRange"></p>
+
+  <div class="modal-overlay" id="viewSessionModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow">SESSION RECORDS</p>
+          <h3 id="viewSessionDate">—</h3>
+          <p class="modal-subtext" id="viewSessionTimeRange"></p>
+        </div>
+        <button class="modal-close" data-close="viewSessionModal">&times;</button>
       </div>
-      <button class="modal-close" data-close="viewSessionModal">&times;</button>
-    </div>
 
-    <div class="modal-body" id="viewSessionBody" style="max-height: 400px; overflow-y: auto;">
-      
-    </div>
+      <div class="modal-body" id="viewSessionBody" style="max-height: 400px; overflow-y: auto;"></div>
 
-    <div class="modal-footer">
-      <button class="btn btn-outline" data-close="viewSessionModal">Close</button>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="viewSessionModal">Close</button>
+      </div>
     </div>
   </div>
-</div>
 
 
   <div class="modal-overlay" id="createClassModal">
@@ -263,7 +378,7 @@
     </div>
   </div>
 
-  
+
   <div class="modal-overlay" id="logoutConfirmModal">
     <div class="modal modal-small">
       <div class="modal-header">
@@ -274,16 +389,14 @@
         <button class="modal-close" data-close="logoutConfirmModal">&times;</button>
       </div>
 
-    
-
       <div class="modal-footer">
         <button class="btn btn-outline" data-close="logoutConfirmModal">Cancel</button>
         <button class="btn btn-danger" id="confirmLogoutBtn">Log out</button>
       </div>
     </div>
   </div>
-  
-  
+
+
   <div class="modal-overlay" id="deleteSessionModal">
     <div class="modal modal-small">
       <div class="modal-header">
@@ -309,7 +422,7 @@
     </div>
   </div>
 
-  
+
   <div class="modal-overlay" id="deleteClassModal">
     <div class="modal modal-small">
       <div class="modal-header">
@@ -335,7 +448,7 @@
     </div>
   </div>
 
-  
+
   <div class="modal-overlay" id="removeMemberModal">
     <div class="modal modal-small">
       <div class="modal-header">
@@ -363,7 +476,7 @@
 
   <div class="toast-stack" id="toastStack"></div>
 
-  
+
   <div class="modal-overlay" id="aiAssistantModal">
     <div class="modal ai-modal">
       <div class="modal-header">
@@ -395,7 +508,10 @@
     </div>
   </div>
 
+  <!-- teacher.js = existing functionality (unchanged). teacher-ui.js = new layout behavior only. -->
   <script src="teacher.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="teacher-ui.js"></script>
 </body>
 </html>
