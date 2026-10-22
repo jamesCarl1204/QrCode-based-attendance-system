@@ -189,6 +189,27 @@
 
         <div class="subject-grid" id="subjectGrid"></div>
       </div>
+      <!-- AI ASSISTANT VIEW -->
+<div id="aiView" hidden>
+  <div class="section-header">
+    <h2>Class Attendance Assistant</h2>
+    <p>Ask about attendance across your own classes.</p>
+  </div>
+
+  <div class="panel ai-panel">
+    <div class="ai-chat-log" id="aiChatLog">
+      <div class="ai-msg ai-msg-assistant">Hi! How can I help you?</div>
+    </div>
+    <p class="field-error" id="aiChatError"></p>
+    <div class="ai-chat-input-row">
+      <input type="text" id="aiChatInput" placeholder="Ask about attendance in your classes…">
+      <button class="btn btn-primary" id="aiChatSendBtn">Send</button>
+    </div>
+    <div class="ai-panel-footer">
+      <button class="btn btn-outline" id="aiChatClearBtn">Clear history</button>
+    </div>
+  </div>
+</div>
     </main>
 
   </div>
@@ -477,38 +498,6 @@
   <div class="toast-stack" id="toastStack"></div>
 
 
-  <div class="modal-overlay" id="aiAssistantModal">
-    <div class="modal ai-modal">
-      <div class="modal-header">
-        <div>
-          <p class="modal-eyebrow">AI ASSISTANT</p>
-          <h3>Class Attendance Assistant</h3>
-          <p class="modal-subtext">Ask about attendance across your own classes.</p>
-        </div>
-        <button class="modal-close" data-close="aiAssistantModal">&times;</button>
-      </div>
-
-      <div class="modal-body ai-modal-body">
-        <div class="ai-chat-log" id="aiChatLog">
-          <div class="ai-msg ai-msg-assistant">
-            Hi! How can I help you?
-          </div>
-        </div>
-        <p class="field-error" id="aiChatError"></p>
-        <div class="ai-chat-input-row">
-          <input type="text" id="aiChatInput" placeholder="Ask about attendance in your classes…">
-          <button class="btn btn-primary" id="aiChatSendBtn">Send</button>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-outline" id="aiChatClearBtn">Clear history</button>
-        <button class="btn btn-outline" data-close="aiAssistantModal">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- teacher.js = existing functionality (unchanged). teacher-ui.js = new layout behavior only. -->
   <script src="teacher.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>

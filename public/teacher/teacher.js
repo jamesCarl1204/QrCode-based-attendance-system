@@ -1036,7 +1036,6 @@ async function sendAiQuestion() {
 }
 
 document.getElementById("aiAssistantBtn").addEventListener("click", () => {
-  openModal("aiAssistantModal");
   loadAiHistory();
 });
 

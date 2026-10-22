@@ -1186,3 +1186,14 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   .class-code-chip { font-size: 0.8rem; }
   .card-menu-actions, .session-card-actions { align-self: flex-end; }
 }
+
+.ai-panel .ai-chat-log {
+  max-height: none;
+  height: calc(100vh - 340px);
+  min-height: 260px;
+}
+.ai-panel-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}

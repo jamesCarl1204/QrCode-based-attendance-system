@@ -18,7 +18,7 @@ app.set('trust proxy', 1);
 const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
-  password: 'carlSQL418',
+  password: 'carlSQL88',
   database: 'logdb',
   waitForConnections: true,
   connectionLimit: 10,
