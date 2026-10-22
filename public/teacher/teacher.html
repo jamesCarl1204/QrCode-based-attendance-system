@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="teacher.css">
+
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="navbar-left">
+    <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  <!--  <div class="logo-icon"><img src="100.png" alt="School logo" class="logo-img"></div>
+ <h1>QR Code-Based Student Attendance Monitoring System with Email Notification</h1>
+      <span class="navbar-subtitle"></span>-->
+  </div>
+   <div class="navbar-right">
+  <button class="btn btn-primary" id="createClassBtn">+ Create class</button>
+  <button class="btn btn-outline" id="logoutBtn">Log out</button>
+</div>
+  </header>
+
+  <div class="app-shell" id="appShell">
+
+    <nav class="sidebar" id="sidebar">
+      <button class="sidebar-link active" data-filter="active">My Classes</button>
+      <button class="sidebar-link" data-filter="archived">Archived Classes</button>
+      <button class="sidebar-link" id="aiAssistantBtn">
+        <span class="icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </span>
+        AI Assistant
+      </button>
+
+ 
+    </nav>
+
+  <main class="main-content">
+  <div class="section-header" id="sectionHeader">
+      <h2 id="sectionHeading">My Subjects</h2>
+      <p id="classSummary">0 classes · School Year 2025–2026</p>
+      <input
+        type="text"
+        id="archiveSearchInput"
+        class="archive-search-input"
+        placeholder="Search archived classes…"
+        style="display:none;"
+      >
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon"></div>
+      <h3>No classes yet</h3>
+      <p>Add a class to get started</p>
+      <div class="empty-actions">
+        <button class="btn btn-primary" id="emptyCreateBtn">+ Create class</button>
+      </div>
+    </div>
+
+    <div class="empty-state" id="archivedEmptyState">
+      <div class="empty-icon"></div>
+      <h3>No archived classes</h3>
+      <p>Classes you archive will show up here.</p>
+    </div>
+
+    <div class="subject-grid" id="subjectGrid">
+    </div>
+  </main>
+
+  </div> 
+
+  <div class="detail-page" id="detailPage">
+    <div class="detail-banner" id="detailBanner">
+    <div class="detail-top-row">
+        <a class="back-link" id="backToClasses">← All classes</a>
+        <button class="btn btn-outline archive-toggle-btn" id="archiveClassBtn"> Archive class</button>
+      </div>
+      <h2 id="detailSubjectName">Mathematics</h2>
+      <p id="detailSectionName">Grade 10 - Section A</p>
+      <div class="class-code-chip">
+        Class code <strong id="detailClassCode">MATH-10A</strong>
+      </div>
+    </div>
+
+    <div class="detail-body">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="attendance">Attendance</button>
+        <button class="tab-btn" data-tab="members">Members</button>
+      </div>
+
+      <div class="tab-content active" id="attendanceTab">
+        <div class="tab-header-row">
+          <div>
+            <h3>Attendance</h3>
+            <p id="sessionCountText">0 sessions recorded</p>
+          </div>
+          <button class="btn btn-primary" id="createAttendanceBtn">+ Create Attendance</button>
+          <p class="archived-hint" id="archivedHint" style="display:none;">Restore this class to create attendance</p>
+        </div>
+
+        <div class="empty-state" id="attendanceEmptyState">
+          <div class="empty-icon"></div>
+          <h3>No attendance sessions yet</h3>
+          <p>Tap <strong>Create Attendance</strong> to open a session for today.</p>
+        </div>
+
+        <div class="session-list" id="sessionList"></div>
+      </div>
+
+      <div class="tab-content" id="membersTab">
+        <div class="tab-header-row">
+          <div>
+            <h3>Members</h3>
+            <p id="memberCountText">0 students joined</p>
+          </div>
+        </div>
+
+        <div class="session-card" id="teacherMemberCard">
+          <div>
+            <div class="session-date" id="teacherMemberName">—</div>
+            <div class="session-time" id="teacherMemberEmail">—</div>
+          </div>
+          <span class="muted-text">Teacher · Owner</span>
+        </div>
+
+        <div class="empty-state" id="membersEmptyState">
+          <div class="empty-icon"></div>
+          <h3>No students yet</h3>
+          <p>Share your class code so students can join.</p>
+        </div>
+
+        <div class="session-list" id="membersList"></div>
+      </div>
+    </div> 
+  </div> 
+
+  
+  <div class="modal-overlay" id="createAttendanceModal">
+    <div class="modal">
+      <div class="modal-header attendance-modal-header">
+        <div>
+          <p class="modal-eyebrow">CREATE ATTENDANCE</p>
+          <h3 id="attendanceModalSubject">Mathematics</h3>
+          <p class="modal-subtext" id="attendanceModalSection">Grade 10 - Section A</p>
+        </div>
+        <button class="modal-close" data-close="createAttendanceModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="live-clock" id="liveClockRow">Current time (PH): <strong id="liveClockText">--:--:-- --</strong></div>
+
+        <label for="attendanceDate">Date</label>
+        <input type="date" id="attendanceDate">
+
+        <div class="time-row">
+          <div class="time-col">
+            <label for="classStart">Class start</label>
+            <input type="time" id="classStart" value="08:00">
+          </div>
+          <div class="time-col">
+            <label for="classEnd">Class end</label>
+            <input type="time" id="classEnd" value="09:30">
+          </div>
+        </div>
+
+        <label for="lateAfter">Mark as Late after</label>
+        <input type="time" id="lateAfter" value="08:10">
+        <p class="hint-text">Students who arrive after <span id="lateAfterPreview">08:10</span> will be marked as late.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="createAttendanceModal">Cancel</button>
+        <button class="btn btn-primary" id="submitCreateAttendance">Open Attendance ›</button>
+      </div>
+    </div>
+  </div>
+
+ 
+  <div class="modal-overlay" id="sessionQrModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow">ATTENDANCE QR</p>
+          <h3 id="qrSessionDate">—</h3>
+          <p class="modal-subtext" id="qrSessionTimeRange"></p>
+        </div>
+        <button class="modal-close" data-close="sessionQrModal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="text-align:center;">
+        <div id="qrCodeContainer" style="display:flex; justify-content:center; margin: 12px 0;"></div>
+        <p class="hint-text">Students scan this QR using their app to mark attendance.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="sessionQrModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+ 
+<div class="modal-overlay" id="viewSessionModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <p class="modal-eyebrow">SESSION RECORDS</p>
+        <h3 id="viewSessionDate">—</h3>
+        <p class="modal-subtext" id="viewSessionTimeRange"></p>
+      </div>
+      <button class="modal-close" data-close="viewSessionModal">&times;</button>
+    </div>
+
+    <div class="modal-body" id="viewSessionBody" style="max-height: 400px; overflow-y: auto;">
+      
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="viewSessionModal">Close</button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="modal-overlay" id="createClassModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Create Class</h3>
+        <button class="modal-close" data-close="createClassModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <label for="subjectName">Subject name *</label>
+        <input type="text" id="subjectName" placeholder="e.g. Mathematics">
+
+        <label for="sectionGrade">Section / Grade</label>
+        <input type="text" id="sectionGrade" placeholder="e.g. Grade 10 - Section A">
+
+        <label for="classCode">Class code (auto-generated · share with students)</label>
+        <input type="text" id="classCode" placeholder="Enter a subject name first" readonly>
+
+        <label>Class color</label>
+        <div class="color-picker" id="colorPicker">
+          <button class="color-swatch selected" data-color="blue" style="background:#2563eb"></button>
+          <button class="color-swatch" data-color="green" style="background:#16a34a"></button>
+          <button class="color-swatch" data-color="pink" style="background:#db2777"></button>
+          <button class="color-swatch" data-color="orange" style="background:#ea580c"></button>
+          <button class="color-swatch" data-color="purple" style="background:#7c3aed"></button>
+          <button class="color-swatch" data-color="teal" style="background:#0d9488"></button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="createClassModal">Cancel</button>
+        <button class="btn btn-primary" id="submitCreateClass">Create</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-overlay" id="logoutConfirmModal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow modal-eyebrow-danger">LOG OUT</p>
+          <h3>Are you sure you want to log out?</h3>
+        </div>
+        <button class="modal-close" data-close="logoutConfirmModal">&times;</button>
+      </div>
+
+    
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="logoutConfirmModal">Cancel</button>
+        <button class="btn btn-danger" id="confirmLogoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="modal-overlay" id="deleteSessionModal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow modal-eyebrow-danger">DELETE ATTENDANCE</p>
+          <h3>Delete this session?</h3>
+        </div>
+        <button class="modal-close" data-close="deleteSessionModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-description">
+          You're about to delete the attendance session for
+          <strong id="deleteSessionDate">—</strong>. This will permanently remove
+          every student's time-in and status for that session. This cannot be undone.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="deleteSessionModal">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteSessionBtn">Delete session</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-overlay" id="deleteClassModal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow modal-eyebrow-danger">DELETE CLASS</p>
+          <h3>Delete this class?</h3>
+        </div>
+        <button class="modal-close" data-close="deleteClassModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-description">
+          You're about to permanently delete <strong id="deleteClassSubject">—</strong>.
+          This cannot be undone.
+        </p>
+        <p class="field-error" id="deleteClassError"></p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="deleteClassModal">Cancel</button>
+        <button class="btn btn-danger" id="confirmDeleteClassBtn">Delete class</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="modal-overlay" id="removeMemberModal">
+    <div class="modal modal-small">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow modal-eyebrow-danger">REMOVE STUDENT</p>
+          <h3>Remove this student from the class?</h3>
+        </div>
+        <button class="modal-close" data-close="removeMemberModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-description">
+          <strong id="removeMemberName">—</strong> will no longer see or have access to this class.
+          Their existing attendance records for this class will stay intact and will not be deleted.
+        </p>
+        <p class="field-error" id="removeMemberError"></p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-close="removeMemberModal">Cancel</button>
+        <button class="btn btn-danger" id="confirmRemoveMemberBtn">Remove student</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+  
+  <div class="modal-overlay" id="aiAssistantModal">
+    <div class="modal ai-modal">
+      <div class="modal-header">
+        <div>
+          <p class="modal-eyebrow">AI ASSISTANT</p>
+          <h3>Class Attendance Assistant</h3>
+          <p class="modal-subtext">Ask about attendance across your own classes.</p>
+        </div>
+        <button class="modal-close" data-close="aiAssistantModal">&times;</button>
+      </div>
+
+      <div class="modal-body ai-modal-body">
+        <div class="ai-chat-log" id="aiChatLog">
+          <div class="ai-msg ai-msg-assistant">
+            Hi! How can I help you?
+          </div>
+        </div>
+        <p class="field-error" id="aiChatError"></p>
+        <div class="ai-chat-input-row">
+          <input type="text" id="aiChatInput" placeholder="Ask about attendance in your classes…">
+          <button class="btn btn-primary" id="aiChatSendBtn">Send</button>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" id="aiChatClearBtn">Clear history</button>
+        <button class="btn btn-outline" data-close="aiAssistantModal">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="teacher.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</body>
+</html>
