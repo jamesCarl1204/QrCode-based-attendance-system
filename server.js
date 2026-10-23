@@ -10,19 +10,22 @@ const { sendAttendanceNotification, sendClassEndedNotification } = require('./em
 const { askAssistant } = require('./Aiassistant');
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const bcrypt = require('bcrypt');
 
 app.set('trust proxy', 1);
 
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: 'carlSQL88',
-  database: 'logdb',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT || 3306,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  dateStrings: true, 
+  dateStrings: true,
+  timezone: '+08:00',
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
 });
 
 
@@ -53,7 +56,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'change-this-secret-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 8 } 
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 1000 * 60 * 60 * 8
+  }
 }));
 
 const loginLimiter = rateLimit({
@@ -195,7 +203,7 @@ app.post('/api/register/student', registerLimiter, async (req, res) => {
         middleName ? middleName.trim() : null,
         lastName.trim(),
         email.trim(),
-        password, 
+        await bcrypt.hash(password, 10),   
         parentEmail.trim()
       ]
     );
@@ -229,17 +237,19 @@ app.post('/api/login/student', loginLimiter, async (req, res) => {
       [email.trim()]
     );
 
-    if (rows.length === 0 || rows[0].password !== password) {
+  if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
       return res.status(401).json({ success: false, generalError: 'Invalid email or password.' });
     }
 
     const student = rows[0];
+    
     req.session.user = {
       id: student.id,
       role: 'student',
       email: student.email,
       firstName: student.first_name
-    };
+    }
+    
 
     return res.json({ success: true, redirect: '/students/student.html' });
   } catch (err) {
@@ -261,8 +271,9 @@ app.post('/api/login/teacher', loginLimiter, async (req, res) => {
       'SELECT id, first_name, email, password, role FROM teachers WHERE email = ?',
       [email.trim()]
     );
-
-    if (rows.length === 0 || rows[0].password !== password) {
+      
+if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
+   
       return res.status(401).json({ success: false, generalError: 'Invalid email or password.' });
     }
 
@@ -1375,7 +1386,7 @@ app.post('/api/admin/teachers', requireAdmin, async (req, res) => {
         middleName ? middleName.trim() : null,
         lastName.trim(),
         email.trim(),
-        password
+        await bcrypt.hash(password, 10) 
       ]
     );
 
@@ -1732,8 +1743,3 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
 
-setInterval(checkAndNotifySessionEnd, 60 * 1000); // check every minute
-
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
