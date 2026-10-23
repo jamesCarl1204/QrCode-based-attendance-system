@@ -394,11 +394,12 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   justify-content: center;
   border: 1px solid transparent;
 }
-.stat-green   { background: rgba(34, 197, 94, 0.1);  border-color: rgba(34, 197, 94, 0.2);  color: #22c55e; }
-.stat-indigo  { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2); color: #6366f1; }
-.stat-emerald { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); color: #10b981; }
-.stat-amber   { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-.stat-value { font-size: 1.9rem; font-weight: 700; color: var(--text-strong); }
+.stat-green   { background: #22c55e; border-color: #22c55e; color: #ffffff; }
+.stat-indigo  { background: #6366f1; border-color: #6366f1; color: #ffffff; }
+.stat-emerald { background: #10b981; border-color: #10b981; color: #ffffff; }
+.stat-amber   { background: #f59e0b; border-color: #f59e0b; color: #ffffff; }
+
+stat-value { font-size: 1.9rem; font-weight: 700; color: var(--text-strong); }
 
 .dash-row { display: grid; gap: 20px; margin-bottom: 20px; }
 .dash-row-wide { grid-template-columns: 2fr 1fr; }
@@ -873,12 +874,10 @@ body { overflow-x: hidden; }
   justify-content: center;
   border: 1px solid transparent;
 }
-.dash-activity-icon svg { width: 16px; height: 16px; }
-.dash-activity-icon.activity-green  { background: rgba(34, 197, 94, 0.1);  border-color: rgba(34, 197, 94, 0.2);  color: #22c55e; }
-.dash-activity-icon.activity-blue   { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.2); color: #6366f1; }
-.dash-activity-icon.activity-orange { background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-.dash-activity-icon.activity-red    { background: rgba(244, 63, 94, 0.1);  border-color: rgba(244, 63, 94, 0.2);  color: #f43f5e; }
-
+.dash-activity-icon.activity-green  { background: #22c55e; border-color: #22c55e; color: #ffffff; }
+.dash-activity-icon.activity-blue   { background: #6366f1; border-color: #6366f1; color: #ffffff; }
+.dash-activity-icon.activity-orange { background: #f59e0b; border-color: #f59e0b; color: #ffffff; }
+.dash-activity-icon.activity-red    { background: #f43f5e; border-color: #f43f5e; color: #ffffff; }
 .dash-activity-time {
   margin-left: auto;
   padding-left: 8px;
