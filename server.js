@@ -94,7 +94,6 @@ const scanLimiter = rateLimit({
 
 
 
-// ==== ADD THIS: insert between the "/api/login/teacher" route and "/api/logout" route in server.js ====
 
 // Reuses the same shape/rate-limit pattern as loginLimiter/registerLimiter above.
 const forgotPasswordLimiter = rateLimit({
@@ -220,6 +219,7 @@ app.post('/api/register/student', registerLimiter, async (req, res) => {
       firstName: firstName.trim()
     };
 
+    return res.json({ success: true });
   } catch (err) {
     console.error('Registration error:', err);
     return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
@@ -252,7 +252,8 @@ app.post('/api/login/student', loginLimiter, async (req, res) => {
       email: student.email,
       firstName: student.first_name
     }
-    
+     
+    return res.json({ success: true });
 
   } catch (err) {
     console.error('Student login error:', err);
@@ -289,7 +290,7 @@ if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
       firstName: teacher.first_name
     };
 
-    return res.json({ success: true, redirect });
+    return res.json({ success: true});
   } catch (err) {
     console.error('Teacher login error:', err);
     return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
@@ -298,8 +299,7 @@ if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
 
 
 app.post('/api/logout', (req, res) => {
-  req.session.destroy(() => {
-  });
+  req.session.destroy(() => res.json({ success: true }));
 });
 
 app.get('/api/me', (req, res) => {
