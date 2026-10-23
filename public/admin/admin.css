@@ -21,8 +21,8 @@ html[data-theme="dark"] {
   --panel-2: #1e293b;
   --hover: rgba(148, 163, 184, 0.12);
   --input-bg: #0b1222;
-  --navbar-bg: rgba(15, 23, 42, 0.85);
-  --sidebar-bg: rgba(15, 23, 42, 0.96);
+  --navbar-bg: #0f172a;
+  --sidebar-bg: #0f172a;
   --overlay: rgba(2, 6, 23, 0.8);
 
   --brand: #22c55e;
@@ -50,8 +50,8 @@ html[data-theme="light"] {
   --panel-2: #f1f5f9;
   --hover: #f1f5f9;
   --input-bg: #f8fafc;
-  --navbar-bg: rgba(255, 255, 255, 0.85);
-  --sidebar-bg: rgba(255, 255, 255, 0.95);
+  --navbar-bg: #ffffff;
+  --sidebar-bg: #ffffff;
   --overlay: rgba(15, 23, 42, 0.5);
 
   --brand: #16a34a;
@@ -97,8 +97,6 @@ body {
   align-items: center;
   height: var(--nav-h);
   background: var(--navbar-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   padding: 0 24px;
   border-bottom: 1px solid var(--border);
   position: sticky;
@@ -563,8 +561,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   position: fixed;
   inset: 0;
   background: var(--overlay);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   align-items: center;
   justify-content: center;
   z-index: 100;
