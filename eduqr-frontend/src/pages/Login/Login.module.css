@@ -101,34 +101,34 @@
 }
 
 .mainSolo .card {
-  padding: 12px 18px;
+  padding: 20px 24px;
   border-radius: 16px;
 }
 
 .mainSolo .formHead {
-  margin-bottom: 7px;
-  padding-bottom: 7px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
 }
 
 .mainSolo .formHead h2 {
-  font-size: 1.05rem;
+  font-size: 1.15rem;
 }
 
 .mainSolo .formHead p {
-  font-size: 0.74rem;
-  line-height: 1.25;
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
 .mainSolo .backBtn {
-  margin-bottom: 8px;
-  font-size: 0.78rem;
+  margin-bottom: 12px;
+  font-size: 0.82rem;
 }
 
 .regGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 12px;
-  row-gap: 0;
+  column-gap: 16px;
+  row-gap: 5px;
 }
 
 .span2 {
@@ -137,19 +137,19 @@
 }
 
 .regGrid .field {
-  margin-bottom: 0;
+  margin-bottom: 2px;
 }
 
 .regGrid .label {
-  margin-bottom: 2px;
-  font-size: 0.7rem;
+  margin-bottom: 4px;
+  font-size: 0.76rem;
 }
 
 .regGrid .input {
   box-sizing: border-box;
-  padding: 5px 36px 5px 34px;
-  font-size: 0.8rem;
-  border-radius: 9px;
+  padding: 8px 36px 8px 34px;
+  font-size: 0.86rem;
+  border-radius: 10px;
 }
 
 .regGrid .inputIcon {
@@ -163,16 +163,16 @@
 }
 
 .regGrid .note {
-  min-height: 8px;
-  margin: 1px 0 2px 2px;
-  font-size: 0.62rem;
-  line-height: 1.1;
+  min-height: 11px;
+  margin: 2px 0 4px 2px;
+  font-size: 0.68rem;
+  line-height: 1.25;
 }
 
 .mainSolo .submit {
-  margin-top: 3px;
-  padding: 8px;
-  font-size: 0.84rem;
+  margin-top: 8px;
+  padding: 11px;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 600px) {
@@ -181,7 +181,7 @@
   }
 
   .mainSolo .card {
-    padding: 12px 14px;
+    padding: 18px 16px;
   }
 
   .regGrid {
