@@ -86,3 +86,97 @@
   .feature { padding: 10px 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .pillDot { animation: none; } }
+
+/* Compact, centered registration layout */
+.mainSolo {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 760px;
+  padding-top: 8px;
+  padding-bottom: 18px;
+}
+
+.mainSolo .cardCol {
+  max-width: 660px;
+}
+
+.mainSolo .card {
+  padding: 20px 26px;
+  border-radius: 18px;
+}
+
+.mainSolo .formHead {
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+}
+
+.mainSolo .formHead h2 {
+  font-size: 1.12rem;
+}
+
+.mainSolo .formHead p {
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.regGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 14px;
+  row-gap: 0;
+}
+
+.span2 {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.regGrid .field {
+  margin-bottom: 2px;
+}
+
+.regGrid .label {
+  margin-bottom: 4px;
+  font-size: 0.74rem;
+}
+
+.regGrid .input {
+  box-sizing: border-box;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 0.86rem;
+  border-radius: 10px;
+}
+
+.regGrid .note {
+  min-height: 10px;
+  margin: 2px 0 3px 2px;
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
+.mainSolo .submit {
+  margin-top: 4px;
+  padding: 10px;
+}
+
+@media (max-width: 600px) {
+  .mainSolo {
+    padding: 4px 16px 18px;
+  }
+
+  .mainSolo .card {
+    padding: 18px 16px;
+  }
+
+  .regGrid {
+    grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+
+  .span2 {
+    grid-column: auto;
+  }
+}
+
