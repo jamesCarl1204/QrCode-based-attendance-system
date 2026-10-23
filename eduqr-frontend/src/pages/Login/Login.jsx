@@ -15,10 +15,10 @@ const REG_TRIM = ['studentIdNumber', 'firstName', 'middleName', 'lastName', 'ema
 
 // `full` = spans both columns. Fields without it sit side by side.
 const REG_FIELDS = [
-  { key: 'studentIdNumber', icon: 'fa-id-card', label: 'Student ID Number', placeholder: 'e.g. 2024-00123', full: true, autoComplete: 'off' },
+  { key: 'studentIdNumber', icon: 'fa-id-card', label: 'Student ID Number', placeholder: 'e.g. 2024-00123', autoComplete: 'off' },
   { key: 'firstName', icon: 'fa-user', label: 'First Name', placeholder: 'First name', autoComplete: 'given-name' },
   { key: 'lastName', icon: 'fa-user', label: 'Last Name', placeholder: 'Last name', autoComplete: 'family-name' },
-  { key: 'middleName', icon: 'fa-user', label: 'Middle Name (optional)', placeholder: 'Middle name', optional: true, full: true, autoComplete: 'additional-name' },
+  { key: 'middleName', icon: 'fa-user', label: 'Middle Name (optional)', placeholder: 'Middle name', optional: true, autoComplete: 'additional-name' },
   { key: 'email', icon: 'fa-envelope', type: 'email', label: 'Email Address', placeholder: 'you@email.com', full: true, autoComplete: 'email' },
   { key: 'password', icon: 'fa-lock', type: 'password', label: 'Password', placeholder: 'At least 8 characters', autoComplete: 'new-password' },
   { key: 'confirmPassword', icon: 'fa-lock', type: 'password', label: 'Confirm Password', placeholder: 'Re-enter password', autoComplete: 'new-password' },
