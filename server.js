@@ -1190,7 +1190,7 @@ async function buildTeacherAIContext(teacherId) {
         const attendance = clsStudents.map((st) => {
           const rec = recsForSession.find((r) => r.student_id === st.student_id);
           let status;
-          if (rec) status = rec.status; // 'Present' | 'Late'
+          if (rec) status = rec.status; // 'Present' | 'Late' | 'Absent'
           else status = ended ? 'Absent' : 'Not yet (session ongoing or upcoming)';
           return { student: `${st.first_name} ${st.last_name}`, status };
         });
@@ -1201,7 +1201,7 @@ async function buildTeacherAIContext(teacherId) {
           end_time: sess.end_time,
           late_after: sess.late_after,
           ended,
-          attendance,
+          attendance, // gagamitin lang sa summary sa baba, hindi ipapadala sa AI
         };
       });
 
@@ -1222,13 +1222,26 @@ async function buildTeacherAIContext(teacherId) {
         return { student: name, present, late, absent, totalSessionsCounted: totalCounted, attendanceRatePercent: attendanceRate };
       });
 
+      // Ito ang ipapadala sa AI: hiwalay na ang present / late / absent
+      const sessionsForAI = sessionsOut.map((s) => ({
+        session_date: s.session_date,
+        start_time: s.start_time,
+        end_time: s.end_time,
+        late_after: s.late_after,
+        ended: s.ended,
+        present: s.attendance.filter((a) => a.status === 'Present').map((a) => a.student),
+        late: s.attendance.filter((a) => a.status === 'Late').map((a) => a.student),
+        absent: s.attendance.filter((a) => a.status === 'Absent').map((a) => a.student),
+        not_yet_recorded: s.attendance.filter((a) => a.status.startsWith('Not yet')).map((a) => a.student),
+      }));
+
       return {
         subject_name: cls.subject_name,
         section: cls.section,
         class_code: cls.class_code,
         archived: !!cls.archived,
         students: clsStudents.map((s) => `${s.first_name} ${s.last_name}`),
-        sessions: sessionsOut,
+        sessions: sessionsForAI,
         studentSummary: summary,
       };
     }),

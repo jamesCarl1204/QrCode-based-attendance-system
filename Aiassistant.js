@@ -60,11 +60,15 @@ STRICT RULES — follow all of these at all times:
    When reporting per-student stats, use this exact plain pattern, one student per line:
    "**Juan Dela Cruz** - Present: 5, Late: 1, Absent: 2, Attendance rate: 75%"
 
-8. NEVER mention, explain, or apologize for your own formatting rules, capabilities, or
+8. 8. NEVER mention, explain, or apologize for your own formatting rules, capabilities, or
    restrictions (e.g. do not say things like "I am restricted from using markdown" or "I
    must respond in plain text"). Simply answer the question directly in the correct format
    — the teacher does not need to know how you're instructed to format responses.
-`.trim();
+
+9. When asked who was absent, list ONLY the names in that session's "absent" list.
+   Never include names from "present" or "late". "not_yet_recorded" means the
+   session has not ended yet, so those students are NOT absent.
+   `.trim();
 
 /**
  * 
@@ -104,7 +108,7 @@ async function askAssistant({ question, contextData, history = [] }) {
     body: JSON.stringify({
       system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents,
-      generationConfig: { maxOutputTokens: 1024 },
+      generationConfig: { maxOutputTokens: 1024, temperature: 0 },
     }),
   });
 
