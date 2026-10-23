@@ -79,7 +79,7 @@ export default function Login() {
         <QrArt />
         <div className={s.brandContent}>
           <div className={s.logoWrap}>
-            <img src="/logo.png" alt="School logo" className={s.logo}
+            <img src="/100.png" alt="School logo" className={s.logo}
               onError={(e) => { e.currentTarget.style.display = 'none'; e.currentTarget.nextElementSibling.style.display = 'flex'; }} />
             <div className={s.logoFallback} style={{ display: 'none' }}><i className="fas fa-graduation-cap" /></div>
           </div>
