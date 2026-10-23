@@ -721,15 +721,6 @@ document.getElementById("sidebarToggleBtn").addEventListener("click", () => {
   document.getElementById("sidebar").classList.toggle("collapsed");
 });
 
-function syncNavbarHeight() {
-  const navbar = document.querySelector(".navbar");
-  if (!navbar) return;
-  document.documentElement.style.setProperty("--navbar-h", `${navbar.offsetHeight}px`);
-}
-syncNavbarHeight();
-window.addEventListener("resize", syncNavbarHeight);
-window.addEventListener("load", syncNavbarHeight);
-
 const ACTIVITY_ICONS = {
   present: { colorClass: "activity-green", svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>` },
   late: { colorClass: "activity-orange", svg: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>` },

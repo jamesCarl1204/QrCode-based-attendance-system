@@ -1,28 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Portal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="admin.css">
+  <script>
+    // Apply saved theme before paint (no flash)
+    (function () {
+      try {
+        var t = localStorage.getItem("eduqr_theme");
+        if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
   <header class="navbar">
     <div class="navbar-left">
       <button class="sidebar-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle sidebar">
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <i class="fa-solid fa-bars"></i>
       </button>
-      <div class="logo-icon"><img src="100.png" alt="School logo" class="logo-img"></div>
-      <div>
-        <h1>Regis Marie College</h1>
-        <span class="navbar-subtitle">QR-Code Based Student Attendance Monitoring System · Admin Portal</span>
-      </div>
+      <h1 class="page-title" id="pageTitle">Dashboard</h1>
     </div>
+
     <div class="navbar-right">
+      <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+        <i id="themeIcon" class="fa-solid fa-sun"></i>
+        <span id="themeText">Light Mode</span>
+      </button>
+      <div class="nav-clock" title="Philippine time">
+        <i class="fa-regular fa-clock"></i>
+        <span id="navClock">--:--:-- --</span>
+      </div>
       <button class="btn btn-outline" id="logoutBtn">Log out</button>
     </div>
   </header>
@@ -30,102 +45,108 @@
   <div class="app-shell" id="appShell">
 
     <nav class="sidebar" id="sidebar">
-      <button class="sidebar-link active" data-tab="dashboard">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-        <span>Dashboard</span>
-      </button>
-      <button class="sidebar-link" data-tab="students">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        <span>Students</span>
-      </button>
-      <button class="sidebar-link" data-tab="teachers">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <span>Teachers</span>
-      </button>
-      <button class="sidebar-link" data-tab="classes">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <span>Classes</span>
-      </button>
-      <button class="sidebar-link" data-tab="archivedClasses">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>
-        <span>Archived Classes</span>
-      </button>
-      <button class="sidebar-link" data-tab="createTeacher">
-        <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
-        <span>Create Teacher</span>
-      </button>
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-icon"><i class="fa-solid fa-qrcode"></i></div>
+        <div>
+          <span class="sidebar-brand-name">Admin Portal</span>
+          <span class="sidebar-brand-sub">Attendance System</span>
+        </div>
+      </div>
+
+      <div class="sidebar-links">
+        <button class="sidebar-link active" data-tab="dashboard">
+          <span class="icon"><i class="fa-solid fa-chart-pie"></i></span>
+          Dashboard
+        </button>
+        <button class="sidebar-link" data-tab="students">
+          <span class="icon"><i class="fa-solid fa-user-graduate"></i></span>
+          Students
+        </button>
+        <button class="sidebar-link" data-tab="teachers">
+          <span class="icon"><i class="fa-solid fa-chalkboard-user"></i></span>
+          Teachers
+        </button>
+        <button class="sidebar-link" data-tab="classes">
+          <span class="icon"><i class="fa-solid fa-book-open"></i></span>
+          Classes
+        </button>
+        <button class="sidebar-link" data-tab="archivedClasses">
+          <span class="icon"><i class="fa-solid fa-box-archive"></i></span>
+          Archived Classes
+        </button>
+        <button class="sidebar-link" data-tab="createTeacher">
+          <span class="icon"><i class="fa-solid fa-user-plus"></i></span>
+          Create Teacher
+        </button>
+      </div>
+
+      <div class="sidebar-profile">
+        <div class="profile-avatar" id="profileAvatar">A</div>
+        <div class="profile-meta">
+          <p class="profile-name" id="profileName">Admin</p>
+          <p class="profile-email" id="profileEmail">&nbsp;</p>
+        </div>
+      </div>
     </nav>
 
     <main class="main-content">
 
       <div class="admin-tab active" id="dashboardTab">
-        <div class="dashboard-header-row">
-          <div>
-            <h2>Dashboard</h2>
-          </div>
+        <div class="section-header">
+          <h2>Dashboard Overview</h2>
           <p id="dashboardUpdatedText"><span class="live-dot"></span>Live overview · updating…</p>
         </div>
 
-        <div class="stat-pill-row">
-          <div class="stat-pill">
-            <div class="stat-pill-icon stat-icon-blue">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="stat-grid">
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Students</span>
+              <div class="stat-icon stat-green"><i class="fa-solid fa-user-graduate"></i></div>
             </div>
-            <div>
-              <div class="stat-value" id="dashStudentsCount">—</div>
-              <div class="stat-label">Students</div>
-            </div>
+            <span class="stat-value" id="dashStudentsCount">—</span>
           </div>
-          <div class="stat-pill">
-            <div class="stat-pill-icon stat-icon-purple">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Teachers</span>
+              <div class="stat-icon stat-indigo"><i class="fa-solid fa-chalkboard-user"></i></div>
             </div>
-            <div>
-              <div class="stat-value" id="dashTeachersCount">—</div>
-              <div class="stat-label">Teachers</div>
-            </div>
+            <span class="stat-value" id="dashTeachersCount">—</span>
           </div>
-          <div class="stat-pill">
-            <div class="stat-pill-icon stat-icon-green">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Ongoing Sessions</span>
+              <div class="stat-icon stat-emerald"><i class="fa-solid fa-qrcode"></i></div>
             </div>
-            <div>
-              <div class="stat-value" id="dashOngoingCount">—</div>
-              <div class="stat-label">Ongoing sessions</div>
-            </div>
+            <span class="stat-value" id="dashOngoingCount">—</span>
           </div>
-          <div class="stat-pill">
-            <div class="stat-pill-icon stat-icon-orange">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
+          <div class="panel stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Today's Attendance</span>
+              <div class="stat-icon stat-amber"><i class="fa-solid fa-chart-line"></i></div>
             </div>
-            <div>
-              <div class="stat-value" id="dashTodayRate">—</div>
-              <div class="stat-label">Today's attendance</div>
-            </div>
+            <span class="stat-value" id="dashTodayRate">—</span>
           </div>
         </div>
 
-        <div class="dashboard-card">
-          <h4 class="section-block-title dashboard-card-title" style="margin-top:0;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-4"/></svg>
-            Today's snapshot
-          </h4>
-          <div class="snapshot-row"><span>Present</span><strong id="dashPresent">0</strong></div>
-          <div class="snapshot-row"><span>Late</span><strong id="dashLate">0</strong></div>
-          <div class="snapshot-row"><span>Absent</span><strong id="dashAbsent">0</strong></div>
-        </div>
-
-        <div class="dashboard-card" style="margin-top:16px;">
-          <h4 class="section-block-title dashboard-card-title" style="margin-top:0;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-            Recent activity
-          </h4>
-          <div id="dashActivity"><p class="muted-text">Loading…</p></div>
-        </div>
-
-        <div class="quick-actions-row">
-          <button class="btn btn-outline" data-quick-tab="createTeacher">+ Create teacher</button>
-          <button class="btn btn-outline" data-quick-tab="classes">View classes</button>
+        <div class="dash-row dash-row-wide">
+          <div class="panel">
+            <h3 class="panel-title">Recent Activity</h3>
+            <p class="panel-sub">Latest events across the system</p>
+            <div class="activity-feed" id="dashActivity"><p class="muted-text">Loading…</p></div>
+          </div>
+          <div class="panel">
+            <h3 class="panel-title">Today's Snapshot</h3>
+            <p class="panel-sub">Present, late and absent</p>
+            <div class="status-legend">
+              <div><span>Present</span><strong class="c-present" id="dashPresent">0</strong></div>
+              <div><span>Late</span><strong class="c-late" id="dashLate">0</strong></div>
+              <div><span>Absent</span><strong class="c-absent" id="dashAbsent">0</strong></div>
+            </div>
+            <div class="quick-actions-column">
+              <button class="btn btn-primary" data-quick-tab="createTeacher"><i class="fa-solid fa-plus"></i> Create teacher</button>
+              <button class="btn btn-outline" data-quick-tab="classes">View classes</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -226,7 +247,7 @@
           <p>Add a new teacher account to the system</p>
         </div>
 
-        <div class="create-teacher-card">
+        <div class="panel create-teacher-card">
           <div class="ct-card-header">
             <div class="ct-card-header-icon">
               <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
@@ -408,14 +429,14 @@
         <button class="modal-close" data-close="classDetailModal">&times;</button>
       </div>
       <div class="modal-body" id="classDetailBody" style="max-height:520px; overflow-y:auto;"></div>
-            <div class="modal-footer">
+      <div class="modal-footer">
         <button class="btn btn-outline" data-close="classDetailModal">Close</button>
         <button class="btn btn-danger" id="deleteClassFromDetailBtn">Delete class</button>
       </div>
     </div>
   </div>
 
-    <div class="modal-overlay" id="deleteClassModal">
+  <div class="modal-overlay" id="deleteClassModal">
     <div class="modal modal-small">
       <div class="modal-header">
         <div>
@@ -456,5 +477,6 @@
   <div class="toast-stack" id="toastStack"></div>
 
   <script src="admin.js"></script>
+  <script src="admin-ui.js"></script>
 </body>
 </html>

@@ -37,9 +37,6 @@ html[data-theme="dark"] {
   --accent-mix: 70%;
   --accent-mix-color: #ffffff;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
 }
 
 html[data-theme="light"] {
@@ -71,9 +68,6 @@ html[data-theme="light"] {
   --accent-mix: 82%;
   --accent-mix-color: #000000;
 
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 24px 60px rgba(15, 23, 42, 0.18);
 }
 
 :root {
@@ -86,10 +80,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: "Inter", "Google Sans", Roboto, Arial, sans-serif;
-  background:
-    radial-gradient(700px 400px at 95% -10%, var(--bg-glow-2), transparent 60%),
-    radial-gradient(600px 380px at -5% 5%, var(--bg-glow-1), transparent 55%),
-    var(--bg);
+  background: var(--bg);
   background-attachment: fixed;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -194,16 +185,15 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+  transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
 }
 .btn:active { transform: scale(0.97); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .btn-primary {
-  background: linear-gradient(135deg, #16a34a 0%, #34d399 100%);
+  background: var(--brand);
   color: var(--on-brand);
   font-weight: 700;
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.22);
 }
 .btn-primary:hover { filter: brightness(1.08); }
 
@@ -225,7 +215,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
 .btn-danger {
   background: #e11d48;
   color: #ffffff;
-  box-shadow: 0 6px 16px rgba(225, 29, 72, 0.25);
 }
 .btn-danger:hover { background: #be123c; }
 
@@ -291,13 +280,12 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, #16a34a, #34d399);
+  background: var(--brand);
   color: var(--on-brand);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.15rem;
-  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.25);
   flex-shrink: 0;
 }
 .sidebar-brand-name {
@@ -397,7 +385,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 20px;
-  box-shadow: var(--shadow-sm);
 }
 .panel-title { font-size: 0.98rem; font-weight: 700; color: var(--text-strong); }
 .panel-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; margin-bottom: 14px; }
@@ -458,7 +445,7 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  background: linear-gradient(160deg, var(--brand-soft), transparent 70%), var(--panel);
+  background: var(--panel);
   border-color: var(--brand-line);
 }
 .panel-cta .btn { margin-top: auto; width: 100%; }
@@ -536,7 +523,7 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
 
 .subject-card {
   --accent-text: color-mix(in srgb, var(--accent, #2563eb) var(--accent-mix), var(--accent-mix-color));
-  background: linear-gradient(180deg, color-mix(in srgb, var(--accent, #2563eb) 14%, var(--panel)) 0%, var(--panel) 55%);
+  background: color-mix(in srgb, var(--accent, #2563eb) 8%, var(--panel));
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 22px 22px 20px;
@@ -546,12 +533,10 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  box-shadow: var(--shadow-sm);
   cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 .subject-card:hover {
-  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--accent, #2563eb) 45%, var(--border));
 }
@@ -568,7 +553,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 14px color-mix(in srgb, var(--accent, #2563eb) 40%, transparent);
 }
 
 .subject-card h3 {
@@ -655,7 +639,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   background: var(--panel-2);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
   min-width: 150px;
   z-index: 10;
   overflow: hidden;
@@ -685,20 +668,11 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
 .detail-page.active { display: block; }
 
 .detail-banner {
-  background: linear-gradient(135deg, #1e3a8a 0%, #0f1f4b 100%);
+  background: #1e3a8a; /* overridden per class color by teacher.js */
   color: white;
   padding: 32px;
   position: relative;
   overflow: hidden;
-}
-.detail-banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(360px 220px at 100% 0%, rgba(255, 255, 255, 0.14), transparent 60%),
-    radial-gradient(280px 200px at 10% 120%, rgba(255, 255, 255, 0.08), transparent 60%);
-  pointer-events: none;
 }
 .detail-top-row {
   position: relative;
@@ -750,7 +724,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   width: fit-content;
   margin-top: -24px;
   margin-bottom: 24px;
-  box-shadow: var(--shadow-md);
   position: relative;
   z-index: 2;
   border: 1px solid var(--border);
@@ -799,10 +772,9 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  transition: border-color 0.15s ease;
 }
-.session-card:hover { box-shadow: var(--shadow-md); border-color: var(--border-strong); }
+.session-card:hover { border-color: var(--border-strong); }
 .session-card .session-date { font-weight: 700; color: var(--text-strong); }
 .session-card .session-time { color: var(--muted); font-size: 0.85rem; }
 
@@ -848,7 +820,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   width: 90%;
   max-width: 440px;
   padding: 24px;
-  box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-strong);
   animation: modal-in 0.18s ease both;
 }
@@ -905,7 +876,7 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   font-size: 0.9rem;
   background: var(--input-bg);
   color: var(--text);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 .modal-body input:focus {
   outline: none;
@@ -1072,7 +1043,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   background: var(--panel-2);
   color: var(--text);
   border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-md);
   opacity: 0;
   transform: translateY(-10px) scale(0.97);
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -1140,7 +1110,6 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
     transform: translateX(-100%);
     opacity: 1;
     transition: transform 0.2s ease;
-    box-shadow: var(--shadow-lg);
   }
   .sidebar.collapsed {
     width: 250px;
@@ -1196,4 +1165,70 @@ html[data-theme="light"] .btn-outline#logoutBtn { color: #e11d48; }
   display: flex;
   justify-content: flex-end;
   margin-top: 12px;
+}
+
+/* ---------- Dashboard: equal-height chart panels (desktop only) ---------- */
+@media (min-width: 1001px) {
+  .dash-row-wide > .panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Chart areas stretch to fill whatever space is left in the card */
+  .dash-row-wide > .panel .chart-box,
+  .dash-row-wide > .panel .chart-box-sm {
+    flex: 1;
+    height: auto;
+    min-height: 220px;
+    min-width: 0;
+  }
+
+  /* Canvas sits inside the box without pushing the card taller */
+  .dash-row-wide > .panel .chart-box canvas {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Keep the legend pinned at the bottom of the Status card */
+  .status-legend {
+    margin-top: 14px;
+  }
+}
+
+/* ---------- Fix: mobile / tablet horizontal overflow ---------- */
+
+/* Pigilan ang grid items na lumaki lampas sa column */
+.stat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.dash-row-wide { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+.dash-row > *,
+.stat-grid > * {
+  min-width: 0;
+}
+
+.chart-box canvas {
+  max-width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dash-row-wide { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+body { overflow-x: hidden; }
+
+.main-content,
+.panel,
+.subject-card,
+.session-card > div {
+  min-width: 0;
+}
+.subject-card h3,
+.session-card .session-date,
+.session-card .session-time,
+.activity-feed * {
+  overflow-wrap: anywhere;
 }
