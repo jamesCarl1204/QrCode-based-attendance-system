@@ -560,6 +560,30 @@ app.post('/api/classes/join', requireStudent, async (req, res) => {
   }
 });
 
+app.delete('/api/classes/:id/leave', requireStudent, async (req, res) => {
+  const classId = req.params.id;
+
+  try {
+    const [enrolled] = await pool.query(
+      'SELECT id FROM class_students WHERE class_id = ? AND student_id = ? AND removed_at IS NULL',
+      [classId, req.session.user.id]
+    );
+    if (enrolled.length === 0) {
+      return res.status(404).json({ success: false, generalError: 'You are not enrolled in this class.' });
+    }
+
+    await pool.query(
+      'UPDATE class_students SET removed_at = NOW() WHERE class_id = ? AND student_id = ? AND removed_at IS NULL',
+      [classId, req.session.user.id]
+    );
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.error('Leave class error:', err);
+    return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
+  }
+});
+
 app.get('/api/classes/:id/members', requireAuth, async (req, res) => {
   const classId = req.params.id;
 

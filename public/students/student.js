@@ -450,3 +450,47 @@ document.getElementById("sidebarToggleBtn").addEventListener("click", () => {
 });
 
 loadClasses();
+
+document.getElementById("leaveClassBtn").addEventListener("click", () => {
+  const cls = classes.find((c) => c.id === activeClassId);
+  if (!cls) return;
+  document.getElementById("leaveClassSubject").textContent = cls.subject;
+  document.getElementById("leaveClassError").textContent = "";
+  openModal("leaveClassModal");
+});
+
+document.getElementById("confirmLeaveClassBtn").addEventListener("click", async () => {
+  const cls = classes.find((c) => c.id === activeClassId);
+  if (!cls) return;
+
+  const btn = document.getElementById("confirmLeaveClassBtn");
+  const errorEl = document.getElementById("leaveClassError");
+  errorEl.textContent = "";
+  btn.disabled = true;
+  btn.textContent = "Leaving…";
+
+  try {
+    const res = await fetch(`/api/classes/${cls.id}/leave`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    const data = await res.json();
+
+    if (!data.success) {
+      errorEl.textContent = data.generalError || "Could not leave this class.";
+      return;
+    }
+
+    classes = classes.filter((c) => c.id !== cls.id);
+    closeModal("leaveClassModal");
+    backToClasses();
+    renderAllCards();
+    updateClassSummary();
+  } catch (err) {
+    console.error("Leave class error:", err);
+    errorEl.textContent = "Something went wrong. Please try again.";
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Leave class";
+  }
+});
