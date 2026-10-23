@@ -273,3 +273,33 @@
   .modalFooter { flex-direction: column-reverse; gap: 8px; } .modalFooter .btn { width: 100%; }
   .aiInputRow { flex-direction: column; } .aiInputRow .btn { width: 100%; }
 }
+
+
+/* ---------- Teacher dashboard: compact cards on mobile ---------- */
+@media (max-width: 768px) {
+  .teacherDashboard .sectionHeader p { margin-bottom: 16px; }
+  .teacherDashboard .statGrid { gap: 10px; margin-bottom: 14px; }
+  .teacherDashboard .panel { padding: 14px; border-radius: 14px; }
+  .teacherDashboard .statTop { gap: 8px; margin-bottom: 8px; }
+  .teacherDashboard .statLabel { font-size: 0.68rem; line-height: 1.35; }
+  .teacherDashboard .statIcon { width: 32px; height: 32px; flex-shrink: 0; }
+  .teacherDashboard .statValue { font-size: 1.55rem; }
+  .teacherDashboard .dashRow { gap: 12px; margin-bottom: 12px; }
+  .teacherDashboard .panelTitle { font-size: 0.92rem; }
+  .teacherDashboard .panelSub { font-size: 0.74rem; margin-bottom: 10px; }
+  .teacherDashboard .chartBox { height: 190px; }
+  .teacherDashboard .chartBoxSm { height: 155px; }
+  .teacherDashboard .statusLegend { gap: 5px; margin-top: 10px; padding-top: 10px; }
+  .teacherDashboard .statusLegend strong { font-size: 0.88rem; }
+  .teacherDashboard .ctaIcon { width: 38px; height: 38px; margin-bottom: 10px; font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .teacherDashboard .statGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .teacherDashboard .panel { padding: 12px; }
+  .teacherDashboard .statLabel { font-size: 0.64rem; letter-spacing: 0; }
+  .teacherDashboard .statIcon { width: 28px; height: 28px; border-radius: 8px; font-size: 0.78rem; }
+  .teacherDashboard .statValue { font-size: 1.4rem; }
+  .teacherDashboard .chartBox { height: 170px; }
+  .teacherDashboard .chartBoxSm { height: 140px; }
+}
