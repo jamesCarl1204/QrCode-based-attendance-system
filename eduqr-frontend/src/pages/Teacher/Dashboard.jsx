@@ -14,7 +14,7 @@ export default function Dashboard({ classes, onGoClasses, stats = {} }) {
   const dash = (v) => (v === undefined || v === null ? '—' : v);
 
   return (
-    <>
+    <div className={s.teacherDashboard}>
       <div className={s.sectionHeader}><h2>Dashboard Overview</h2><p>Summary of your classes and attendance.</p></div>
 
       <div className={s.statGrid}>
@@ -70,6 +70,6 @@ export default function Dashboard({ classes, onGoClasses, stats = {} }) {
           <button className={`${s.btn} ${s.btnPrimary}`} onClick={onGoClasses}>Go to My Classes</button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
