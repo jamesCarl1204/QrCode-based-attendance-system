@@ -1,0 +1,69 @@
+.page { min-height: 100vh; display: flex; font-family: 'DM Sans', -apple-system, "Segoe UI", Roboto, sans-serif; --navy-deep: #0b1631; --navy: #122349; --sky: #7db3ff; --gold: #f2b134; --ink: #0f1f4b; --slate: #64748b; --soft: #f8fafc; --blue: #122349; color: var(--ink); }
+
+.brandPanel { position: relative; flex: 0 0 44%; min-height: 100vh; background: radial-gradient(circle at 15% 15%, #1a2f63 0%, var(--navy) 45%, var(--navy-deep) 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 56px 48px; }
+.qrArt { position: absolute; top: 50%; left: 50%; width: 130%; max-width: 620px; transform: translate(-50%, -50%); color: var(--sky); opacity: 0.14; pointer-events: none; }
+.brandContent { position: relative; z-index: 2; max-width: 420px; }
+.logoWrap { width: 84px; height: 84px; margin-bottom: 28px; }
+.logo, .logoFallback { width: 84px; height: 84px; border-radius: 18px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); }
+.logo { object-fit: contain; padding: 10px; }
+.logoFallback { display: flex; align-items: center; justify-content: center; font-size: 34px; color: var(--gold); }
+.eyebrow { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
+.title { font-family: 'Space Grotesk', sans-serif; font-size: 2.8rem; font-weight: 700; line-height: 1.2; color: #fff; margin-bottom: 18px; letter-spacing: -0.01em; }
+.subtext { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,0.72); margin-bottom: 34px; }
+.points { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.points li { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.85); }
+.points i { width: 32px; height: 32px; flex-shrink: 0; border-radius: 9px; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center; color: var(--sky); font-size: 13px; }
+
+.authPanel { flex: 1; min-height: 100vh; background: var(--soft); display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+.authInner { width: 100%; max-width: 420px; }
+.heading h1 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 30px; }
+
+.optionGrid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+.optionCard { display: flex; align-items: center; gap: 16px; background: #fff; border: 2px solid #e2e8f0; border-radius: 16px; padding: 18px 20px; cursor: pointer; transition: border-color 0.2s ease, box-shadow 0.2s ease; font-family: inherit; text-align: left; width: 100%; }
+.optionCard:hover { border-color: var(--blue); box-shadow: 0 4px 16px rgba(18,35,73,0.12); }
+.optionIcon { width: 46px; height: 46px; flex-shrink: 0; border-radius: 12px; background: linear-gradient(135deg, var(--blue), var(--navy)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 19px; }
+.optionCard h3 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.optionCard p { font-size: 12.5px; color: var(--slate); font-weight: 500; }
+.optionArrow { margin-left: auto; opacity: 0.5; color: var(--blue); }
+
+.newUser { text-align: center; padding-top: 22px; border-top: 1px solid #e2e8f0; }
+.newUser span { color: var(--slate); font-size: 13.5px; font-weight: 500; display: block; margin-bottom: 12px; }
+.linkBtn { background: #fff; border: 2px solid var(--blue); color: var(--blue); font-size: 14px; font-weight: 600; cursor: pointer; padding: 10px 22px; border-radius: 50px; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; }
+.linkBtn:hover { background: var(--blue); color: #fff; }
+
+.backBtn { display: inline-flex; align-items: center; gap: 8px; color: var(--blue); font-weight: 600; cursor: pointer; font-size: 14px; margin-bottom: 22px; background: none; border: none; font-family: inherit; }
+.backBtn:hover { text-decoration: underline; }
+.formHeader { text-align: center; margin-bottom: 26px; }
+.formHeader i { font-size: 38px; color: var(--blue); margin-bottom: 10px; display: block; }
+.formHeader h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.formHeader p { color: var(--slate); font-size: 13.5px; }
+
+.generalError { background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 16px; }
+.success { background: #dcfce7; color: #166534; }
+.inputGroup { position: relative; margin-bottom: 6px; }
+.inputGroup i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 15px; }
+.inputGroup input { width: 100%; padding: 14px 16px 14px 46px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 15px; font-family: inherit; background: #fff; color: var(--ink); }
+.inputGroup input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(18,35,73,0.12); }
+.fieldError { color: #dc2626; font-size: 0.78rem; margin: 2px 0 12px 4px; min-height: 14px; }
+.hint { color: var(--slate); font-size: 0.78rem; margin: -8px 0 14px 4px; }
+.forgot { text-align: right; margin: -4px 0 18px; }
+.forgot a { color: var(--blue); font-size: 13px; font-weight: 600; cursor: pointer; }
+.forgot a:hover { text-decoration: underline; }
+.submit { width: 100%; padding: 15px; border: none; border-radius: 10px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%); color: #fff; box-shadow: 0 4px 14px rgba(18,35,73,0.3); }
+.submit:hover { opacity: 0.94; }
+.submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+@media (max-width: 900px) {
+  .page { flex-direction: column; }
+  .brandPanel { flex: none; min-height: 260px; padding: 36px 28px; }
+  .title { font-size: 26px; }
+  .points { display: none; }
+  .qrArt { max-width: 420px; }
+  .authPanel { min-height: auto; padding: 36px 20px 48px; }
+}
+@media (max-width: 480px) {
+  .brandPanel { padding: 30px 22px; min-height: 220px; }
+  .title { font-size: 22px; }
+  .subtext { font-size: 13.5px; margin-bottom: 0; }
+  .logoWrap, .logo, .logoFallback { width: 64px; height: 64px; }
+}

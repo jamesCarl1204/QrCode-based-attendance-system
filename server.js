@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const bcrypt = require('bcrypt');
 
-app.set('trust proxy', 1);
+app.set('trust proxy', 2);
 
 
 const pool = mysql.createPool({
