@@ -92,12 +92,12 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  max-width: 660px;
+  max-width: 560px;
   padding: 4px 16px 10px;
 }
 
 .mainSolo .cardCol {
-  max-width: 600px;
+  max-width: 500px;
 }
 
 .mainSolo .card {
