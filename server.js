@@ -44,12 +44,16 @@ app.use(cors({
   },
   credentials: true
 }));
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public'))); 
 
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.json({
+    success: true,
+    message: 'QR Code Attendance API is running'
+  });
 });
 
 app.use(session({
@@ -216,7 +220,6 @@ app.post('/api/register/student', registerLimiter, async (req, res) => {
       firstName: firstName.trim()
     };
 
-    return res.json({ success: true, redirect: '/students/student.html' });
   } catch (err) {
     console.error('Registration error:', err);
     return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
@@ -251,7 +254,6 @@ app.post('/api/login/student', loginLimiter, async (req, res) => {
     }
     
 
-    return res.json({ success: true, redirect: '/students/student.html' });
   } catch (err) {
     console.error('Student login error:', err);
     return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
@@ -287,7 +289,6 @@ if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
       firstName: teacher.first_name
     };
 
-    const redirect = role === 'admin' ? '/admin/admin.html' : '/teacher/teacher.html';
     return res.json({ success: true, redirect });
   } catch (err) {
     console.error('Teacher login error:', err);
@@ -298,7 +299,6 @@ if (rows.length === 0 || !(await bcrypt.compare(password, rows[0].password))) {
 
 app.post('/api/logout', (req, res) => {
   req.session.destroy(() => {
-    res.json({ success: true, redirect: '/login.html' });
   });
 });
 
