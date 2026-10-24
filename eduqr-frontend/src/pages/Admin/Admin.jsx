@@ -155,29 +155,29 @@ function ClassDetailModal({ classId, onClose, onDelete }) {
 
   const cls = data?.class;
   return (
-    <Modal open={!!classId} wide onClose={onClose}>
+    <Modal open={!!classId} wide className={s.adminClassDetailModal} onClose={onClose}>
       <ModalHeader eyebrow="CLASS RECORD" title={cls ? cls.subject_name : 'Loading…'} onClose={onClose}
         sub={cls ? `${cls.section || 'No section set'} · Teacher: ${cls.teacher_first_name} ${cls.teacher_last_name} (${cls.teacher_email}) · Class code: ${cls.class_code}` : ''} />
-      <div style={{ maxHeight: 520, overflowY: 'auto' }}>
+      <div className={s.adminClassDetailContent}>
         {data === null && <p className={s.mutedText}>Loading…</p>}
         {data === false && <p className={s.mutedText}>Could not load class.</p>}
         {data && (
           <>
-            <div className={s.statPillRow}>
+            <div className={`${s.statPillRow} ${s.adminClassStats}`}>
               {[['Present', data.totals.present], ['Late', data.totals.late], ['Absent', data.totals.absent],
                 ['Attendance Rate', data.totals.attendanceRatePercent !== null ? `${data.totals.attendanceRatePercent}%` : '—']].map(([l, v]) => (
                 <div key={l} className={s.statPill}><div className={s.statValue}>{v}</div><div className={s.statLabel}>{l}</div></div>
               ))}
             </div>
-            <h4 className={s.blockTitle}>Students ({data.students.length})</h4>
+            <h4 className={s.blockTitle}>Students <span className={s.adminSectionCount}>{data.students.length}</span></h4>
             {data.students.length === 0 && <p className={s.mutedText}>No students enrolled yet.</p>}
             {data.students.map((st) => (
-              <div key={st.id} className={s.sessionCard}><div><div className={s.sessionDate}>{st.first_name} {st.last_name}</div><div className={s.sessionTime}>{st.email}</div></div></div>
+              <div key={st.id} className={`${s.sessionCard} ${s.adminStudentCard}`}><span className={s.adminStudentAvatar}>{st.first_name?.charAt(0)}{st.last_name?.charAt(0)}</span><div className={s.adminStudentInfo}><div className={s.sessionDate}>{st.first_name} {st.last_name}</div><div className={s.sessionTime}>{st.email}</div></div></div>
             ))}
             <h4 className={s.blockTitle}>Attendance Sessions ({data.sessions.length})</h4>
             {data.sessions.length === 0 && <p className={s.mutedText}>No attendance sessions yet.</p>}
             {data.sessions.map((x) => (
-              <div key={x.id} className={s.accordion}>
+              <div key={x.id} className={`${s.accordion} ${s.adminSessionAccordion}`}>
                 <div className={s.accordionHeader} onClick={() => setOpen((o) => ({ ...o, [x.id]: !o[x.id] }))}>
                   <div>
                     <div className={s.sessionDate}>{x.session_date}</div>
