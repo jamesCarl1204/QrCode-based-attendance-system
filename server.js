@@ -1268,17 +1268,49 @@ app.get('/api/ai/history', requireTeacher, async (req, res) => {
   }
 });
 
-const [historyRows] = await pool.query(
-  `SELECT role, content FROM (
-     SELECT id, role, content
-     FROM ai_messages
-     WHERE teacher_id = ?
-     ORDER BY id DESC
-     LIMIT 20
-   ) t
-   ORDER BY id ASC`,
-  [teacherId]
-);
+app.post('/api/ai/ask', requireTeacher, async (req, res) => {
+  const { question } = req.body || {};
+  if (!question || !question.trim()) {
+    return res.status(400).json({ success: false, generalError: 'Question is required.' });
+  }
+
+  try {
+    const teacherId = req.session.user.id;
+
+    const [historyRows] = await pool.query(
+      `SELECT role, content FROM (
+         SELECT id, role, content
+         FROM ai_messages
+         WHERE teacher_id = ?
+         ORDER BY id DESC
+         LIMIT 20
+       ) t
+       ORDER BY id ASC`,
+      [teacherId]
+    );
+
+    // Dapat user message ang unang item sa history ng Gemini
+    while (historyRows.length && historyRows[0].role !== 'user') historyRows.shift();
+
+    const contextData = await buildTeacherAIContext(teacherId);
+    const answer = await askAssistant({
+      question: question.trim(),
+      contextData,
+      history: historyRows,
+    });
+
+    // Isang INSERT: laging mas mababa ang id ng tanong kaysa sa sagot
+    await pool.query(
+      'INSERT INTO ai_messages (teacher_id, role, content) VALUES (?, ?, ?), (?, ?, ?)',
+      [teacherId, 'user', question.trim(), teacherId, 'assistant', answer]
+    );
+
+    return res.json({ success: true, answer });
+  } catch (err) {
+    console.error('AI ask error:', err);
+    return res.status(500).json({ success: false, generalError: 'The AI assistant could not respond right now. Please try again.' });
+  }
+});
 
 // ===== TEACHER DASHBOARD =====
 const pad = (n) => String(n).padStart(2, '0');
