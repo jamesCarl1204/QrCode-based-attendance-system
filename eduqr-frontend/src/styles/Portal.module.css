@@ -335,3 +335,41 @@
   .adminDashboard .activityItem { align-items: flex-start; flex-wrap: wrap; }
   .adminDashboard .activityTime { margin-left: 38px; }
 }
+
+
+/* ---------- Teacher session records UI ---------- */
+.sessionRecordsPanel { padding: 22px; }
+.sessionRecordsPanel > .hint { padding: 12px 14px; border: 1px solid var(--brand-line); border-radius: 12px; background: var(--brand-soft); color: var(--text-soft); line-height: 1.5; }
+.recordsTableWrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); }
+.recordsTableWrap .recordsTable { width: 100%; min-width: 650px; border-collapse: separate; border-spacing: 0; }
+.recordsTableWrap .recordsTable th { padding: 14px 16px; background: var(--panel-2); color: var(--muted); font-size: 0.7rem; letter-spacing: 0.07em; border-bottom: 1px solid var(--border); }
+.recordsTableWrap .recordsTable td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; font-size: 0.85rem; }
+.recordsTableWrap .recordsTable tbody tr { transition: background 0.15s ease; }
+.recordsTableWrap .recordsTable tbody tr:hover { background: var(--hover); }
+.recordsTableWrap .recordsTable tbody tr:last-child td { border-bottom: none; }
+.recordStudentName { display: inline-block; color: var(--text-strong); font-weight: 650; min-width: 150px; }
+.recordTime { color: var(--text-soft); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.recordStatus { display: inline-flex; align-items: center; justify-content: center; min-width: 76px; padding: 5px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; border: 1px solid transparent; }
+.recordStatusPresent { color: #15803d; background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.24); }
+.recordStatusLate { color: #b45309; background: rgba(245,158,11,0.13); border-color: rgba(245,158,11,0.26); }
+.recordStatusAbsent { color: #be123c; background: rgba(244,63,94,0.12); border-color: rgba(244,63,94,0.24); }
+.recordStatusPending { color: var(--muted); background: var(--panel-2); border-color: var(--border); }
+.recordActions { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.recordActions .markBtn { margin: 0; padding: 6px 10px; font-size: 0.72rem; border-radius: 8px; }
+.recordMarkPresent { color: #16a34a; border-color: rgba(34,197,94,0.35); }
+.recordMarkPresent:hover:not(:disabled) { background: rgba(34,197,94,0.1); }
+.recordMarkLate { color: #b45309; border-color: rgba(245,158,11,0.35); }
+.recordMarkLate:hover:not(:disabled) { background: rgba(245,158,11,0.1); }
+.recordMarkAbsent { color: #e11d48; border-color: rgba(244,63,94,0.35); }
+.recordMarkAbsent:hover:not(:disabled) { background: rgba(244,63,94,0.1); }
+@media (max-width: 768px) {
+  .sessionRecordsPanel { padding: 14px; }
+  .recordsTableWrap { border-radius: 12px; }
+  .recordsTableWrap .recordsTable th, .recordsTableWrap .recordsTable td { padding: 12px; }
+  .sessionRecordsPanel > .hint { padding: 10px 12px; font-size: 0.78rem; }
+}
+@media (max-width: 480px) {
+  .sessionRecordsPanel { padding: 12px; }
+  .recordsTableWrap .recordsTable { min-width: 610px; }
+  .recordsTableWrap .recordsTable th, .recordsTableWrap .recordsTable td { padding: 10px; }
+}
