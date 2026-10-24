@@ -183,6 +183,7 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
         onBack={onBack}
         tab="attendance"
         setTab={() => {}}
+        showTabs={false}
         extra={detailClass ? `Teacher: ${detailClass.teacher_first_name} ${detailClass.teacher_last_name} · ${detailClass.teacher_email}` : `Teacher: ${cls.teacher_first_name} ${cls.teacher_last_name}`}
         topAction={<button className={`${s.btn} ${s.bannerBtn}`} onClick={() => detailClass && onDelete(detailClass)}>Delete class</button>}
       >
