@@ -1251,7 +1251,14 @@ async function buildTeacherAIContext(teacherId) {
 app.get('/api/ai/history', requireTeacher, async (req, res) => {
   try {
     const [rows] = await pool.query(
-      'SELECT role, content, created_at FROM ai_messages WHERE teacher_id = ? ORDER BY created_at ASC LIMIT 100',
+      `SELECT role, content, created_at FROM (
+         SELECT id, role, content, created_at
+         FROM ai_messages
+         WHERE teacher_id = ?
+         ORDER BY id DESC
+         LIMIT 100
+       ) t
+       ORDER BY id ASC`,
       [req.session.user.id]
     );
     return res.json({ success: true, messages: rows });
@@ -1261,39 +1268,17 @@ app.get('/api/ai/history', requireTeacher, async (req, res) => {
   }
 });
 
-app.post('/api/ai/ask', requireTeacher, async (req, res) => {
-  const { question } = req.body || {};
-  if (!question || !question.trim()) {
-    return res.status(400).json({ success: false, generalError: 'Please enter a question.' });
-  }
-
-  try {
-    const teacherId = req.session.user.id;
-
-    const [historyRows] = await pool.query(
-      'SELECT role, content FROM ai_messages WHERE teacher_id = ? ORDER BY created_at ASC LIMIT 20',
-      [teacherId]
-    );
-
-    const contextData = await buildTeacherAIContext(teacherId);
-
-    const answer = await askAssistant({
-      question,
-      contextData,
-      history: historyRows,
-    });
-
-    await pool.query(
-      'INSERT INTO ai_messages (teacher_id, role, content) VALUES (?, ?, ?), (?, ?, ?)',
-      [teacherId, 'user', question.trim(), teacherId, 'assistant', answer]
-    );
-
-    return res.json({ success: true, answer });
-  } catch (err) {
-    console.error('AI ask error:', err);
-    return res.status(500).json({ success: false, generalError: 'The AI assistant could not respond right now. Please try again.' });
-  }
-});
+const [historyRows] = await pool.query(
+  `SELECT role, content FROM (
+     SELECT id, role, content
+     FROM ai_messages
+     WHERE teacher_id = ?
+     ORDER BY id DESC
+     LIMIT 20
+   ) t
+   ORDER BY id ASC`,
+  [teacherId]
+);
 
 // ===== TEACHER DASHBOARD =====
 const pad = (n) => String(n).padStart(2, '0');
