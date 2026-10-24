@@ -28,6 +28,9 @@ const pool = mysql.createPool({
   ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
 });
 
+pool.on('connection', (conn) => {
+  conn.query("SET time_zone = '+08:00'");
+});
 
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
   .split(',')
@@ -739,8 +742,7 @@ app.delete('/api/classes/:classId/students/:studentId', requireTeacher, async (r
 
 
 function getCurrentTimeString() {
-  const now = new Date();
-  return now.toTimeString().split(' ')[0];
+  return phTime();
 }
 
 
@@ -889,7 +891,11 @@ const [rows] = await pool.query(
     const now = new Date();
     const sessionEnd = toPHDate(session.session_date, session.end_time);
     const isEnded = now > sessionEnd;
+    const phTime = () =>
+  new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Manila', hourCycle: 'h23' }); // "14:05:09"
 
+const phDate = () =>
+  new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }); // "2026-10-24"
     const records = rows.map(r => {
       if (r.status) {
         return { student_id: r.student_id, first_name: r.first_name, last_name: r.last_name, time_in: r.time_in, status: r.status };
@@ -1078,8 +1084,8 @@ app.post('/api/attend/scan', scanLimiter, requireStudent, async (req, res) => {
     }
 
     const status = now > lateAfter ? 'Late' : 'Present';
-    const timeIn = now.toTimeString().split(' ')[0];
-
+    const timeIn = phTime();
+    
    await pool.query(
       'INSERT INTO attendance_records (session_id, student_id, time_in, status) VALUES (?, ?, ?, ?)',
       [session.id, req.session.user.id, timeIn, status]
@@ -1783,8 +1789,7 @@ app.get('/api/admin/dashboard', requireAdmin, async (req, res) => {
       "SELECT COUNT(*) AS teacherCount FROM teachers WHERE role = 'teacher'"
     );
 
-    const today = new Date();
-    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayStr = phDate();
 
     const [todaySessions] = await pool.query(
       `SELECT id, class_start AS start_time, class_end AS end_time
