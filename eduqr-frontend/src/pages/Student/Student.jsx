@@ -71,43 +71,57 @@ function ScanModal({ open, onClose, onDone }) {
   );
 }
 
-function RecordsModal({ session, onClose }) {
+function RecordsPage({ session, onBack }) {
   const [records, setRecords] = useState(null);
+
+  const loadRecords = useCallback(async () => {
+    try {
+      const d = await api(`/api/sessions/${session.id}/records`);
+      setRecords(d.success ? d.records || [] : false);
+    } catch {
+      setRecords(false);
+    }
+  }, [session.id]);
+
   useEffect(() => {
-    if (!session) return;
     setRecords(null);
-    api(`/api/sessions/${session.id}/records`).then((d) => setRecords(d.success ? d.records || [] : false));
-  }, [session]);
+    loadRecords();
+  }, [loadRecords]);
 
   return (
-    <Modal open={!!session} onClose={onClose}>
-      {session && (
-        <>
-          <ModalHeader eyebrow="SESSION RECORDS" title={session.session_date}
-            sub={`${fmt12(session.start_time)} – ${fmt12(session.end_time)} · Late after ${fmt12(session.late_after)}`} onClose={onClose} />
-          <div className={s.scrollBody}>
-            {records === null && <p className={s.mutedText}>Loading…</p>}
-            {records === false && <p className={s.mutedText}>Could not load records.</p>}
-            {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
-            {records && records.length > 0 && (
-              <table className={s.recordsTable}>
-                <thead><tr><th>Name</th><th>Time</th><th>Status</th></tr></thead>
-                <tbody>
-                  {records.map((r) => (
-                    <tr key={r.student_id}>
-                      <td>{r.first_name} {r.last_name}</td>
-                      <td>{r.time_in ? fmt12(r.time_in) : '—'}</td>
-                      <td>{r.status || 'Not yet'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+    <div className={s.mainContent}>
+      <button className={`${s.btn} ${s.btnOutline}`} onClick={onBack} style={{ marginBottom: 20 }}>← Back to sessions</button>
+      <div className={s.sectionHeader}>
+        <h2>Session Records · {session.session_date}</h2>
+        <p>{fmt12(session.start_time)} – {fmt12(session.end_time)} · Late after {fmt12(session.late_after)}</p>
+      </div>
+      <div className={`${s.panel} ${s.sessionRecordsPanel}`}>
+        {records === null && <p className={s.mutedText}>Loading…</p>}
+        {records === false && <p className={s.mutedText}>Could not load records.</p>}
+        {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
+        {records && records.length > 0 && (
+          <div className={s.recordsTableWrap}>
+            <table className={s.recordsTable}>
+              <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
+              <tbody>
+                {records.map((r) => (
+                  <tr key={r.student_id}>
+                    <td>
+                      <div className={s.recordStudentCell}>
+                        <span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span>
+                        <span className={s.recordStudentName}>{r.first_name} {r.last_name}</span>
+                      </div>
+                    </td>
+                    <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
+                    <td><span className={s.recordStatus}>{r.status || 'Not yet'}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <ModalFooter><button className={`${s.btn} ${s.btnOutline}`} onClick={onClose}>Close</button></ModalFooter>
-        </>
-      )}
-    </Modal>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -137,6 +151,10 @@ function ClassDetail({ cls, onBack, onLeft }) {
     window.addEventListener('attendance-updated', h);
     return () => window.removeEventListener('attendance-updated', h);
   }, [loadSessions]);
+
+  if (viewSession) {
+    return <RecordsPage session={viewSession} onBack={() => setViewSession(null)} />;
+  }
 
   const leave = async () => {
     setLeaving(true); setLeaveErr('');
@@ -191,8 +209,6 @@ function ClassDetail({ cls, onBack, onLeft }) {
           </>
         )}
       </DetailFrame>
-
-      <RecordsModal session={viewSession} onClose={() => setViewSession(null)} />
 
       <Modal open={leaveOpen} small onClose={() => setLeaveOpen(false)}>
         <ModalHeader danger eyebrow="LEAVE CLASS" title="Leave this class?" onClose={() => setLeaveOpen(false)} />
