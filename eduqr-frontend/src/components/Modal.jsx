@@ -1,10 +1,10 @@
 import s from '../styles/Portal.module.css';
 
-export default function Modal({ open, onClose, small, wide, children }) {
+export default function Modal({ open, onClose, small, wide, className, children }) {
   if (!open) return null;
   return (
     <div className={s.modalOverlay} onMouseDown={(e) => { if (e.target === e.currentTarget) onClose?.(); }}>
-      <div className={`${s.modal} ${small ? s.modalSmall : ''}`} style={wide ? { maxWidth: 720 } : undefined}>
+      <div className={`${s.modal} ${small ? s.modalSmall : ''} ${className || ''} `} style={wide ? { maxWidth: 720 } : undefined}>
         {children}
       </div>
     </div>
