@@ -46,9 +46,20 @@ export default function Dashboard({ classes, onGoClasses, stats = {} }) {
           <h3 className={s.panelTitle}>Status Breakdown</h3>
           <p className={s.panelSub}>Present, late and absent</p>
           <div className={`${s.chartBox} ${s.chartBoxSm}`}>
-            <Doughnut data={{ labels: ['Present', 'Late', 'Absent'], datasets: [{ data: stats.status || [], backgroundColor: ['#22c55e', '#f59e0b', '#f43f5e'], borderWidth: 0 }] }}
-              options={{ responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { display: false } } }} />
-          </div>
+          <Doughnut
+           data={{
+           labels: ['Present', 'Late', 'Absent'],
+           datasets: [{
+           data: (stats.status || [0, 0, 0]).some((v) => v > 0) ? stats.status : [1, 0, 0],
+           backgroundColor: (stats.status || [0, 0, 0]).some((v) => v > 0)
+           ? ['#22c55e', '#f59e0b', '#f43f5e']
+           : ['rgba(148,163,184,0.25)', '#f59e0b', '#f43f5e'],
+           borderWidth: 0,
+          }],
+          }}
+  options={{ responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { display: false } } }}
+/>
+ </div>
           <div className={s.statusLegend}>
             <div><span>Present</span><strong className={s.cPresent}>{dash(stats.status?.[0])}</strong></div>
             <div><span>Late</span><strong className={s.cLate}>{dash(stats.status?.[1])}</strong></div>
