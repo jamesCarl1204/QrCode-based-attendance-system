@@ -63,7 +63,7 @@ function CreateAttendanceModal({ cls, open, onClose, onCreated }) {
   );
 }
 
-function RecordsModal({ session, onClose, onChanged }) {
+function RecordsPage({ session, onBack, onChanged }) {
   const toast = useToast();
   const [records, setRecords] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -73,7 +73,7 @@ function RecordsModal({ session, onClose, onChanged }) {
     setRecords(d.success ? d.records || [] : false);
   }, [session]);
 
-  useEffect(() => { if (session) { setRecords(null); load(); } }, [session, load]);
+  useEffect(() => { setRecords(null); load(); }, [load]);
 
   const mark = async (studentId, status) => {
     setBusy(true);
@@ -86,41 +86,42 @@ function RecordsModal({ session, onClose, onChanged }) {
   };
 
   return (
-    <Modal open={!!session} onClose={onClose}>
-      {session && (
-        <>
-          <ModalHeader eyebrow="SESSION RECORDS" title={session.session_date} sub={timeRange(session)} onClose={onClose} />
-          <div className={s.scrollBody}>
-            {records === null && <p className={s.mutedText}>Loading…</p>}
-            {records === false && <p className={s.mutedText}>Could not load records.</p>}
-            {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
-            {records && records.length > 0 && (
-              <>
-                <p className={s.hint} style={{ marginBottom: 10 }}>Student has no internet or couldn't scan the QR code? Mark their attendance manually using the buttons below.</p>
-                <table className={s.recordsTable}>
-                  <thead><tr><th>Name</th><th>Time</th><th>Status</th><th>Mark</th></tr></thead>
-                  <tbody>
-                    {records.map((r) => (
-                      <tr key={r.student_id}>
-                        <td>{r.first_name} {r.last_name}</td>
-                        <td>{r.time_in ? fmt12(r.time_in) : '—'}</td>
-                        <td>{r.status || 'Not yet'}</td>
-                        <td style={{ whiteSpace: 'nowrap' }}>
-                          {['Present', 'Late', 'Absent'].map((st) => (
-                            <button key={st} className={`${s.btn} ${s.btnOutline} ${s.markBtn}`} disabled={busy} onClick={() => mark(r.student_id, st)}>{st}</button>
-                          ))}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            )}
-          </div>
-          <ModalFooter><button className={`${s.btn} ${s.btnOutline}`} onClick={onClose}>Close</button></ModalFooter>
-        </>
-      )}
-    </Modal>
+    <div className={s.mainContent}>
+      <button className={`${s.btn} ${s.btnOutline}`} onClick={onBack} style={{ marginBottom: 20 }}>← Back to sessions</button>
+      <div className={s.sectionHeader}>
+        <h2>Session Records · {session.session_date}</h2>
+        <p>{timeRange(session)}</p>
+      </div>
+      <div className={s.panel}>
+        {records === null && <p className={s.mutedText}>Loading…</p>}
+        {records === false && <p className={s.mutedText}>Could not load records.</p>}
+        {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
+        {records && records.length > 0 && (
+          <>
+            <p className={s.hint} style={{ marginBottom: 10 }}>Student has no internet or couldn't scan the QR code? Mark their attendance manually using the buttons below.</p>
+            <div style={{ overflowX: 'auto' }}>
+              <table className={s.recordsTable}>
+                <thead><tr><th>Name</th><th>Time</th><th>Status</th><th>Mark</th></tr></thead>
+                <tbody>
+                  {records.map((r) => (
+                    <tr key={r.student_id}>
+                      <td>{r.first_name} {r.last_name}</td>
+                      <td>{r.time_in ? fmt12(r.time_in) : '—'}</td>
+                      <td>{r.status || 'Not yet'}</td>
+                      <td style={{ whiteSpace: 'nowrap' }}>
+                        {['Present', 'Late', 'Absent'].map((st) => (
+                          <button key={st} className={`${s.btn} ${s.btnOutline} ${s.markBtn}`} disabled={busy} onClick={() => mark(r.student_id, st)}>{st}</button>
+                        ))}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -183,10 +184,14 @@ export default function ClassDetail({ cls, onBack, onArchiveChange }) {
     } catch { setRemoveErr('Something went wrong. Please try again.'); } finally { setBusy(false); }
   };
 
+  if (viewSession) {
+  return <RecordsPage session={viewSession} onBack={() => setViewSession(null)} onChanged={loadSessions} />;
+}
   return (
     <>
       <DetailFrame cls={cls} onBack={onBack} tab={tab} setTab={setTab}
-        topAction={<button className={`${s.btn} ${s.bannerBtn}`} disabled={busy} onClick={toggleArchive}>{cls.archived ? 'Restore class' : 'Archive class'}</button>}>
+      
+      topAction={<button className={`${s.btn} ${s.bannerBtn}`} disabled={busy} onClick={toggleArchive}>{cls.archived ? 'Restore class' : 'Archive class'}</button>}>
         {tab === 'attendance' ? (
           <>
             <div className={s.tabHeaderRow}>
@@ -263,8 +268,7 @@ export default function ClassDetail({ cls, onBack, onArchiveChange }) {
         )}
       </Modal>
 
-      <RecordsModal session={viewSession} onClose={() => setViewSession(null)} onChanged={loadSessions} />
-
+  
       <Modal open={!!delSession} small onClose={() => setDelSession(null)}>
         <ModalHeader danger eyebrow="DELETE ATTENDANCE" title="Delete this session?" onClose={() => setDelSession(null)} />
         <p className={s.modalDesc}>You're about to delete the attendance session for <strong>{delSession?.session_date}</strong>. This will permanently remove every student's time-in and status for that session. This cannot be undone.</p>
