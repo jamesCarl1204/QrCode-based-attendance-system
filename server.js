@@ -802,17 +802,22 @@ app.get('/api/sessions/:id/records', requireAuth, async (req, res) => {
       }
     }
 
-    const [rows] = await pool.query(
-      `SELECT s.id AS student_id, s.first_name, s.last_name,
-              ar.time_in, ar.status
-       FROM class_students cs
-       JOIN students s ON s.id = cs.student_id
-       LEFT JOIN attendance_records ar
-         ON ar.session_id = ? AND ar.student_id = s.id
-       WHERE cs.class_id = ? AND cs.removed_at IS NULL
-       ORDER BY s.first_name ASC`,
-      [sessionId, session.class_id]
-    );
+   const isStudent = req.session.user.role === 'student';
+
+const [rows] = await pool.query(
+  `SELECT s.id AS student_id, s.first_name, s.last_name,
+          ar.time_in, ar.status
+   FROM class_students cs
+   JOIN students s ON s.id = cs.student_id
+   LEFT JOIN attendance_records ar
+     ON ar.session_id = ? AND ar.student_id = s.id
+   WHERE cs.class_id = ? AND cs.removed_at IS NULL
+   ${isStudent ? 'AND s.id = ?' : ''}
+   ORDER BY s.first_name ASC`,
+  isStudent
+    ? [sessionId, session.class_id, req.session.user.id]
+    : [sessionId, session.class_id]
+);
 
     const now = new Date();
     const sessionEnd = toPHDate(session.session_date, session.end_time);

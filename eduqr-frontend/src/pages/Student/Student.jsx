@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import { api } from '../../api.js';
 import { fmt12 } from '../../utils.js';
+import { useAuth } from '../../context/AuthContext.jsx';
 import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassCard from '../../components/ClassCard.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
@@ -14,10 +15,25 @@ const LINKS = [
   { key: 'scan', icon: 'fa-camera', label: 'Scan' },
 ];
 
+const TABS = [
+  { key: 'attendance', label: 'Attendance' },
+  { key: 'summary', label: 'Summary' },
+  { key: 'members', label: 'Members' },
+];
+
 const mapClass = (c) => ({
   id: c.id, subject: c.subject_name, section: c.section, code: c.class_code, color: c.color,
   archived: !!c.archived, teacherFirstName: c.teacher_first_name, teacherEmail: c.teacher_email,
 });
+
+const statusClass = (st) =>
+  st === 'Present' ? s.recordStatusPresent : st === 'Late' ? s.recordStatusLate : st === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending;
+
+const rateClass = (r) => (r === null ? '' : r >= 85 ? s.rateGood : r >= 75 ? s.rateWarn : s.rateLow);
+
+// Pick only the logged-in student's own row (backend already filters; this is a second guard).
+const ownRecord = (data, userId) =>
+  data && data.success ? (data.records || []).find((r) => String(r.student_id) === String(userId)) || null : null;
 
 function ScanModal({ open, onClose, onDone }) {
   const [err, setErr] = useState('');
@@ -71,51 +87,46 @@ function ScanModal({ open, onClose, onDone }) {
   );
 }
 
+/* ---------- Own record for one session (no classmates) ---------- */
 function RecordsPage({ session, onBack }) {
-  const [records, setRecords] = useState(null);
-
-  const loadRecords = useCallback(async () => {
-    try {
-      const d = await api(`/api/sessions/${session.id}/records`);
-      setRecords(d.success ? d.records || [] : false);
-    } catch {
-      setRecords(false);
-    }
-  }, [session.id]);
+  const { user } = useAuth();
+  const [mine, setMine] = useState(undefined); // undefined = loading, null = none, false = error
 
   useEffect(() => {
-    setRecords(null);
-    loadRecords();
-  }, [loadRecords]);
+    let alive = true;
+    setMine(undefined);
+    api(`/api/sessions/${session.id}/records`)
+      .then((d) => { if (alive) setMine(d.success ? ownRecord(d, user?.id) : false); })
+      .catch(() => { if (alive) setMine(false); });
+    return () => { alive = false; };
+  }, [session.id, user?.id]);
 
   return (
     <div className={s.mainContent}>
       <button className={`${s.btn} ${s.btnOutline}`} onClick={onBack} style={{ marginBottom: 20 }}>← Back to sessions</button>
       <div className={s.sectionHeader}>
-        <h2>Session Records · {session.session_date}</h2>
+        <h2>My Record · {session.session_date}</h2>
         <p>{fmt12(session.start_time)} – {fmt12(session.end_time)} · Late after {fmt12(session.late_after)}</p>
       </div>
       <div className={`${s.panel} ${s.sessionRecordsPanel}`}>
-        {records === null && <p className={s.mutedText}>Loading…</p>}
-        {records === false && <p className={s.mutedText}>Could not load records.</p>}
-        {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
-        {records && records.length > 0 && (
+        {mine === undefined && <p className={s.mutedText}>Loading…</p>}
+        {mine === false && <p className={s.mutedText}>Could not load your record.</p>}
+        {mine === null && <p className={s.mutedText}>No record found for you in this session.</p>}
+        {mine && (
           <div className={s.recordsTableWrap}>
             <table className={s.recordsTable}>
               <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
               <tbody>
-                {records.map((r) => (
-                  <tr key={r.student_id}>
-                    <td>
-                      <div className={s.recordStudentCell}>
-                        <span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span>
-                        <span className={s.recordStudentName}>{r.first_name} {r.last_name}</span>
-                      </div>
-                    </td>
-                    <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
-                    <td><span className={s.recordStatus}>{r.status || 'Not yet'}</span></td>
-                  </tr>
-                ))}
+                <tr>
+                  <td>
+                    <div className={s.recordStudentCell}>
+                      <span className={s.recordAvatar}>{mine.first_name?.charAt(0)}{mine.last_name?.charAt(0)}</span>
+                      <span className={s.recordStudentName}>{mine.first_name} {mine.last_name}</span>
+                    </div>
+                  </td>
+                  <td><span className={s.recordTime}>{mine.time_in ? fmt12(mine.time_in) : '—'}</span></td>
+                  <td><span className={`${s.recordStatus} ${statusClass(mine.status)}`}>{mine.status || 'Not yet'}</span></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -125,9 +136,69 @@ function RecordsPage({ session, onBack }) {
   );
 }
 
+/* ---------- Summary tab: own attendance in this class ---------- */
+function SummaryTab({ sessions, mine }) {
+  const stats = useMemo(() => {
+    if (!mine) return null;
+    let present = 0, late = 0, absent = 0;
+    const history = sessions.map((x) => {
+      const r = mine[x.id];
+      const st = r?.status || null;
+      if (st === 'Present') present++;
+      else if (st === 'Late') late++;
+      else if (st === 'Absent') absent++;
+      return { id: x.id, date: x.session_date, status: st };
+    });
+    const counted = present + late + absent;
+    return { present, late, absent, counted, history, rate: counted > 0 ? Math.round(((present + late) / counted) * 100) : null };
+  }, [sessions, mine]);
+
+  if (sessions.length === 0) {
+    return (
+      <div className={s.emptyState}>
+        <div className={s.emptyIcon}><i className="fa-solid fa-chart-simple" /></div>
+        <h3>No data yet</h3><p>Your summary will show up once your teacher opens attendance sessions.</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className={s.tabHeaderRow}>
+        <div><h3>My Summary</h3><p>Your attendance in this class across ended sessions</p></div>
+      </div>
+      {!stats && <p className={s.mutedText}>Loading…</p>}
+      {stats && (
+        <>
+          <div className={s.statPillRow}>
+            <div className={s.statPill}><div className={`${s.statValue} ${s.cPresent}`}>{stats.present}</div><div className={s.statLabel}>Present</div></div>
+            <div className={s.statPill}><div className={`${s.statValue} ${s.cLate}`}>{stats.late}</div><div className={s.statLabel}>Late</div></div>
+            <div className={s.statPill}><div className={`${s.statValue} ${s.cAbsent}`}>{stats.absent}</div><div className={s.statLabel}>Absent</div></div>
+            <div className={s.statPill}><div className={`${s.statValue} ${rateClass(stats.rate)}`}>{stats.rate !== null ? `${stats.rate}%` : '—'}</div><div className={s.statLabel}>Attendance Rate</div></div>
+          </div>
+          {stats.rate !== null && stats.rate < 75 && (
+            <p className={s.fieldError} style={{ marginBottom: 12 }}>Your attendance is below 75%. Please talk to your teacher.</p>
+          )}
+          <div className={s.historyList}>
+            {stats.history.map((h) => (
+              <div key={h.id} className={s.historyItem}>
+                <span>{h.date}</span>
+                <span className={`${s.recordStatus} ${statusClass(h.status)}`}>{h.status || 'Not yet'}</span>
+              </div>
+            ))}
+          </div>
+          <p className={s.hint} style={{ marginTop: 10 }}>Rate = (Present + Late) ÷ ended sessions. Sessions that haven't ended yet are not counted.</p>
+        </>
+      )}
+    </>
+  );
+}
+
 function ClassDetail({ cls, onBack, onLeft }) {
+  const { user } = useAuth();
   const [tab, setTab] = useState('attendance');
   const [sessions, setSessions] = useState([]);
+  const [mine, setMine] = useState(null); // { [sessionId]: own record | null }, null while loading
   const [members, setMembers] = useState({ teacher: null, students: [] });
   const [viewSession, setViewSession] = useState(null);
   const [leaveOpen, setLeaveOpen] = useState(false);
@@ -152,6 +223,20 @@ function ClassDetail({ cls, onBack, onLeft }) {
     return () => window.removeEventListener('attendance-updated', h);
   }, [loadSessions]);
 
+  // Fetch the student's own record for every session (badges + summary)
+  useEffect(() => {
+    let alive = true;
+    if (sessions.length === 0) { setMine({}); return undefined; }
+    Promise.all(
+      sessions.map((x) =>
+        api(`/api/sessions/${x.id}/records`)
+          .then((d) => [x.id, ownRecord(d, user?.id)])
+          .catch(() => [x.id, null])
+      )
+    ).then((pairs) => { if (alive) setMine(Object.fromEntries(pairs)); });
+    return () => { alive = false; };
+  }, [sessions, user?.id]);
+
   if (viewSession) {
     return <RecordsPage session={viewSession} onBack={() => setViewSession(null)} />;
   }
@@ -167,10 +252,10 @@ function ClassDetail({ cls, onBack, onLeft }) {
 
   return (
     <>
-      <DetailFrame cls={cls} onBack={onBack} tab={tab} setTab={setTab}
+      <DetailFrame cls={cls} onBack={onBack} tab={tab} setTab={setTab} tabs={TABS}
         topAction={<button className={`${s.btn} ${s.bannerBtn}`} onClick={() => setLeaveOpen(true)}>Leave class</button>}
         extra={cls.teacherFirstName ? `Teacher: ${cls.teacherFirstName} (${cls.teacherEmail})` : ''}>
-        {tab === 'attendance' ? (
+        {tab === 'attendance' && (
           <>
             <div className={s.tabHeaderRow}><div><h3>Attendance</h3><p>{sessions.length} session{sessions.length === 1 ? '' : 's'} recorded</p></div></div>
             {sessions.length === 0 && (
@@ -179,16 +264,24 @@ function ClassDetail({ cls, onBack, onLeft }) {
                 <h3>No attendance sessions yet</h3><p>Your teacher hasn't opened an attendance session yet.</p>
               </div>
             )}
-            {sessions.map((x) => (
-              <div key={x.id} className={`${s.sessionCard} ${s.clickable}`} onClick={() => setViewSession(x)}>
-                <div>
-                  <div className={s.sessionDate}>{x.session_date}</div>
-                  <div className={s.sessionTime}>{fmt12(x.start_time)} – {fmt12(x.end_time)} · Late after {fmt12(x.late_after)}</div>
+            {sessions.map((x) => {
+              const st = mine?.[x.id]?.status || null;
+              return (
+                <div key={x.id} className={`${s.sessionCard} ${s.clickable}`} onClick={() => setViewSession(x)}>
+                  <div>
+                    <div className={s.sessionDate}>{x.session_date}</div>
+                    <div className={s.sessionTime}>{fmt12(x.start_time)} – {fmt12(x.end_time)} · Late after {fmt12(x.late_after)}</div>
+                  </div>
+                  {mine && <span className={`${s.recordStatus} ${statusClass(st)}`}>{st || 'Not yet'}</span>}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </>
-        ) : (
+        )}
+
+        {tab === 'summary' && <SummaryTab sessions={sessions} mine={mine} />}
+
+        {tab === 'members' && (
           <>
             <div className={s.tabHeaderRow}><div><h3>Members</h3><p>{members.students.length} student{members.students.length === 1 ? '' : 's'} joined</p></div></div>
             <div className={s.sessionCard}>
