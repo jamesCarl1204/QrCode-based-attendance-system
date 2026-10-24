@@ -7,9 +7,13 @@ import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassCard from '../../components/ClassCard.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
+import StudentDashboard from './StudentDashboard.jsx';
 import s from '../../styles/Portal.module.css';
 
+const TITLES = { dashboard: 'Dashboard', active: 'My Classes', archived: 'Archived Classes' };
+
 const LINKS = [
+  { key: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
   { key: 'active', icon: 'fa-book-open', label: 'My Classes' },
   { key: 'archived', icon: 'fa-box-archive', label: 'Archived Classes' },
   { key: 'scan', icon: 'fa-camera', label: 'Scan' },
@@ -321,7 +325,7 @@ function ClassDetail({ cls, onBack, onLeft }) {
 
 export default function Student() {
   const [classes, setClasses] = useState([]);
-  const [filter, setFilter] = useState('active');
+  const [filter, setFilter] = useState('dashboard');
   const [activeId, setActiveId] = useState(null);
   const [joinOpen, setJoinOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
@@ -358,9 +362,13 @@ export default function Student() {
   return (
     <>
       <PortalLayout role="student" brand="Student Portal" links={LINKS} active={filter}
-        title={filter === 'archived' ? 'Archived Classes' : 'My Classes'}
+        title={TITLES[filter]}
         onSelect={(k) => (k === 'scan' ? setScanOpen(true) : setFilter(k))}
         headerAction={<button className={`${s.btn} ${s.btnPrimary}`} onClick={() => setJoinOpen(true)}><i className="fa-solid fa-plus" /> <span className={s.btnLabel}>Join class</span></button>}>
+        {filter === 'dashboard' && <StudentDashboard onOpenClass={(id) => { setActiveId(id); }} />}
+
+        {filter !== 'dashboard' && (
+        <>
         <div className={s.sectionHeader}>
           <h2>{filter === 'archived' ? 'Archived Classes' : 'My Classes'}</h2>
           <p>{visible.length} {visible.length === 1 ? 'class' : 'classes'} {filter === 'archived' ? 'archived' : 'joined'}</p>
@@ -377,6 +385,8 @@ export default function Student() {
           <div className={s.subjectGrid}>
             {visible.map((c) => <ClassCard key={c.id} cls={c} onOpen={() => setActiveId(c.id)} />)}
           </div>
+        )}
+        </>
         )}
       </PortalLayout>
 

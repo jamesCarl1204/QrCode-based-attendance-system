@@ -439,7 +439,74 @@ app.get('/api/classes', requireAuth, async (req, res) => {
   }
 });
 
+app.get('/api/student/dashboard', requireStudent, async (req, res) => {
+  try {
+    const studentId = req.session.user.id;
 
+    const [classes] = await pool.query(
+      `SELECT c.id, c.subject_name, c.section, c.color
+       FROM classes c
+       JOIN class_students cs ON cs.class_id = c.id
+       WHERE cs.student_id = ? AND cs.removed_at IS NULL AND c.archived = 0
+       ORDER BY cs.joined_at DESC`,
+      [studentId]
+    );
+    if (classes.length === 0) {
+      return res.json({
+        success: true,
+        overall: { present: 0, late: 0, absent: 0, rate: null },
+        classes: []
+      });
+    }
+
+    const classIds = classes.map((c) => c.id);
+    const [sessions] = await pool.query(
+      `SELECT id, class_id, session_date, class_end AS end_time
+       FROM attendance_sessions WHERE class_id IN (?)`,
+      [classIds]
+    );
+
+    const sessionIds = sessions.map((s) => s.id);
+    const [records] = sessionIds.length
+      ? await pool.query(
+          'SELECT session_id, status FROM attendance_records WHERE student_id = ? AND session_id IN (?)',
+          [studentId, sessionIds]
+        )
+      : [[]];
+    const recMap = {};
+    records.forEach((r) => { recMap[r.session_id] = r.status; });
+
+    const now = new Date();
+    const calcRate = (p, l, a) => {
+      const total = p + l + a;
+      return total > 0 ? Math.round(((p + l) / total) * 100) : null;
+    };
+
+    let tp = 0, tl = 0, ta = 0;
+    const classesOut = classes.map((c) => {
+      let present = 0, late = 0, absent = 0;
+      sessions.filter((s) => s.class_id === c.id).forEach((s) => {
+        const st = recMap[s.id];
+        const ended = now > toPHDate(s.session_date, s.end_time);
+        if (st === 'Present') present++;
+        else if (st === 'Late') late++;
+        else if (st === 'Absent') absent++;
+        else if (ended) absent++;
+      });
+      tp += present; tl += late; ta += absent;
+      return { ...c, present, late, absent, rate: calcRate(present, late, absent) };
+    });
+
+    return res.json({
+      success: true,
+      overall: { present: tp, late: tl, absent: ta, rate: calcRate(tp, tl, ta) },
+      classes: classesOut
+    });
+  } catch (err) {
+    console.error('Student dashboard error:', err);
+    return res.status(500).json({ success: false, generalError: 'Something went wrong. Please try again.' });
+  }
+});
 
 app.patch('/api/classes/:id/archive', requireTeacher, async (req, res) => {
   const classId = req.params.id;
