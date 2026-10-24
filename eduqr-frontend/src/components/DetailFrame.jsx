@@ -2,7 +2,7 @@ import s from '../styles/Portal.module.css';
 import { BANNER } from '../utils.js';
 
 // Banner + tabs shared by the student and teacher class detail pages.
-export default function DetailFrame({ cls, onBack, topAction, extra, tab, setTab, children }) {
+export default function DetailFrame({ cls, onBack, topAction, extra, tab, setTab, showTabs = true, children }) {
   return (
     <div>
       <div className={s.detailBanner} style={{ background: BANNER[cls.color] || BANNER.blue }}>
@@ -16,10 +16,12 @@ export default function DetailFrame({ cls, onBack, topAction, extra, tab, setTab
         {extra && <p className={s.bannerExtra}>{extra}</p>}
       </div>
       <div className={s.detailBody}>
-        <div className={s.tabs}>
-          <button className={`${s.tabBtn} ${tab === 'attendance' ? s.active : ''}`} onClick={() => setTab('attendance')}>Attendance</button>
-          <button className={`${s.tabBtn} ${tab === 'members' ? s.active : ''}`} onClick={() => setTab('members')}>Members</button>
-        </div>
+        {showTabs && (
+          <div className={s.tabs}>
+            <button className={`${s.tabBtn} ${tab === 'attendance' ? s.active : ''}`} onClick={() => setTab('attendance')}>Attendance</button>
+            <button className={`${s.tabBtn} ${tab === 'members' ? s.active : ''}`} onClick={() => setTab('members')}>Members</button>
+          </div>
+        )}
         {children}
       </div>
     </div>
