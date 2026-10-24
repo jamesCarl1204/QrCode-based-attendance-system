@@ -472,3 +472,31 @@
   .studentDashboard .sessionTime { overflow-wrap: anywhere; }
   .studentDashboard .emptyState { padding: 32px 14px; }
 }
+
+
+/* ---------- Teacher session records: mobile cards, desktop table ---------- */
+.teacherRecordsMobile { display: none; }
+.teacherRecordCard { min-width: 0; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); }
+.teacherRecordIdentity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.teacherRecordStudentInfo { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.teacherRecordStudentInfo .recordStudentName { min-width: 0; overflow-wrap: anywhere; }
+.teacherRecordTime { color: var(--muted); font-size: 0.78rem; font-variant-numeric: tabular-nums; }
+.teacherRecordActions { display: flex; gap: 8px; margin-top: 13px; }
+.teacherRecordActions .markBtn { flex: 1; min-width: 0; }
+@media (max-width: 768px) {
+  .teacherRecordsDesktop { display: none; }
+  .teacherRecordsMobile { display: block; }
+  .teacherRecordCard { padding: 12px; }
+  .teacherRecordIdentity { gap: 8px; flex-wrap: wrap; }
+  .teacherRecordStudentInfo { flex-basis: calc(100% - 130px); }
+  .teacherRecordIdentity > .recordStatus { margin-left: auto; }
+  .teacherRecordActions { gap: 6px; }
+  .teacherRecordActions .markBtn { padding: 8px 6px; font-size: 0.76rem; }
+}
+@media (max-width: 380px) {
+  .teacherRecordIdentity { align-items: flex-start; }
+  .teacherRecordIdentity > .recordStatus { margin-left: 38px; }
+  .teacherRecordStudentInfo { flex-basis: calc(100% - 54px); }
+  .teacherRecordActions { gap: 5px; }
+  .teacherRecordActions .markBtn { font-size: 0.7rem; }
+}
