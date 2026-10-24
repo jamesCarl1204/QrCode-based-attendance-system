@@ -373,3 +373,17 @@
   .recordsTableWrap .recordsTable { min-width: 610px; }
   .recordsTableWrap .recordsTable th, .recordsTableWrap .recordsTable td { padding: 10px; }
 }
+
+
+/* Session record student identity polish */
+.recordsTableWrap .recordStudentCell { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+.recordsTableWrap .recordAvatar { width: 34px; height: 34px; flex: 0 0 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--brand-soft); border: 1px solid var(--brand-line); color: var(--brand-text); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; }
+.recordsTableWrap .recordStudentName { min-width: 0; }
+.recordsTableWrap .recordStatus { letter-spacing: 0.01em; }
+.recordsTableWrap .recordActions .markBtn { min-width: 68px; transition: transform 0.15s ease, background 0.15s ease; }
+.recordsTableWrap .recordActions .markBtn:hover:not(:disabled) { transform: translateY(-1px); }
+.recordsTableWrap .recordActions .markBtn:disabled { opacity: 0.55; }
+@media (max-width: 768px) {
+  .recordsTableWrap .recordStudentCell { gap: 8px; }
+  .recordsTableWrap .recordAvatar { width: 30px; height: 30px; flex-basis: 30px; border-radius: 9px; }
+}
