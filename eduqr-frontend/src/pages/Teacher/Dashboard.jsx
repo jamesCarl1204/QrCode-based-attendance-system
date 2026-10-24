@@ -1,7 +1,7 @@
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Filler, Tooltip } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
 import s from '../../styles/Portal.module.css';
-
+import { timeAgo } from '../../utils.js';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, ArcElement, Filler, Tooltip);
 
 const GRID = 'rgba(148,163,184,0.15)';
@@ -58,11 +58,23 @@ export default function Dashboard({ classes, onGoClasses, stats = {} }) {
       </div>
 
       <div className={s.dashRow}>
-        <div className={s.panel}>
-          <h3 className={s.panelTitle}>Recent Check-In Activity</h3>
-          <p className={s.panelSub}>Latest student scans across your classes</p>
-          <p className={s.mutedText} style={{ padding: '24px 0', textAlign: 'center' }}>No check-ins to show yet.</p>
-        </div>
+       <div className={s.panel}>
+     <h3 className={s.panelTitle}>Recent Check-In Activity</h3>
+      <p className={s.panelSub}>Latest student scans across your classes</p>
+      <div className={s.activityFeed}>
+      {(!stats.recent || stats.recent.length === 0) && (
+       <p className={s.mutedText} style={{ padding: '24px 0', textAlign: 'center' }}>No check-ins to show yet.</p>
+      )}
+      {stats.recent?.map((r, i) => (
+       <div key={i} className={s.activityItem}>
+        <span>
+          <strong>{r.first_name} {r.last_name}</strong> · {r.status} · {r.subject_name}
+        </span>
+        <span className={s.activityTime}>{timeAgo(r.created_at)}</span>
+       </div>
+       ))}
+     </div>
+     </div>
         <div className={`${s.panel} ${s.panelCta}`}>
           <div className={s.ctaIcon}><i className="fa-solid fa-qrcode" /></div>
           <h3 className={s.panelTitle}>Start Attendance</h3>

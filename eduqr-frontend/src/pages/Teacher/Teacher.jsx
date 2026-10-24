@@ -27,6 +27,7 @@ export default function Teacher() {
   const [activeId, setActiveId] = useState(null);
   const [search, setSearch] = useState('');
   const [openMenu, setOpenMenu] = useState(null);
+  const [stats, setStats] = useState({});
 
   const [createOpen, setCreateOpen] = useState(false);
   const [form, setForm] = useState({ subject: '', section: '', color: 'blue' });
@@ -38,6 +39,18 @@ export default function Teacher() {
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => { api('/api/classes').then((d) => { if (d.success) setClasses(d.classes.map(mapClass)); }); }, []);
+ useEffect(() => {
+  if (view !== 'dashboard') return undefined;
+  let alive = true;
+  const load = async () => {
+    const d = await api('/api/teacher/dashboard');
+    if (alive && d.success) setStats(d.stats);
+  };
+  load();
+  const id = setInterval(load, 15000);
+  return () => { alive = false; clearInterval(id); };
+}, [view]);
+
   useEffect(() => {
     const close = () => setOpenMenu(null);
     document.addEventListener('click', close);
@@ -93,7 +106,13 @@ export default function Teacher() {
       <PortalLayout role="teacher" brand="Teacher Portal" links={LINKS} active={view} title={TITLES[view]} onSelect={setView}
         headerAction={<button className={`${s.btn} ${s.btnPrimary}`} onClick={() => setCreateOpen(true)}><i className="fa-solid fa-plus" /> <span className={s.btnLabel}>Create class</span></button>}>
 
-        {view === 'dashboard' && <Dashboard classes={classes} onGoClasses={() => setView('active')} />}
+         {view === 'dashboard' && (
+           <Dashboard
+            classes={classes}
+            onGoClasses={() => setView('active')}
+            stats={{ ...stats, todayRate: stats.todayRate != null ? `${stats.todayRate}%` : undefined }}
+          />
+        )}
         {view === 'ai' && <AiChat />}
 
         {(view === 'active' || view === 'archived') && (
