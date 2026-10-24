@@ -5,6 +5,7 @@ import { useToast } from '../../context/ToastContext.jsx';
 import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassCard from '../../components/ClassCard.jsx';
 import DataTable from '../../components/DataTable.jsx';
+import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import s from '../../styles/Portal.module.css';
 
@@ -143,70 +144,121 @@ function ClassesGrid({ classes, archived, onOpen }) {
   );
 }
 
-function ClassDetailModal({ classId, onClose, onDelete }) {
+function AdminClassDetailPage({ cls, onBack, onDelete }) {
   const [data, setData] = useState(null);
   const [open, setOpen] = useState({});
 
   useEffect(() => {
-    if (!classId) return;
-    setData(null); setOpen({});
-    api(`/api/admin/classes/${classId}`).then((d) => setData(d.success ? d : false));
-  }, [classId]);
+    if (!cls?.id) return;
+    let alive = true;
+    setData(null);
+    setOpen({});
+    api(`/api/admin/classes/${cls.id}`).then((d) => {
+      if (alive) setData(d.success ? d : false);
+    }).catch(() => { if (alive) setData(false); });
+    return () => { alive = false; };
+  }, [cls?.id]);
 
-  const cls = data?.class;
+  const detailClass = data?.class;
+  const frameClass = detailClass ? {
+    id: detailClass.id,
+    subject: detailClass.subject_name,
+    section: detailClass.section,
+    code: detailClass.class_code,
+    color: detailClass.color,
+    archived: !!detailClass.archived,
+  } : {
+    id: cls.id,
+    subject: cls.subject_name,
+    section: cls.section,
+    code: cls.class_code,
+    color: cls.color,
+    archived: !!cls.archived,
+  };
+
   return (
-    <Modal open={!!classId} wide className={s.adminClassDetailModal} onClose={onClose}>
-      <ModalHeader eyebrow="CLASS RECORD" title={cls ? cls.subject_name : 'Loading…'} onClose={onClose}
-        sub={cls ? `${cls.section || 'No section set'} · Teacher: ${cls.teacher_first_name} ${cls.teacher_last_name} (${cls.teacher_email}) · Class code: ${cls.class_code}` : ''} />
-      <div className={s.adminClassDetailContent}>
-        {data === null && <p className={s.mutedText}>Loading…</p>}
-        {data === false && <p className={s.mutedText}>Could not load class.</p>}
-        {data && (
-          <>
-            <div className={`${s.statPillRow} ${s.adminClassStats}`}>
-              {[['Present', data.totals.present], ['Late', data.totals.late], ['Absent', data.totals.absent],
-                ['Attendance Rate', data.totals.attendanceRatePercent !== null ? `${data.totals.attendanceRatePercent}%` : '—']].map(([l, v]) => (
-                <div key={l} className={s.statPill}><div className={s.statValue}>{v}</div><div className={s.statLabel}>{l}</div></div>
-              ))}
-            </div>
-            <h4 className={s.blockTitle}>Students <span className={s.adminSectionCount}>{data.students.length}</span></h4>
-            {data.students.length === 0 && <p className={s.mutedText}>No students enrolled yet.</p>}
-            {data.students.map((st) => (
-              <div key={st.id} className={`${s.sessionCard} ${s.adminStudentCard}`}><span className={s.adminStudentAvatar}>{st.first_name?.charAt(0)}{st.last_name?.charAt(0)}</span><div className={s.adminStudentInfo}><div className={s.sessionDate}>{st.first_name} {st.last_name}</div><div className={s.sessionTime}>{st.email}</div></div></div>
-            ))}
-            <h4 className={s.blockTitle}>Attendance Sessions ({data.sessions.length})</h4>
-            {data.sessions.length === 0 && <p className={s.mutedText}>No attendance sessions yet.</p>}
-            {data.sessions.map((x) => (
-              <div key={x.id} className={`${s.accordion} ${s.adminSessionAccordion}`}>
-                <div className={s.accordionHeader} onClick={() => setOpen((o) => ({ ...o, [x.id]: !o[x.id] }))}>
-                  <div>
-                    <div className={s.sessionDate}>{x.session_date}</div>
-                    <div className={s.sessionTime}>{fmt12(x.start_time)} – {fmt12(x.end_time)} · Late after {fmt12(x.late_after)}</div>
+    <div className={s.adminClassPage}>
+      <DetailFrame
+        cls={frameClass}
+        onBack={onBack}
+        tab="attendance"
+        setTab={() => {}}
+        extra={detailClass ? `Teacher: ${detailClass.teacher_first_name} ${detailClass.teacher_last_name} · ${detailClass.teacher_email}` : `Teacher: ${cls.teacher_first_name} ${cls.teacher_last_name}`}
+        topAction={<button className={`${s.btn} ${s.bannerBtn}`} onClick={() => detailClass && onDelete(detailClass)}>Delete class</button>}
+      >
+        <div className={s.adminClassDetailContent}>
+          {data === null && <p className={s.mutedText}>Loading class records…</p>}
+          {data === false && <p className={s.mutedText}>Could not load class records. Please go back and try again.</p>}
+          {data && (
+            <>
+              <div className={`${s.statPillRow} ${s.adminClassStats}`}>
+                {[
+                  ['Present', data.totals.present],
+                  ['Late', data.totals.late],
+                  ['Absent', data.totals.absent],
+                  ['Attendance Rate', data.totals.attendanceRatePercent !== null ? `${data.totals.attendanceRatePercent}%` : '—'],
+                ].map(([label, value]) => (
+                  <div key={label} className={s.statPill}>
+                    <div className={s.statValue}>{value}</div>
+                    <div className={s.statLabel}>{label}</div>
                   </div>
-                  <span className={s.mutedText}>{x.ended ? 'Ended' : 'Ongoing'}</span>
-                </div>
-                {open[x.id] && (
-                  <div className={s.accordionBody}>
-                    <table className={s.recordsTable}>
-                      <thead><tr><th>Name</th><th>Time</th><th>Status</th></tr></thead>
-                      <tbody>
-                        {x.records.map((r, i) => (
-                          <tr key={i}><td>{r.first_name} {r.last_name}</td><td>{r.time_in ? fmt12(r.time_in) : '—'}</td><td>{r.status || 'Not yet'}</td></tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                ))}
               </div>
-            ))}
-          </>
-        )}
-      </div>
-      <ModalFooter>
-        <button className={`${s.btn} ${s.btnOutline}`} onClick={onClose}>Close</button>
-        <button className={`${s.btn} ${s.btnDanger}`} onClick={() => cls && onDelete(cls)}>Delete class</button>
-      </ModalFooter>
-    </Modal>
+
+              <div className={s.tabHeaderRow}>
+                <div><h3>Students</h3><p>{data.students.length} enrolled student{data.students.length === 1 ? '' : 's'}</p></div>
+              </div>
+              {data.students.length === 0 && <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-user-group" /></div><h3>No students yet</h3><p>There are no students enrolled in this class.</p></div>}
+              {data.students.map((student) => (
+                <div key={student.id} className={`${s.sessionCard} ${s.adminStudentCard}`}>
+                  <span className={s.adminStudentAvatar}>{student.first_name?.charAt(0)}{student.last_name?.charAt(0)}</span>
+                  <div className={s.adminStudentInfo}>
+                    <div className={s.sessionDate}>{student.first_name} {student.last_name}</div>
+                    <div className={s.sessionTime}>{student.email}</div>
+                  </div>
+                </div>
+              ))}
+
+              <div className={s.tabHeaderRow} style={{ marginTop: 28 }}>
+                <div><h3>Attendance Sessions</h3><p>{data.sessions.length} session{data.sessions.length === 1 ? '' : 's'} recorded</p></div>
+              </div>
+              {data.sessions.length === 0 && <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-qrcode" /></div><h3>No attendance sessions yet</h3><p>Sessions created by the teacher will appear here.</p></div>}
+              {data.sessions.map((session) => (
+                <div key={session.id} className={`${s.accordion} ${s.adminSessionAccordion}`}>
+                  <button type="button" className={s.accordionHeader} onClick={() => setOpen((current) => ({ ...current, [session.id]: !current[session.id] }))} aria-expanded={!!open[session.id]}>
+                    <div>
+                      <div className={s.sessionDate}>{session.session_date}</div>
+                      <div className={s.sessionTime}>{fmt12(session.start_time)} – {fmt12(session.end_time)} · Late after {fmt12(session.late_after)}</div>
+                    </div>
+                    <span>{session.ended ? 'Ended' : 'Ongoing'} <i className={`fa-solid ${open[session.id] ? 'fa-chevron-up' : 'fa-chevron-down'}`} /></span>
+                  </button>
+                  {open[session.id] && (
+                    <div className={s.accordionBody}>
+                      {session.records.length === 0 ? <p className={s.mutedText}>No attendance records for this session.</p> : (
+                        <div className={s.recordsTableWrap}>
+                          <table className={s.recordsTable}>
+                            <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
+                            <tbody>
+                              {session.records.map((record, index) => (
+                                <tr key={index}>
+                                  <td>{record.first_name} {record.last_name}</td>
+                                  <td>{record.time_in ? fmt12(record.time_in) : '—'}</td>
+                                  <td><span className={`${s.recordStatus} ${record.status === 'Present' ? s.recordStatusPresent : record.status === 'Late' ? s.recordStatusLate : record.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{record.status || 'Not yet'}</span></td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </DetailFrame>
+    </div>
   );
 }
 
@@ -335,6 +387,18 @@ export default function Admin() {
 
   const studentRows = useMemo(() => students, [students]);
 
+  if (detailId) {
+    const selectedClass = classes.find((item) => item.id === detailId);
+    if (selectedClass) {
+      return <AdminClassDetailPage
+        key={selectedClass.id}
+        cls={selectedClass}
+        onBack={() => setDetailId(null)}
+        onDelete={(item) => { setDetailId(null); setDelClass(item); }}
+      />;
+    }
+  }
+
   return (
     <>
       <PortalLayout role="admin" brand="Admin Portal" links={LINKS} active={tab} title={TITLES[tab]} onSelect={setTab}>
@@ -376,7 +440,6 @@ export default function Admin() {
         You're about to permanently delete <strong>{delTeacher?.name}</strong> along with all of their classes, sessions, and attendance records. This cannot be undone.
       </ConfirmDelete>
 
-      <ClassDetailModal classId={detailId} onClose={() => setDetailId(null)} onDelete={(c) => { setDetailId(null); setDelClass(c); }} />
 
       <ConfirmDelete open={!!delClass} eyebrow="DELETE CLASS" title="Delete this class?" label="Delete class" busy={busy}
         onCancel={() => setDelClass(null)}
