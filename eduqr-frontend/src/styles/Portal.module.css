@@ -387,3 +387,49 @@
   .recordsTableWrap .recordStudentCell { gap: 8px; }
   .recordsTableWrap .recordAvatar { width: 30px; height: 30px; flex-basis: 30px; border-radius: 9px; }
 }
+
+
+/* ---------- Admin active class detail modal: visual-only polish ---------- */
+.adminClassDetailModal { width: min(94vw, 900px); max-width: 900px !important; max-height: 88vh; padding: 0; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28); }
+.adminClassDetailModal .modalHeader { flex: 0 0 auto; padding: 24px 28px 20px; margin: 0; background: linear-gradient(135deg, var(--brand-soft), var(--panel)); border-bottom: 1px solid var(--border); }
+.adminClassDetailModal .modalHeader h3 { font-size: clamp(1.2rem, 2vw, 1.55rem); line-height: 1.25; margin-bottom: 7px; }
+.adminClassDetailModal .modalSub { max-width: 720px; line-height: 1.55; overflow-wrap: anywhere; }
+.adminClassDetailContent { padding: 22px 28px 10px; overflow-y: auto; min-height: 0; }
+.adminClassDetailContent .statPillRow { gap: 12px; margin-bottom: 24px; }
+.adminClassDetailContent .statPill { padding: 16px 12px; border-radius: 14px; background: var(--panel-2); transition: border-color 0.15s ease, transform 0.15s ease; }
+.adminClassDetailContent .statPill:hover { border-color: var(--brand-line); transform: translateY(-1px); }
+.adminClassDetailContent .statPill .statValue { font-size: 1.45rem; font-weight: 800; }
+.adminClassDetailContent .statPill .statLabel { font-size: 0.76rem; letter-spacing: 0.02em; }
+.adminClassDetailContent .blockTitle { display: flex; align-items: center; gap: 9px; margin: 24px 0 12px; font-size: 1rem; }
+.adminSectionCount { display: inline-flex; min-width: 26px; height: 26px; padding: 0 7px; align-items: center; justify-content: center; border-radius: 8px; background: var(--brand-soft); color: var(--brand-text); font-size: 0.75rem; }
+.adminClassDetailContent .adminStudentCard { flex-direction: row; align-items: center; padding: 13px 15px; border-radius: 13px; gap: 12px; margin-bottom: 9px; }
+.adminStudentAvatar { width: 38px; height: 38px; flex: 0 0 38px; display: inline-flex; align-items: center; justify-content: center; border-radius: 11px; background: var(--brand-soft); border: 1px solid var(--brand-line); color: var(--brand-text); font-size: 0.76rem; font-weight: 800; text-transform: uppercase; }
+.adminStudentInfo { min-width: 0; }
+.adminStudentInfo .sessionDate, .adminStudentInfo .sessionTime { overflow-wrap: anywhere; }
+.adminClassDetailContent .adminSessionAccordion { border-radius: 14px; margin-bottom: 11px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.025); }
+.adminClassDetailContent .adminSessionAccordion .accordionHeader { padding: 16px 18px; min-height: 68px; }
+.adminClassDetailContent .adminSessionAccordion .accordionHeader > span { flex-shrink: 0; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel-2); font-size: 0.74rem; font-weight: 700; }
+.adminClassDetailContent .adminSessionAccordion .accordionBody { padding: 0 16px 16px; }
+.adminClassDetailContent .recordsTable { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.adminClassDetailContent .recordsTable th { background: var(--panel-2); }
+.adminClassDetailModal .modalFooter { flex: 0 0 auto; margin: 0; padding: 16px 28px 22px; border-top: 1px solid var(--border); background: var(--panel); }
+@media (max-width: 768px) {
+  .adminClassDetailModal { width: 94vw; max-height: 90vh; border-radius: 16px; }
+  .adminClassDetailModal .modalHeader { padding: 19px 18px 16px; }
+  .adminClassDetailContent { padding: 17px 18px 8px; }
+  .adminClassDetailContent .statPillRow { gap: 8px; margin-bottom: 20px; }
+  .adminClassDetailContent .statPill { padding: 12px 8px; }
+  .adminClassDetailContent .statPill .statValue { font-size: 1.2rem; }
+  .adminClassDetailContent .adminSessionAccordion .accordionHeader { padding: 13px 12px; }
+  .adminClassDetailContent .adminSessionAccordion .accordionBody { padding: 0 10px 12px; }
+  .adminClassDetailModal .modalFooter { padding: 13px 18px 18px; }
+}
+@media (max-width: 480px) {
+  .adminClassDetailModal { width: 96vw; }
+  .adminClassDetailContent { padding: 14px 12px 6px; }
+  .adminClassDetailContent .statPillRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .adminClassDetailContent .blockTitle { margin-top: 20px; }
+  .adminClassDetailContent .adminStudentCard { padding: 11px; }
+  .adminStudentAvatar { width: 32px; height: 32px; flex-basis: 32px; }
+  .adminClassDetailModal .modalFooter { padding: 12px; }
+}
