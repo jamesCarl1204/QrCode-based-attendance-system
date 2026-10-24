@@ -105,7 +105,7 @@ function RecordsPage({ session, onBack, onChanged }) {
                 <tbody>
                   {records.map((r) => (
                     <tr key={r.student_id}>
-                      <td><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></td>
+                      <td><div className={s.recordStudentCell}><span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></div></td>
                       <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
                       <td><span className={`${s.recordStatus} ${r.status === 'Present' ? s.recordStatusPresent : r.status === 'Late' ? s.recordStatusLate : r.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{r.status || 'Not yet'}</span></td>
                       <td>
