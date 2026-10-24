@@ -92,26 +92,28 @@ function RecordsPage({ session, onBack, onChanged }) {
         <h2>Session Records · {session.session_date}</h2>
         <p>{timeRange(session)}</p>
       </div>
-      <div className={s.panel}>
+      <div className={`${s.panel} ${s.sessionRecordsPanel}`}>
         {records === null && <p className={s.mutedText}>Loading…</p>}
         {records === false && <p className={s.mutedText}>Could not load records.</p>}
         {records && records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
         {records && records.length > 0 && (
           <>
             <p className={s.hint} style={{ marginBottom: 10 }}>Student has no internet or couldn't scan the QR code? Mark their attendance manually using the buttons below.</p>
-            <div style={{ overflowX: 'auto' }}>
+            <div className={s.recordsTableWrap}>
               <table className={s.recordsTable}>
-                <thead><tr><th>Name</th><th>Time</th><th>Status</th><th>Mark</th></tr></thead>
+                <thead><tr><th>Student</th><th>Time In</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
                   {records.map((r) => (
                     <tr key={r.student_id}>
-                      <td>{r.first_name} {r.last_name}</td>
-                      <td>{r.time_in ? fmt12(r.time_in) : '—'}</td>
-                      <td>{r.status || 'Not yet'}</td>
-                      <td style={{ whiteSpace: 'nowrap' }}>
-                        {['Present', 'Late', 'Absent'].map((st) => (
-                          <button key={st} className={`${s.btn} ${s.btnOutline} ${s.markBtn}`} disabled={busy} onClick={() => mark(r.student_id, st)}>{st}</button>
-                        ))}
+                      <td><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></td>
+                      <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
+                      <td><span className={`${s.recordStatus} ${r.status === 'Present' ? s.recordStatusPresent : r.status === 'Late' ? s.recordStatusLate : r.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{r.status || 'Not yet'}</span></td>
+                      <td>
+                        <div className={s.recordActions}>
+                          {['Present', 'Late', 'Absent'].map((st) => (
+                            <button key={st} className={`${s.btn} ${s.btnOutline} ${s.markBtn} ${st === 'Present' ? s.recordMarkPresent : st === 'Late' ? s.recordMarkLate : s.recordMarkAbsent}`} disabled={busy} onClick={() => mark(r.student_id, st)}>{st}</button>
+                          ))}
+                        </div>
                       </td>
                     </tr>
                   ))}
