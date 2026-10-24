@@ -189,7 +189,7 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
           {!Array.isArray(viewSession.records) && <p className={s.mutedText}>Attendance records are unavailable.</p>}
           {Array.isArray(viewSession.records) && viewSession.records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
           {Array.isArray(viewSession.records) && viewSession.records.length > 0 && (
-            <div className={s.recordsTableWrap}>
+            <div className={`${s.recordsTableWrap} ${s.adminRecordsDesktop}`}>
               <table className={s.recordsTable}>
                 <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
                 <tbody>
@@ -197,7 +197,7 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
                     <tr key={record.student_id ?? record.studentId ?? index}>
                       <td>
                         <div className={s.recordStudentCell}>
-                          <span className={s.recordAvatar}>{record.first_name?.charAt(0)}{record.last_name?.charAt(0)}</span>
+                          <span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span>
                           <span className={s.recordStudentName}>{record.first_name} {record.last_name}</span>
                         </div>
                       </td>
@@ -207,6 +207,22 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
                   ))}
                 </tbody>
               </table>
+            </div>
+            <div className={s.adminRecordsMobile}>
+              {viewSession.records.map((record, index) => (
+                <article className={s.adminRecordCard} key={record.student_id ?? record.studentId ?? index}>
+                  <div className={s.adminRecordIdentity}>
+                    <span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span>
+                    <div className={s.adminRecordInfo}>
+                      <span className={s.recordStudentName}>{record.first_name} {record.last_name}</span>
+                      <span className={s.teacherRecordTime}>Time In · {record.time_in ? fmt12(record.time_in) : '—'}</span>
+                    </div>
+                  </div>
+                  <div className={s.adminRecordStatus}>
+                    <span className={`${s.recordStatus} ${record.status === 'Present' ? s.recordStatusPresent : record.status === 'Late' ? s.recordStatusLate : record.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{record.status || 'Not yet'}</span>
+                  </div>
+                </article>
+              ))}
             </div>
           )}
         </div>
