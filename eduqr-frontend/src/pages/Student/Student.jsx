@@ -117,6 +117,7 @@ function RecordsPage({ session, onBack }) {
         {mine === false && <p className={s.mutedText}>Could not load your record.</p>}
         {mine === null && <p className={s.mutedText}>No record found for you in this session.</p>}
         {mine && (
+          <>
           <div className={`${s.recordsTableWrap} ${s.studentRecordsDesktop}`}>
             <table className={s.recordsTable}>
               <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
@@ -148,6 +149,7 @@ function RecordsPage({ session, onBack }) {
               </div>
             </article>
           </div>
+          </>
         )}
       </div>
     </div>
