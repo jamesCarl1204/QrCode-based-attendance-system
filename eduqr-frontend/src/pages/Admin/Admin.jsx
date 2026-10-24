@@ -146,13 +146,14 @@ function ClassesGrid({ classes, archived, onOpen }) {
 
 function AdminClassDetailPage({ cls, onBack, onDelete }) {
   const [data, setData] = useState(null);
-  const [open, setOpen] = useState({});
+  const [tab, setTab] = useState('attendance');
+  const [viewSession, setViewSession] = useState(null);
 
   useEffect(() => {
     if (!cls?.id) return;
     let alive = true;
     setData(null);
-    setOpen({});
+    setViewSession(null);
     api(`/api/admin/classes/${cls.id}`).then((d) => {
       if (alive) setData(d.success ? d : false);
     }).catch(() => { if (alive) setData(false); });
@@ -176,21 +177,57 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
     archived: !!cls.archived,
   };
 
+  if (viewSession) {
+    return (
+      <div className={s.mainContent}>
+        <button className={`${s.btn} ${s.btnOutline}`} onClick={() => setViewSession(null)} style={{ marginBottom: 20 }}>← Back to sessions</button>
+        <div className={s.sectionHeader}>
+          <h2>Session Records · {viewSession.session_date}</h2>
+          <p>{fmt12(viewSession.start_time)} – {fmt12(viewSession.end_time)} · Late after {fmt12(viewSession.late_after)}</p>
+        </div>
+        <div className={`${s.panel} ${s.sessionRecordsPanel}`}>
+          {!Array.isArray(viewSession.records) && <p className={s.mutedText}>Attendance records are unavailable.</p>}
+          {Array.isArray(viewSession.records) && viewSession.records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
+          {Array.isArray(viewSession.records) && viewSession.records.length > 0 && (
+            <div className={s.recordsTableWrap}>
+              <table className={s.recordsTable}>
+                <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
+                <tbody>
+                  {viewSession.records.map((record, index) => (
+                    <tr key={record.student_id ?? record.studentId ?? index}>
+                      <td>
+                        <div className={s.recordStudentCell}>
+                          <span className={s.recordAvatar}>{record.first_name?.charAt(0)}{record.last_name?.charAt(0)}</span>
+                          <span className={s.recordStudentName}>{record.first_name} {record.last_name}</span>
+                        </div>
+                      </td>
+                      <td><span className={s.recordTime}>{record.time_in ? fmt12(record.time_in) : '—'}</span></td>
+                      <td><span className={`${s.recordStatus} ${record.status === 'Present' ? s.recordStatusPresent : record.status === 'Late' ? s.recordStatusLate : record.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{record.status || 'Not yet'}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={s.adminClassPage}>
       <DetailFrame
         cls={frameClass}
         onBack={onBack}
-        tab="attendance"
-        setTab={() => {}}
-        showTabs={false}
+        tab={tab}
+        setTab={setTab}
         extra={detailClass ? `Teacher: ${detailClass.teacher_first_name} ${detailClass.teacher_last_name} · ${detailClass.teacher_email}` : `Teacher: ${cls.teacher_first_name} ${cls.teacher_last_name}`}
         topAction={<button className={`${s.btn} ${s.bannerBtn}`} onClick={() => detailClass && onDelete(detailClass)}>Delete class</button>}
       >
         <div className={s.adminClassDetailContent}>
           {data === null && <p className={s.mutedText}>Loading class records…</p>}
           {data === false && <p className={s.mutedText}>Could not load class records. Please go back and try again.</p>}
-          {data && (
+          {data && tab === 'attendance' && (
             <>
               <div className={`${s.statPillRow} ${s.adminClassStats}`}>
                 {[
@@ -207,9 +244,41 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
               </div>
 
               <div className={s.tabHeaderRow}>
-                <div><h3>Students</h3><p>{data.students.length} enrolled student{data.students.length === 1 ? '' : 's'}</p></div>
+                <div><h3>Attendance</h3><p>{data.sessions.length} session{data.sessions.length === 1 ? '' : 's'} recorded</p></div>
               </div>
-              {data.students.length === 0 && <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-user-group" /></div><h3>No students yet</h3><p>There are no students enrolled in this class.</p></div>}
+              {data.sessions.length === 0 && (
+                <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-qrcode" /></div><h3>No attendance sessions yet</h3><p>Sessions created by the teacher will appear here.</p></div>
+              )}
+              {data.sessions.map((session) => (
+                <div key={session.id} className={s.sessionCard}>
+                  <button type="button" className={s.clickable} onClick={() => setViewSession(session)} style={{ textAlign: 'left', background: 'transparent', border: 0, color: 'inherit', font: 'inherit', padding: 0, flex: 1, minWidth: 0 }}>
+                    <div className={s.sessionDate}>{session.session_date}</div>
+                    <div className={s.sessionTime}>{fmt12(session.start_time)} – {fmt12(session.end_time)} · Late after {fmt12(session.late_after)}</div>
+                  </button>
+                  <div className={s.sessionActions}>
+                    <button className={`${s.btn} ${s.btnOutline}`} onClick={() => setViewSession(session)}>View records</button>
+                    <span className={s.mutedText}>{session.ended ? 'Ended' : 'Ongoing'}</span>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+          {data && tab === 'members' && (
+            <>
+              <div className={s.tabHeaderRow}>
+                <div><h3>Members</h3><p>{data.students.length} student{data.students.length === 1 ? '' : 's'} joined</p></div>
+              </div>
+              <div className={s.sessionCard}>
+                <span className={s.adminStudentAvatar}>{detailClass?.teacher_first_name?.charAt(0)}{detailClass?.teacher_last_name?.charAt(0)}</span>
+                <div className={s.adminStudentInfo}>
+                  <div className={s.sessionDate}>{detailClass ? `${detailClass.teacher_first_name} ${detailClass.teacher_last_name}` : ` ${cls.teacher_first_name} ${cls.teacher_last_name}`}</div>
+                  <div className={s.sessionTime}>{detailClass?.teacher_email || '—'}</div>
+                </div>
+                <span className={s.mutedText}>Teacher · Owner</span>
+              </div>
+              {data.students.length === 0 && (
+                <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-user-group" /></div><h3>No students yet</h3><p>There are no students enrolled in this class.</p></div>
+              )}
               {data.students.map((student) => (
                 <div key={student.id} className={`${s.sessionCard} ${s.adminStudentCard}`}>
                   <span className={s.adminStudentAvatar}>{student.first_name?.charAt(0)}{student.last_name?.charAt(0)}</span>
@@ -217,42 +286,6 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
                     <div className={s.sessionDate}>{student.first_name} {student.last_name}</div>
                     <div className={s.sessionTime}>{student.email}</div>
                   </div>
-                </div>
-              ))}
-
-              <div className={s.tabHeaderRow} style={{ marginTop: 28 }}>
-                <div><h3>Attendance Sessions</h3><p>{data.sessions.length} session{data.sessions.length === 1 ? '' : 's'} recorded</p></div>
-              </div>
-              {data.sessions.length === 0 && <div className={s.emptyState}><div className={s.emptyIcon}><i className="fa-solid fa-qrcode" /></div><h3>No attendance sessions yet</h3><p>Sessions created by the teacher will appear here.</p></div>}
-              {data.sessions.map((session) => (
-                <div key={session.id} className={`${s.accordion} ${s.adminSessionAccordion}`}>
-                  <button type="button" className={s.accordionHeader} onClick={() => setOpen((current) => ({ ...current, [session.id]: !current[session.id] }))} aria-expanded={!!open[session.id]}>
-                    <div>
-                      <div className={s.sessionDate}>{session.session_date}</div>
-                      <div className={s.sessionTime}>{fmt12(session.start_time)} – {fmt12(session.end_time)} · Late after {fmt12(session.late_after)}</div>
-                    </div>
-                    <span>{session.ended ? 'Ended' : 'Ongoing'} <i className={`fa-solid ${open[session.id] ? 'fa-chevron-up' : 'fa-chevron-down'}`} /></span>
-                  </button>
-                  {open[session.id] && (
-                    <div className={s.accordionBody}>
-                      {session.records.length === 0 ? <p className={s.mutedText}>No attendance records for this session.</p> : (
-                        <div className={s.recordsTableWrap}>
-                          <table className={s.recordsTable}>
-                            <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
-                            <tbody>
-                              {session.records.map((record, index) => (
-                                <tr key={index}>
-                                  <td>{record.first_name} {record.last_name}</td>
-                                  <td>{record.time_in ? fmt12(record.time_in) : '—'}</td>
-                                  <td><span className={`${s.recordStatus} ${record.status === 'Present' ? s.recordStatusPresent : record.status === 'Late' ? s.recordStatusLate : record.status === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending}`}>{record.status || 'Not yet'}</span></td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
               ))}
             </>
