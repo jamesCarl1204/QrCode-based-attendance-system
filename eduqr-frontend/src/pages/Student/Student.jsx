@@ -117,14 +117,14 @@ function RecordsPage({ session, onBack }) {
         {mine === false && <p className={s.mutedText}>Could not load your record.</p>}
         {mine === null && <p className={s.mutedText}>No record found for you in this session.</p>}
         {mine && (
-          <div className={s.recordsTableWrap}>
+          <div className={`${s.recordsTableWrap} ${s.studentRecordsDesktop}`}>
             <table className={s.recordsTable}>
               <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
               <tbody>
                 <tr>
                   <td>
                     <div className={s.recordStudentCell}>
-                      <span className={s.recordAvatar}>{mine.first_name?.charAt(0)}{mine.last_name?.charAt(0)}</span>
+                      <span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span>
                       <span className={s.recordStudentName}>{mine.first_name} {mine.last_name}</span>
                     </div>
                   </td>
@@ -133,6 +133,20 @@ function RecordsPage({ session, onBack }) {
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div className={s.studentRecordsMobile}>
+            <article className={s.studentRecordCard}>
+              <div className={s.studentRecordIdentity}>
+                <span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span>
+                <div className={s.studentRecordInfo}>
+                  <span className={s.recordStudentName}>{mine.first_name} {mine.last_name}</span>
+                  <span className={s.teacherRecordTime}>Time In · {mine.time_in ? fmt12(mine.time_in) : '—'}</span>
+                </div>
+              </div>
+              <div className={s.studentRecordStatus}>
+                <span className={`${s.recordStatus} ${statusClass(mine.status)}`}>{mine.status || 'Not yet'}</span>
+              </div>
+            </article>
           </div>
         )}
       </div>
