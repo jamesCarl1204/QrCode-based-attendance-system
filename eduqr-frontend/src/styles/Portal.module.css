@@ -500,3 +500,19 @@
   .teacherRecordActions { gap: 5px; }
   .teacherRecordActions .markBtn { font-size: 0.7rem; }
 }
+
+
+/* ---------- Student and admin session records: mobile cards ---------- */
+.studentRecordsMobile, .adminRecordsMobile { display: none; }
+.studentRecordCard, .adminRecordCard { min-width: 0; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); }
+.studentRecordIdentity, .adminRecordIdentity { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.studentRecordInfo, .adminRecordInfo { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.studentRecordInfo .recordStudentName, .adminRecordInfo .recordStudentName { min-width: 0; overflow-wrap: anywhere; }
+.studentRecordStatus, .adminRecordStatus { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+@media (max-width: 768px) {
+  .studentRecordsDesktop, .adminRecordsDesktop { display: none; }
+  .studentRecordsMobile, .adminRecordsMobile { display: block; }
+  .studentRecordCard, .adminRecordCard { padding: 12px; }
+  .studentRecordIdentity, .adminRecordIdentity { gap: 8px; }
+  .studentRecordStatus, .adminRecordStatus { margin-top: 10px; padding-top: 9px; }
+}
