@@ -257,7 +257,26 @@ function RecordsPage({ session, onBack, onChanged }) {
         {records && records.length > 0 && (
           <>
             <p className={s.hint} style={{ marginBottom: 10 }}>Student has no internet or couldn't scan the QR code? Mark their attendance manually using the buttons below.</p>
-            <div className={s.recordsTableWrap}>
+            <div className={s.teacherRecordsMobile}>
+              {records.map((r) => (
+                <article key={r.student_id} className={s.teacherRecordCard}>
+                  <div className={s.teacherRecordIdentity}>
+                    <span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span>
+                    <div className={s.teacherRecordStudentInfo}>
+                      <span className={s.recordStudentName}>{r.first_name} {r.last_name}</span>
+                      <span className={s.teacherRecordTime}>{r.time_in ? `Time In · ${fmt12(r.time_in)}` : 'Time In · —'}</span>
+                    </div>
+                    <span className={`${s.recordStatus} ${statusClass(r.status)}`}>{r.status || 'Not yet'}</span>
+                  </div>
+                  <div className={s.teacherRecordActions}>
+                    {['Present', 'Late', 'Absent'].map((st) => (
+                      <button key={st} className={`${s.btn} ${s.btnOutline} ${s.markBtn} ${st === 'Present' ? s.recordMarkPresent : st === 'Late' ? s.recordMarkLate : s.recordMarkAbsent}`} disabled={busy} onClick={() => mark(r.student_id, st)}>{st}</button>
+                    ))}
+                  </div>
+                </article>
+              ))}
+            </div>
+            <div className={`${s.recordsTableWrap} ${s.teacherRecordsDesktop}`}>
               <table className={s.recordsTable}>
                 <thead><tr><th>Student</th><th>Time In</th><th>Status</th><th>Actions</th></tr></thead>
                 <tbody>
