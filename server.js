@@ -371,6 +371,13 @@ function toPHDate(dateStr, timeStr) {
   return new Date(`${dateStr}T${t}+08:00`);
 }
 
+
+const phTime = () =>
+ new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Manila', hourCycle: 'h23' }); // "14:05:09"
+
+const phDate = () =>
+  new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }); // "2026-10-24"
+  
 app.post('/api/classes', requireTeacher, async (req, res) => {
   const { subjectName, section, color } = req.body || {};
 
@@ -891,12 +898,8 @@ const [rows] = await pool.query(
     const now = new Date();
     const sessionEnd = toPHDate(session.session_date, session.end_time);
     const isEnded = now > sessionEnd;
-    const phTime = () =>
-  new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Manila', hourCycle: 'h23' }); // "14:05:09"
-
-const phDate = () =>
-  new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }); // "2026-10-24"
-    const records = rows.map(r => {
+    
+   const records = rows.map(r => {
       if (r.status) {
         return { student_id: r.student_id, first_name: r.first_name, last_name: r.last_name, time_in: r.time_in, status: r.status };
       }
