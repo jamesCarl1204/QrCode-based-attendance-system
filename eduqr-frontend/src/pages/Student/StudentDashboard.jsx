@@ -19,7 +19,7 @@ export default function StudentDashboard({ onOpenClass }) {
   const dash = (v) => (v === undefined || v === null ? '—' : v);
 
   return (
-    <>
+    <div className={s.studentDashboard}>
       <div className={s.sectionHeader}>
         <h2>Dashboard Overview</h2>
         <p>Your attendance across all your active classes.</p>
@@ -75,6 +75,6 @@ export default function StudentDashboard({ onOpenClass }) {
           </div>
         </>
       )}
-    </>
+    </div>
   );
 }
