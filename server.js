@@ -1303,7 +1303,7 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
   try {
     const teacherId = req.session.user.id;
 
-    // PH time (importante: UTC ang server sa Render)
+    // PH time (UTC ang server sa Render)
     const phNow = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
     const todayStr = ymd(phNow);
     const mon = new Date(phNow);
@@ -1311,6 +1311,8 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
     const weekDays = [0, 1, 2, 3, 4].map((i) => {
       const d = new Date(mon); d.setDate(mon.getDate() + i); return ymd(d);
     });
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    const weekEnd = ymd(sun); // Mon-Sun para sa status/scans
 
     const empty = { students: 0, todayRate: null, todayScans: 0, weekly: [null, null, null, null, null], status: [0, 0, 0], recent: [] };
 
@@ -1320,13 +1322,11 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
     const classIds = classes.map((c) => c.id);
     if (!classIds.length) return res.json({ success: true, stats: empty });
 
-    // Total unique students
     const [[{ total }]] = await pool.query(
       `SELECT COUNT(DISTINCT student_id) AS total FROM class_students
        WHERE class_id IN (?) AND removed_at IS NULL`, [classIds]
     );
 
-    // Enrolled count per class
     const [enrolledRows] = await pool.query(
       `SELECT class_id, COUNT(*) AS n FROM class_students
        WHERE class_id IN (?) AND removed_at IS NULL GROUP BY class_id`, [classIds]
@@ -1334,11 +1334,10 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
     const enrolled = {};
     enrolledRows.forEach((r) => { enrolled[r.class_id] = r.n; });
 
-    // Sessions this week (Mon–Fri)
     const [sessions] = await pool.query(
       `SELECT id, class_id, session_date, class_end AS end_time FROM attendance_sessions
        WHERE class_id IN (?) AND session_date BETWEEN ? AND ?`,
-      [classIds, weekDays[0], weekDays[4]]
+      [classIds, weekDays[0], weekEnd]
     );
 
     const sessionIds = sessions.map((s) => s.id);
@@ -1347,21 +1346,23 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
       : [[]];
 
     const now = new Date();
-    const perDay = {}; // date -> { attended, expected }
+    const perDay = {};
     let present = 0, late = 0, absent = 0, todayScans = 0;
 
     sessions.forEach((s) => {
       const recs = records.filter((r) => r.session_id === s.id);
       const p = recs.filter((r) => r.status === 'Present').length;
       const l = recs.filter((r) => r.status === 'Late').length;
+      const abs = recs.filter((r) => r.status === 'Absent').length;
       const ended = now > toPHDate(s.session_date, s.end_time);
       const exp = enrolled[s.class_id] || 0;
 
-      if (s.session_date === todayStr) {
-        todayScans += p + l;
-        present += p; late += l;
-        if (ended) absent += Math.max(0, exp - p - l - recs.filter((r) => r.status === 'Absent').length) + recs.filter((r) => r.status === 'Absent').length;
-      }
+      if (s.session_date === todayStr) todayScans += p + l;
+      present += p;
+      late += l;
+      absent += abs;                                        // manual Absent, bilang agad
+      if (ended) absent += Math.max(0, exp - p - l - abs);  // di nag-scan, absent kapag tapos na
+
       if (ended) {
         const d = (perDay[s.session_date] ||= { attended: 0, expected: 0 });
         d.attended += p + l;
@@ -1375,7 +1376,6 @@ app.get('/api/teacher/dashboard', requireTeacher, async (req, res) => {
     const t = perDay[todayStr];
     const todayRate = t?.expected ? Math.round((t.attended / t.expected) * 100) : null;
 
-    // Recent check-ins
     const [recent] = await pool.query(
       `SELECT ar.time_in, ar.status, ar.created_at, s.first_name, s.last_name, c.subject_name
        FROM attendance_records ar
