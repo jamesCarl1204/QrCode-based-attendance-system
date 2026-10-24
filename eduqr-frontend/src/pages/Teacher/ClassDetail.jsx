@@ -261,7 +261,7 @@ function RecordsPage({ session, onBack, onChanged }) {
               {records.map((r) => (
                 <article key={r.student_id} className={s.teacherRecordCard}>
                   <div className={s.teacherRecordIdentity}>
-                    <span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span>
+                    <span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span>
                     <div className={s.teacherRecordStudentInfo}>
                       <span className={s.recordStudentName}>{r.first_name} {r.last_name}</span>
                       <span className={s.teacherRecordTime}>{r.time_in ? `Time In · ${fmt12(r.time_in)}` : 'Time In · —'}</span>
@@ -282,7 +282,7 @@ function RecordsPage({ session, onBack, onChanged }) {
                 <tbody>
                   {records.map((r) => (
                     <tr key={r.student_id}>
-                      <td><div className={s.recordStudentCell}><span className={s.recordAvatar}>{r.first_name?.charAt(0)}{r.last_name?.charAt(0)}</span><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></div></td>
+                      <td><div className={s.recordStudentCell}><span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></div></td>
                       <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
                       <td><span className={`${s.recordStatus} ${statusClass(r.status)}`}>{r.status || 'Not yet'}</span></td>
                       <td>
