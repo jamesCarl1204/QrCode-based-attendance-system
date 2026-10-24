@@ -303,3 +303,35 @@
   .teacherDashboard .chartBox { height: 170px; }
   .teacherDashboard .chartBoxSm { height: 140px; }
 }
+
+
+/* ---------- Admin dashboard: compact cards on mobile ---------- */
+@media (max-width: 768px) {
+  .adminDashboard .sectionHeader p { margin-bottom: 16px; }
+  .adminDashboard .statGrid { gap: 10px; margin-bottom: 14px; }
+  .adminDashboard .panel { padding: 14px; border-radius: 14px; }
+  .adminDashboard .statTop { gap: 8px; margin-bottom: 8px; }
+  .adminDashboard .statLabel { font-size: 0.68rem; line-height: 1.35; }
+  .adminDashboard .statIcon { width: 32px; height: 32px; flex-shrink: 0; }
+  .adminDashboard .statValue { font-size: 1.55rem; }
+  .adminDashboard .dashRow { gap: 12px; margin-bottom: 12px; }
+  .adminDashboard .panelTitle { font-size: 0.92rem; }
+  .adminDashboard .panelSub { font-size: 0.74rem; margin-bottom: 10px; }
+  .adminDashboard .activityFeed { gap: 6px; max-height: 260px; }
+  .adminDashboard .activityItem { gap: 8px; padding: 8px 0; font-size: 0.8rem; }
+  .adminDashboard .activityIcon { width: 30px; height: 30px; border-radius: 8px; }
+  .adminDashboard .activityTime { font-size: 0.68rem; padding-left: 4px; }
+  .adminDashboard .statusLegend { gap: 5px; margin-top: 10px; padding-top: 10px; }
+  .adminDashboard .statusLegend strong { font-size: 0.88rem; }
+  .adminDashboard .quickActions { gap: 8px; margin-top: 14px; padding-top: 14px; }
+}
+
+@media (max-width: 480px) {
+  .adminDashboard .statGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .adminDashboard .panel { padding: 12px; }
+  .adminDashboard .statLabel { font-size: 0.64rem; letter-spacing: 0; }
+  .adminDashboard .statIcon { width: 28px; height: 28px; border-radius: 8px; font-size: 0.78rem; }
+  .adminDashboard .statValue { font-size: 1.4rem; }
+  .adminDashboard .activityItem { align-items: flex-start; flex-wrap: wrap; }
+  .adminDashboard .activityTime { margin-left: 38px; }
+}
