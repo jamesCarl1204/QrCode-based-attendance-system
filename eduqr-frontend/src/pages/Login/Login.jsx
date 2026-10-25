@@ -207,7 +207,7 @@ export default function Login() {
                 <Alerts general={general} />
                 <form onSubmit={submit(isTeacher ? '/api/login/teacher' : '/api/login/student',
                   { email: login.email.trim(), password: login.password }, afterAuth)}>
-                  <Field icon="fa-envelope" label="Email Address" type="email" placeholder="Gmail" autoComplete="email" required
+                  <Field icon="fa-envelope" label="Email Address" type="email" placeholder="you@gmail.com" autoComplete="email" required
                     {...bind(login, setLogin, 'email')} />
                   <Field icon="fa-lock" label="Password" password placeholder="••••••••" autoComplete="current-password" required
                     {...bind(login, setLogin, 'password')} />
