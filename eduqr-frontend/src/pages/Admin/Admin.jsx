@@ -189,6 +189,7 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
           {!Array.isArray(viewSession.records) && <p className={s.mutedText}>Attendance records are unavailable.</p>}
           {Array.isArray(viewSession.records) && viewSession.records.length === 0 && <p className={s.mutedText}>No students in this class yet.</p>}
           {Array.isArray(viewSession.records) && viewSession.records.length > 0 && (
+            <>
             <div className={`${s.recordsTableWrap} ${s.adminRecordsDesktop}`}>
               <table className={s.recordsTable}>
                 <thead><tr><th>Student</th><th>Time In</th><th>Status</th></tr></thead>
@@ -224,6 +225,7 @@ function AdminClassDetailPage({ cls, onBack, onDelete }) {
                 </article>
               ))}
             </div>
+            </>
           )}
         </div>
       </div>
