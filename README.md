@@ -1,19 +1,18 @@
-# QR Attendance System – Backend (MVC)
+# QR Code-Based Attendance System
 
-```
-server.js              entry point (npm start) – listen + background job
-app.js                 express app: middleware + routes + error handlers
-config/                env, db pool, cors, session
-middleware/            auth (role guards), rate limiters, error handler
-routes/                URL -> controller mapping (all mounted under /api)
-controllers/           request/response logic
-models/                all SQL queries
-services/              email (Brevo), AI (Gemini), AI context, session-end job
-utils/                 helpers (PH time, codes), response helpers
-scripts/migrate.js     one-time password hashing script
-```
+Automated attendance system using QR codes, with parent email notifications.
 
-## Render
-- Build command: `npm install`
-- Start command: `npm start`
-- Env vars: see `.env.example`
+## Features
+- Admin, Teacher, and Student portals
+- Session-based QR code attendance
+- Parent email notifications
+
+## Tech Stack
+Node.js, Express, MySQL
+
+## How to Run
+1. Clone the repo
+2. Run `npm install`
+3. Import `schema.sql` into MySQL
+4. Create a `.env` file with your DB and email credentials
+5. Run `node server.js`
