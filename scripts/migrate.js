@@ -1,3 +1,5 @@
+// One-time script: hashes any plain-text passwords still in the DB.
+// Run: npm run migrate
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
@@ -9,6 +11,7 @@ const bcrypt = require('bcrypt');
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME || 'logdb',
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined,
   });
 
   for (const table of ['students', 'teachers']) {
