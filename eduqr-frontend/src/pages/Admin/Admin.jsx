@@ -58,10 +58,6 @@ function Dashboard({ goTo }) {
   const rate = d?.today.attendanceRatePercent;
   return (
     <div className={s.adminDashboard}>
-      <div className={s.sectionHeader}>
-        <h2>Dashboard Overview</h2>
-        <p><span className={s.liveDot} />Live overview · {updated ? `updated ${updated}` : 'updating…'}</p>
-      </div>
       <div className={s.statGrid}>
         {[
           ['Students', 'fa-user-graduate', s.statGreen, d?.totals.students],
