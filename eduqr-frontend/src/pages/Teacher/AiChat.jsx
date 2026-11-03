@@ -68,7 +68,6 @@ export default function AiChat() {
 
   return (
     <>
-      <div className={s.sectionHeader}><h2>Class Attendance Assistant</h2><p>Ask about attendance across your own classes.</p></div>
       <div className={s.panel}>
         <div className={s.aiLog} ref={logRef}>
           {msgs.map((m, i) => (
