@@ -20,10 +20,6 @@ export default function StudentDashboard({ onOpenClass }) {
 
   return (
     <div className={s.studentDashboard}>
-      <div className={s.sectionHeader}>
-        <h2>Dashboard Overview</h2>
-        <p>Your attendance across all your active classes.</p>
-      </div>
 
       {d === false && <p className={s.mutedText}>Could not load your dashboard. Please try again.</p>}
 
