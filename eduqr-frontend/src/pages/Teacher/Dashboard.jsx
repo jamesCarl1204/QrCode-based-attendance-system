@@ -15,7 +15,6 @@ export default function Dashboard({ classes, onGoClasses, stats = {} }) {
 
   return (
     <div className={s.teacherDashboard}>
-      <div className={s.sectionHeader}><h2>Dashboard Overview</h2><p>Summary of your classes and attendance.</p></div>
 
       <div className={s.statGrid}>
         {[
