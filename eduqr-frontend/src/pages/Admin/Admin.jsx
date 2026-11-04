@@ -122,7 +122,7 @@ function ClassesGrid({ classes, archived, onOpen }) {
         <input className={s.searchInput} placeholder={archived ? "Search archived classes…" : "Search by subject, section, or teacher…"} value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
       {rows.length === 0 ? (
-        <p className={s.mutedText}>No {archived ? 'archived ' : ''}classes found.</p>
+        archived ? <p className={s.mutedText}>No archived classes found.</p> : <p className={s.mutedText}>No classes found.</p>
       ) : (
         <div className={s.subjectGrid}>
           {rows.map((c) => (
