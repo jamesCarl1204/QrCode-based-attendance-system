@@ -44,7 +44,7 @@ export default function PortalLayout({ role, brand, links, active, onSelect, tit
           <button className={s.toggleBtn} onClick={() => setCollapsed((c) => !c)} aria-label="Toggle sidebar">
             <i className="fa-solid fa-bars" />
           </button>
-          <h1 className={s.pageTitle}>{title}</h1>
+          {title && <h1 className={s.pageTitle}>{title}</h1>}
         </div>
         <div className={s.navbarRight}>
           <button className={s.themeBtn} onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} aria-label="Toggle theme">
