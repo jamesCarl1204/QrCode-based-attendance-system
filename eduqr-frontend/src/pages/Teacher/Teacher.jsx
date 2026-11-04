@@ -122,7 +122,13 @@ export default function Teacher() {
             </div>}
 
             {visible.length === 0 ? (
-              isArchivedView ? <p className={s.mutedText}>No archived classes found.</p> : (
+              isArchivedView ? (
+                <div className={s.emptyState}>
+                  <div className={s.emptyIcon}><i className="fa-solid fa-box-archive" /></div>
+                  <h3>No archived classes</h3>
+                  <p>Archived classes will appear here.</p>
+                </div>
+              ) : (
                 <div className={s.emptyState}>
                   <div className={s.emptyIcon}><i className="fa-solid fa-book-open" /></div>
                   <h3>No classes yet</h3>
