@@ -117,19 +117,19 @@ export default function Teacher() {
 
         {(view === 'active' || view === 'archived') && (
           <>
-            <div className={s.sectionHeader}>
-              <h2>{isArchivedView ? 'Archived Subjects' : 'My Subjects'}</h2>
-              <p>{visible.length} {isArchivedView ? 'archived' : 'active'} {visible.length === 1 ? 'class' : 'classes'} · School Year 2025–2026</p>
-              {isArchivedView && <input className={s.searchInput} style={{ marginTop: -10, marginBottom: 22 }} placeholder="Search archived classes…" value={search} onChange={(e) => setSearch(e.target.value)} />}
-            </div>
+            {isArchivedView && <div className={s.tableToolbar}>
+              <input className={s.searchInput} placeholder="Search archived classes…" value={search} onChange={(e) => setSearch(e.target.value)} />
+            </div>}
 
             {visible.length === 0 ? (
-              <div className={s.emptyState}>
-                <div className={s.emptyIcon}><i className={`fa-solid ${isArchivedView ? 'fa-box-archive' : 'fa-book-open'}`} /></div>
-                <h3>{isArchivedView ? 'No archived classes' : 'No classes yet'}</h3>
-                <p>{isArchivedView ? 'Classes you archive will show up here.' : 'Add a class to get started'}</p>
-                {!isArchivedView && <button className={`${s.btn} ${s.btnPrimary}`} onClick={() => setCreateOpen(true)}>+ Create class</button>}
-              </div>
+              isArchivedView ? <p className={s.mutedText}>No archived classes found.</p> : (
+                <div className={s.emptyState}>
+                  <div className={s.emptyIcon}><i className="fa-solid fa-book-open" /></div>
+                  <h3>No classes yet</h3>
+                  <p>Add a class to get started</p>
+                  <button className={`${s.btn} ${s.btnPrimary}`} onClick={() => setCreateOpen(true)}>+ Create class</button>
+                </div>
+              )
             ) : (
               <div className={s.subjectGrid}>
                 {visible.map((c) => (
