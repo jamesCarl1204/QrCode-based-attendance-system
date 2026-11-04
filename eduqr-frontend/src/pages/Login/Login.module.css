@@ -24,7 +24,7 @@
 
 /* ---------- Shell (dual-pane card) ---------- */
 .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px 0; }
-.shell { width: 100%; max-width: 1024px; min-height: 620px; display: flex; flex-direction: row; background: var(--card); border: 1px solid #f1f5f9; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); }
+.shell { width: 100%; max-width: 1024px; min-height: 620px; display: flex; flex-direction: row-reverse; background: var(--card); border: 1px solid #f1f5f9; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); }
 .shellSolo { max-width: 620px; min-height: 0; }
 
 /* ---------- Left: form pane ---------- */
