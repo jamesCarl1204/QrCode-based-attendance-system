@@ -445,7 +445,7 @@ export default function Admin() {
 
   return (
     <>
-      <PortalLayout role="admin" brand="Admin Portal" links={LINKS} active={tab} title={null} onSelect={setTab}>
+      <PortalLayout role="admin" brand="Admin Portal" links={LINKS} active={tab} title={TITLES[tab]} onSelect={setTab}>
         {tab === 'dashboard' && <Dashboard goTo={setTab} />}
 
         {tab === 'students' && (
