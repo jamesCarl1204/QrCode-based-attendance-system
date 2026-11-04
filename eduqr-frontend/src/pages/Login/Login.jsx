@@ -75,7 +75,9 @@ function RoleTabs({ role, onPick }) {
 function SubmitButton({ busy, busyText, children }) {
   return (
     <button type="submit" className={s.submit} disabled={busy}>
-      {busy ? <><i className="fa-solid fa-spinner fa-spin" /> {busyText}</> : <>{children} <i className="fa-solid fa-arrow-right" /></>}
+      {busy
+        ? <><i className="fa-solid fa-spinner fa-spin" /> {busyText}</>
+        : <>{children} <i className={`fa-solid fa-arrow-right ${s.submitArrow}`} /></>}
     </button>
   );
 }
@@ -158,114 +160,147 @@ export default function Login() {
     navigate(homeFor(me?.role), { replace: true });
   };
 
-  const solo = view === 'register'; // register gets a wider, centered card (no hero)
+  const solo = view === 'register'; // register gets a single wider card (no banner)
 
   return (
     <div className={s.page}>
-      <header className={s.header}>
-        <div className={s.brand}>
-          {logoOk ? (
-            <img src="/100.png" alt="Regis Marie College logo" className={s.logoImg} onError={() => setLogoOk(false)} />
-          ) : (
-            <div className={s.logoFallback}><i className="fa-solid fa-graduation-cap" /></div>
-          )}
-          <div>
-            <span className={s.brandName}>Regis Marie College</span>
-            <span className={s.brandSub}>QR Attendance System</span>
-          </div>
-        </div>
-      </header>
+      <div className={s.stage}>
+        <div className={`${s.shell} ${solo ? s.shellSolo : ''}`}>
 
-      <main className={`${s.main} ${solo ? s.mainSolo : ''}`}>
-        {!solo && (
-          <section className={`${s.hero} ${view !== 'login' ? s.heroHideSm : ''}`}>
-            <div className={s.pill}><span className={s.pillDot} /> QR Attendance Monitoring System</div>
-            <h1 className={s.headline}>
-              Smart, Instant &amp; Secure <br className={s.br} />
-              <span className={s.headlineAccent}>Classroom Attendance</span>
-            </h1>
-            <p className={s.desc}>
-              Scan in seconds, keep parents informed automatically, and give teachers real-time class attendance visibility.
-            </p>
-            <div className={s.features}>
-              <div className={s.feature}><i className="fa-solid fa-bolt" /><strong>Real-Time</strong><span>Instant logs</span></div>
-              <div className={s.feature}><i className="fa-solid fa-envelope-circle-check" /><strong>Parent Alerts</strong><span>Auto notifications</span></div>
-              <div className={s.feature}><i className="fa-solid fa-chart-column" /><strong>Live View</strong><span>For teachers</span></div>
+          {/* ---------- LEFT: form pane ---------- */}
+          <section className={s.formPane}>
+            <div>
+              <div className={s.brand}>
+                {logoOk ? (
+                  <img src="/100.png" alt="Regis Marie College logo" className={s.logoImg} onError={() => setLogoOk(false)} />
+                ) : (
+                  <div className={s.logoFallback}><i className="fa-solid fa-graduation-cap" /></div>
+                )}
+                <div>
+                  <span className={s.brandName}>Regis Marie College</span>
+                  <span className={s.brandSub}>QR Attendance System</span>
+                </div>
+              </div>
+
+              {view !== 'register' && <RoleTabs role={role} onPick={pickRole} />}
+
+              {view === 'login' && (
+                <>
+                  <FormHead
+                    title={isTeacher ? 'Teacher Portal' : 'Student Portal'}
+                    sub={isTeacher ? 'Log in to manage your classes' : 'Log in to view your attendance'} />
+                  <Alerts general={general} />
+                  <form onSubmit={submit(isTeacher ? '/api/login/teacher' : '/api/login/student',
+                    { email: login.email.trim(), password: login.password }, afterAuth)}>
+                    <Field icon="fa-envelope" label="Email Address" type="email" placeholder="you@gmail.com" autoComplete="email" required
+                      {...bind(login, setLogin, 'email')} />
+                    <Field icon="fa-lock" label="Password" password placeholder="••••••••" autoComplete="current-password" required
+                      {...bind(login, setLogin, 'password')} />
+                    <div className={s.forgot}>
+                      <button type="button" className={s.linkBtn} onClick={() => go('forgot')}>Forgot password?</button>
+                    </div>
+                    <SubmitButton busy={busy} busyText="Logging in…">Log In</SubmitButton>
+                  </form>
+                </>
+              )}
+
+              {view === 'register' && (
+                <>
+                  <BackButton onClick={() => go('login')} />
+                  <FormHead title="Create Student Account" sub="Register to join your class and track your attendance" />
+                  <Alerts general={general} />
+                  <form onSubmit={submit('/api/register/student', trimKeys(reg, REG_TRIM), afterAuth)}>
+                    <div className={s.regGrid}>
+                      {REG_FIELDS.map((f) => (
+                        <div key={f.key} className={f.full ? s.span2 : undefined}>
+                          <Field icon={f.icon} label={f.label} type={f.type} password={f.type === 'password'}
+                            placeholder={f.placeholder} hint={f.hint} autoComplete={f.autoComplete} required={!f.optional}
+                            {...bind(reg, setReg, f.key)} />
+                        </div>
+                      ))}
+                    </div>
+                    <SubmitButton busy={busy} busyText="Creating account…">Create Account</SubmitButton>
+                  </form>
+                </>
+              )}
+
+              {view === 'forgot' && (
+                <>
+                  <BackButton onClick={() => go('login')} />
+                  <FormHead
+                    title={isTeacher ? 'Reset Teacher Password' : 'Reset Student Password'}
+                    sub="Enter your email and set a new password" />
+                  <Alerts general={general} success={success} />
+                  <form onSubmit={submit(isTeacher ? '/api/forgot-password/teacher' : '/api/forgot-password/student',
+                    { ...forgot, email: forgot.email.trim() },
+                    () => { setForgot(EMPTY_FORGOT); setSuccess('Password reset successful. You can now log in with your new password.'); })}>
+                    <Field icon="fa-envelope" label="Email Address" type="email" placeholder="you@email.com" autoComplete="email" required
+                      {...bind(forgot, setForgot, 'email')} />
+                    <Field icon="fa-lock" label="New Password" password placeholder="At least 8 characters" autoComplete="new-password" required
+                      {...bind(forgot, setForgot, 'newPassword')} />
+                    <Field icon="fa-lock" label="Confirm New Password" password placeholder="Re-enter new password" autoComplete="new-password" required
+                      {...bind(forgot, setForgot, 'confirmNewPassword')} />
+                    <SubmitButton busy={busy} busyText="Resetting…">Reset Password</SubmitButton>
+                  </form>
+                </>
+              )}
             </div>
-          </section>
-        )}
-
-        <section className={s.cardCol}>
-          <div className={s.card}>
-            {view !== 'register' && <RoleTabs role={role} onPick={pickRole} />}
 
             {view === 'login' && (
-              <>
-                <FormHead
-                  title={isTeacher ? 'Teacher Portal' : 'Student Portal'}
-                  sub={isTeacher ? 'Log in to manage your classes' : 'Log in to view your attendance'} />
-                <Alerts general={general} />
-                <form onSubmit={submit(isTeacher ? '/api/login/teacher' : '/api/login/student',
-                  { email: login.email.trim(), password: login.password }, afterAuth)}>
-                  <Field icon="fa-envelope" label="Email Address" type="email" placeholder="you@gmail.com" autoComplete="email" required
-                    {...bind(login, setLogin, 'email')} />
-                  <Field icon="fa-lock" label="Password" password placeholder="••••••••" autoComplete="current-password" required
-                    {...bind(login, setLogin, 'password')} />
-                  <div className={s.forgot}>
-                    <button type="button" className={s.linkBtn} onClick={() => go('forgot')}>Forgot password?</button>
-                  </div>
-                  <SubmitButton busy={busy} busyText="Logging in…">Log In</SubmitButton>
-                </form>
-                <div className={s.cardFoot}>
-                  <span>New student?</span>
-                  <button type="button" className={s.linkBtn} onClick={() => go('register')}>Register here</button>
+              <div className={s.cardFoot}>
+                <span>New student?</span>
+                <button type="button" className={s.linkBtn} onClick={() => go('register')}>Register here</button>
+              </div>
+            )}
+          </section>
+
+          {/* ---------- RIGHT: banner pane ---------- */}
+          {!solo && (
+            <aside className={`${s.banner} ${view !== 'login' ? s.bannerHideSm : ''}`}>
+              <div className={s.gridOverlay} />
+              <div className={s.glowOne} />
+              <div className={s.glowTwo} />
+
+              <div className={s.bannerTop}>
+                <span className={s.pill}><span className={s.pillDot} /> QR Attendance Monitoring System</span>
+                <div className={s.signUp}>
+                  <span>Don&rsquo;t have an account?</span>
+                  <button type="button" className={s.signUpBtn} onClick={() => go('register')}>Sign Up</button>
                 </div>
-              </>
-            )}
+              </div>
 
-            {view === 'register' && (
-              <>
-                <BackButton onClick={() => go('login')} />
-                <FormHead title="Create Student Account" sub="Register to join your class and track your attendance" />
-                <Alerts general={general} />
-                <form onSubmit={submit('/api/register/student', trimKeys(reg, REG_TRIM), afterAuth)}>
-                  <div className={s.regGrid}>
-                    {REG_FIELDS.map((f) => (
-                      <div key={f.key} className={f.full ? s.span2 : undefined}>
-                        <Field icon={f.icon} label={f.label} type={f.type} password={f.type === 'password'}
-                          placeholder={f.placeholder} hint={f.hint} autoComplete={f.autoComplete} required={!f.optional}
-                          {...bind(reg, setReg, f.key)} />
-                      </div>
-                    ))}
+              <div className={s.hero}>
+                <h1 className={s.headline}>
+                  Smart, Instant &amp; <br className={s.br} />Secure{' '}
+                  <span className={s.headlineAccent}>Classroom Attendance</span>
+                </h1>
+                <p className={s.desc}>
+                  Scan in seconds, keep parents informed automatically, and give teachers real-time class attendance visibility.
+                </p>
+                <div className={s.features}>
+                  <div className={s.feature}>
+                    <span className={s.featureIcon}><i className="fa-solid fa-bolt" /></span>
+                    <strong>Real-Time</strong><span className={s.featureSub}>Instant logs</span>
                   </div>
-                  <SubmitButton busy={busy} busyText="Creating account…">Create Account</SubmitButton>
-                </form>
-              </>
-            )}
+                  <div className={s.feature}>
+                    <span className={s.featureIcon}><i className="fa-regular fa-envelope" /></span>
+                    <strong>Parent Alerts</strong><span className={s.featureSub}>Auto notifications</span>
+                  </div>
+                  <div className={s.feature}>
+                    <span className={s.featureIcon}><i className="fa-solid fa-chart-simple" /></span>
+                    <strong>Live View</strong><span className={s.featureSub}>For teachers</span>
+                  </div>
+                </div>
+              </div>
 
-            {view === 'forgot' && (
-              <>
-                <BackButton onClick={() => go('login')} />
-                <FormHead
-                  title={isTeacher ? 'Reset Teacher Password' : 'Reset Student Password'}
-                  sub="Enter your email and set a new password" />
-                <Alerts general={general} success={success} />
-                <form onSubmit={submit(isTeacher ? '/api/forgot-password/teacher' : '/api/forgot-password/student',
-                  { ...forgot, email: forgot.email.trim() },
-                  () => { setForgot(EMPTY_FORGOT); setSuccess('Password reset successful. You can now log in with your new password.'); })}>
-                  <Field icon="fa-envelope" label="Email Address" type="email" placeholder="you@email.com" autoComplete="email" required
-                    {...bind(forgot, setForgot, 'email')} />
-                  <Field icon="fa-lock" label="New Password" password placeholder="At least 8 characters" autoComplete="new-password" required
-                    {...bind(forgot, setForgot, 'newPassword')} />
-                  <Field icon="fa-lock" label="Confirm New Password" password placeholder="Re-enter new password" autoComplete="new-password" required
-                    {...bind(forgot, setForgot, 'confirmNewPassword')} />
-                  <SubmitButton busy={busy} busyText="Resetting…">Reset Password</SubmitButton>
-                </form>
-              </>
-            )}
-          </div>
-        </section>
-      </main>
+              <div className={s.bannerFoot}>
+                <span>Regis Marie College &copy; 2026</span>
+                <span><i className="fa-solid fa-shield-halved" /> Secure Portal</span>
+              </div>
+            </aside>
+          )}
+        </div>
+      </div>
 
       <footer className={s.footer}>&copy; 2026 Regis Marie College. QR Code-Based Attendance Monitoring System.</footer>
     </div>
