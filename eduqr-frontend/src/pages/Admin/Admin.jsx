@@ -119,10 +119,6 @@ function ClassesGrid({ classes, archived, onOpen }) {
   const noun = archived ? 'archived class' : 'class';
   return (
     <>
-      <div className={s.sectionHeader}>
-        <h2>{archived ? 'Archived Classes' : 'Classes'}</h2>
-        <p>{base.length} {noun}{base.length === 1 ? '' : 'es'}{archived ? '' : ' created'}</p>
-      </div>
       <div className={s.tableToolbar}>
         <input className={s.searchInput} placeholder="Search by subject, section, or teacher…" value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
@@ -454,7 +450,6 @@ export default function Admin() {
 
         {tab === 'students' && (
           <>
-            <div className={s.sectionHeader}><h2>Students</h2><p>{students.length} registered student{students.length === 1 ? '' : 's'}</p></div>
             <DataTable columns={STUDENT_COLS} rows={studentRows} searchKeys={['name', 'studentIdNumber']} placeholder="Search by name or student ID…"
               emptyText="No students found." onView={setViewStudent} onDelete={setDelStudent} />
           </>
@@ -462,7 +457,6 @@ export default function Admin() {
 
         {tab === 'teachers' && (
           <>
-            <div className={s.sectionHeader}><h2>Teachers</h2><p>{teachers.length} registered teacher{teachers.length === 1 ? '' : 's'}</p></div>
             <DataTable columns={TEACHER_COLS} rows={teachers} searchKeys={['name', 'teacherIdNumber']} placeholder="Search by name or teacher ID…"
               emptyText="No teachers found." onView={setViewTeacher} onDelete={setDelTeacher} />
           </>
