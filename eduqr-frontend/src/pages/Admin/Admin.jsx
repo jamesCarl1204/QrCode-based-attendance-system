@@ -116,22 +116,24 @@ function ClassesGrid({ classes, archived, onOpen }) {
     if (!n) return true;
     return c.subject_name.toLowerCase().includes(n) || (c.section || '').toLowerCase().includes(n) || `${c.teacher_first_name} ${c.teacher_last_name}`.toLowerCase().includes(n);
   });
-  const noun = archived ? 'archived class' : 'class';
   return (
     <>
       <div className={s.tableToolbar}>
-        <input className={s.searchInput} placeholder="Search by subject, section, or teacher…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <input className={s.searchInput} placeholder={archived ? "Search archived classes…" : "Search by subject, section, or teacher…"} value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
-      <div className={s.subjectGrid}>
-        {rows.length === 0 && <p className={s.mutedText}>No {archived ? 'archived ' : ''}classes found.</p>}
-        {rows.map((c) => (
-          <ClassCard key={c.id} showCode={false} onOpen={() => onOpen(c.id)}
-            cls={{ subject: c.subject_name, section: c.section, color: c.color, archived: c.archived }}
-            footer={<div className={s.cardMeta}><span>{c.total_students} student{c.total_students === 1 ? '' : 's'}</span><span>{c.total_sessions} session{c.total_sessions === 1 ? '' : 's'}</span></div>}>
-            <p className={s.sectionLabel} style={{ marginTop: 6 }}>Teacher: {c.teacher_first_name} {c.teacher_last_name}</p>
-          </ClassCard>
-        ))}
-      </div>
+      {rows.length === 0 ? (
+        <p className={s.mutedText}>No {archived ? 'archived ' : ''}classes found.</p>
+      ) : (
+        <div className={s.subjectGrid}>
+          {rows.map((c) => (
+            <ClassCard key={c.id} showCode={false} onOpen={() => onOpen(c.id)}
+              cls={{ subject: c.subject_name, section: c.section, color: c.color, archived: c.archived }}
+              footer={<div className={s.cardMeta}><span>{c.total_students} student{c.total_students === 1 ? '' : 's'}</span><span>{c.total_sessions} session{c.total_sessions === 1 ? '' : 's'}</span></div>}>
+              <p className={s.sectionLabel} style={{ marginTop: 6 }}>Teacher: {c.teacher_first_name} {c.teacher_last_name}</p>
+            </ClassCard>
+          ))}
+        </div>
+      )}
     </>
   );
 }
