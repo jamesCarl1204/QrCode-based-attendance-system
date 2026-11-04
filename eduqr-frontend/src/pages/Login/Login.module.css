@@ -5,10 +5,21 @@
   --err: #dc2626; --err-bg: #fee2e2; --err-ink: #b91c1c; --ok-bg: #dcfce7; --ok-ink: #166534;
   min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;
   padding: 16px;
+  position: relative; isolation: isolate; overflow: hidden;
   font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Existing repo image as a softly blurred, darkened page backdrop */
+.page::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -10px;
+  background: linear-gradient(rgba(8, 20, 42, 0.42), rgba(8, 20, 42, 0.42)), url('/100.png') center / cover no-repeat;
+  filter: blur(5px);
 }
 
 /* ---------- Shell (dual-pane card) ---------- */
