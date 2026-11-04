@@ -6,7 +6,6 @@ const { scanLimiter } = require('../middleware/rateLimiters');
 
 router.get('/sessions/:id/records', requireAuth, attendance.getRecords);
 router.post('/sessions/:id/manual-attend', requireTeacher, attendance.manualAttend);
-router.post('/sessions/:id/attend', requireStudent, attendance.attendBySession);
 router.get('/sessions/:id/download', requireTeacher, attendance.downloadCsv);
 router.delete('/sessions/:id', requireTeacher, sessionCtrl.deleteSession);
 

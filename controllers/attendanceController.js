@@ -71,31 +71,7 @@ async function manualAttend(req, res) {
   }
 }
 
-/* POST /sessions/:id/attend (student, by session id) */
-async function attendBySession(req, res) {
-  try {
-    const session = await sessionModel.findWithTeacher(req.params.id);
-    if (!session) return fail(res, 404, 'Session not found.');
 
-    const studentId = req.session.user.id;
-    if (!(await classModel.isEnrolled(session.class_id, studentId))) {
-      return fail(res, 403, 'Not authorized for this class.');
-    }
-
-    const check = evaluateWindow(session);
-    if (check.error) return fail(res, 400, check.error);
-
-    if (await attendanceModel.findOne(session.id, studentId)) {
-      return fail(res, 400, 'You have already attended this session.');
-    }
-
-    const timeIn = phTime();
-    await attendanceModel.insert(session.id, studentId, timeIn, check.status);
-    return res.json({ success: true, status: check.status, time_in: timeIn });
-  } catch (err) {
-    return serverError(res, 'Attend error', err);
-  }
-}
 
 /* POST /attend/scan (student scans the QR code) */
 async function scanQr(req, res) {
