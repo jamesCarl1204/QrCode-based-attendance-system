@@ -64,8 +64,6 @@ export default function PortalLayout({ role, brand, links, active, onSelect, tit
           <div className={s.sidebarBrand}>
             <div className={s.brandIcon}><i className="fa-solid fa-qrcode" /></div>
             <div>
-              <span className={s.brandName}>{brand?.replace(/\\s+Portal$/i, '')}</span>
-              <span className={s.brandSub}>{user?.firstName || user?.email || role}</span>
               <span className={s.profileEmail}>{user?.email || '\\u00a0'}</span>
             </div>
           </div>
