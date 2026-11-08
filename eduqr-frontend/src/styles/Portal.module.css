@@ -516,3 +516,242 @@
   .studentRecordIdentity, .adminRecordIdentity { gap: 8px; }
   .studentRecordStatus, .adminRecordStatus { margin-top: 10px; padding-top: 9px; }
 }
+
+
+/* ---------- Teacher dashboard: minimalist visual refinement ---------- */
+/* Scoped to the teacher portal so shared student/admin screens stay unchanged. */
+:global(html[data-portal="teacher"]) .mainContent {
+  padding: 30px 32px 44px;
+  max-width: 1320px;
+}
+:global(html[data-portal="teacher"]) .navbar {
+  padding-inline: 26px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
+}
+:global(html[data-portal="teacher"]) .pageTitle {
+  font-size: 1.05rem;
+  letter-spacing: -0.025em;
+}
+:global(html[data-portal="teacher"]) .sidebar {
+  padding: 20px 13px;
+}
+:global(html[data-portal="teacher"]) .sidebarBrand {
+  padding: 3px 7px 17px;
+  margin-bottom: 17px;
+}
+:global(html[data-portal="teacher"]) .brandIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+:global(html[data-portal="teacher"]) .sidebarLinks {
+  gap: 5px;
+}
+:global(html[data-portal="teacher"]) .sidebarLink {
+  padding: 10px 12px;
+  border-radius: 9px;
+  font-size: 0.84rem;
+}
+:global(html[data-portal="teacher"]) .linkIcon {
+  width: 19px;
+  font-size: 0.88rem;
+}
+:global(html[data-portal="teacher"]) .sidebarProfile {
+  padding: 9px;
+  border-radius: 10px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
+  gap: 14px;
+  margin-bottom: 0;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .panel {
+  padding: 19px 20px;
+  border-radius: 13px;
+  border-color: var(--border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statTop {
+  margin-bottom: 12px;
+  gap: 10px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statLabel {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+  font-size: 0.88rem;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statGreen,
+:global(html[data-portal="teacher"]) .teacherDashboard .statIndigo,
+:global(html[data-portal="teacher"]) .teacherDashboard .statEmerald,
+:global(html[data-portal="teacher"]) .teacherDashboard .statAmber {
+  background: var(--brand-soft);
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statValue {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .dashRow {
+  gap: 16px;
+  margin-bottom: 0;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .panelTitle {
+  font-size: 0.94rem;
+  letter-spacing: -0.015em;
+  font-weight: 650;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .panelSub {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  margin-top: 4px;
+  margin-bottom: 15px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .chartBox {
+  height: 225px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .chartBoxSm {
+  height: 180px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statusLegend {
+  margin-top: 12px;
+  padding-top: 12px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statusLegend span {
+  font-size: 0.69rem;
+  font-weight: 500;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .statusLegend strong {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .activityFeed {
+  gap: 0;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .activityItem {
+  padding: 12px 0;
+  gap: 14px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .activityItem:first-child {
+  padding-top: 3px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .activityItem:last-child {
+  padding-bottom: 3px;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .activityTime {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .panelCta {
+  border-color: var(--border);
+  background: var(--panel);
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .ctaIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  margin-bottom: 13px;
+  background: var(--brand-soft);
+  color: var(--brand-text);
+  font-size: 1rem;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .panelCta .panelSub {
+  line-height: 1.6;
+}
+:global(html[data-portal="teacher"]) .teacherDashboard .btn {
+  border-radius: 9px;
+  font-size: 0.82rem;
+  padding: 0.62rem 1rem;
+}
+:global(html[data-portal="teacher"]) .navbar .btn,
+:global(html[data-portal="teacher"]) .navbar .themeBtn {
+  border-radius: 9px;
+}
+@media (max-width: 1024px) {
+  :global(html[data-portal="teacher"]) .mainContent {
+    padding: 24px 22px 36px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  :global(html[data-portal="teacher"]) .mainContent {
+    padding: 18px 16px 30px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard {
+    gap: 14px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
+    gap: 10px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .panel {
+    padding: 15px;
+    border-radius: 12px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .dashRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .chartBox {
+    height: 210px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .chartBoxSm {
+    height: 190px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .panelCta .btn {
+    width: 100%;
+  }
+}
+@media (max-width: 480px) {
+  :global(html[data-portal="teacher"]) .mainContent {
+    padding: 15px 12px 26px;
+  }
+  :global(html[data-portal="teacher"]) .navbar {
+    padding-inline: 12px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
+    gap: 8px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .panel {
+    padding: 13px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statLabel {
+    font-size: 0.67rem;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .statValue {
+    font-size: 1.55rem;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .activityItem {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+  :global(html[data-portal="teacher"]) .teacherDashboard .activityTime {
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
