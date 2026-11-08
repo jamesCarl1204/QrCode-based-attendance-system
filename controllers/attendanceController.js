@@ -161,4 +161,4 @@ async function downloadCsv(req, res) {
   }
 }
 
-module.exports = { getRecords, manualAttend, attendBySession, scanQr, downloadCsv };
+module.exports = { getRecords, manualAttend, scanQr, downloadCsv };

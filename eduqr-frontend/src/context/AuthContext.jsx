@@ -11,9 +11,12 @@ export function AuthProvider({ children }) {
   const refresh = useCallback(async () => {
     try {
       const d = await api('/api/me');
-      setUser(d.success ? d.user : null);
+      const u = d.success ? d.user : null;
+      setUser(u);
+      return u; // <-- ito ang idinagdag
     } catch {
       setUser(null);
+      return null;
     } finally {
       setLoading(false);
     }

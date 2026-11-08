@@ -7,9 +7,14 @@ export async function api(path, { method = 'GET', body } = {}) {
     headers: body !== undefined ? { 'Content-Type': 'application/json' } : undefined,
     body: body !== undefined ? JSON.stringify(body) : undefined,
   });
-  let data = {};
-  try { data = await res.json(); } catch { /* non-JSON response */ }
-  return data;
+  let data;
+  try { data = await res.json(); } catch { data = {}; }
+  if (!res.ok && !data.generalError && !data.errors) {
+  data = { success: false, generalError: res.status === 429
+    ? 'Too many attempts. Please try again later.'
+    : `Server error (${res.status}). Please try again.` };
+}
+return data;
 }
 
 export const homeFor = (role) => (role === 'admin' ? '/admin' : role === 'teacher' ? '/teacher' : '/student');
