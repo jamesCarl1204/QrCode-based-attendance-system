@@ -7,8 +7,9 @@
 .pageTitle { font-size: 1.15rem; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .toggleBtn { width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .toggleBtn:hover { background: var(--hover); color: var(--brand-text); }
-.themeBtn { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); font-family: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-.themeBtn:hover { color: var(--text-strong); background: var(--hover); }
+.themeBtn { width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-soft); font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+.themeBtn:hover { color: var(--text-strong); background: var(--hover); border-color: var(--border-strong); }
+.themeBtn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
 .navClock { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; }
 .navClock i { color: var(--brand-text); }
 
