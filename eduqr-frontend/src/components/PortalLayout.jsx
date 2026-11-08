@@ -63,8 +63,9 @@ export default function PortalLayout({ role, brand, links, active, onSelect, tit
         <nav className={`${s.sidebar} ${collapsed ? s.collapsed : ''}`}>
           <div className={s.sidebarBrand}>
             <div className={s.brandIcon}><i className="fa-solid fa-qrcode" /></div>
-            <div>
-              <span className={s.profileEmail}>{user?.email || '\\u00a0'}</span>
+            <div className={s.profileMeta}>
+              <p className={s.profileName}>{name}</p>
+              <p className={s.profileEmail}>{user?.email || '\\u00a0'}</p>
             </div>
           </div>
           <div className={s.sidebarLinks}>
@@ -79,13 +80,6 @@ export default function PortalLayout({ role, brand, links, active, onSelect, tit
                 {l.tag && <span className={s.sidebarTag}>{l.tag}</span>}
               </button>
             ))}
-          </div>
-          <div className={s.sidebarProfile}>
-            <div className={s.profileAvatar}>{name.trim().charAt(0).toUpperCase()}</div>
-            <div className={s.profileMeta}>
-              <p className={s.profileName}>{name}</p>
-              <p className={s.profileEmail}>{user?.email || '\u00a0'}</p>
-            </div>
           </div>
         </nav>
         <main className={s.mainContent} onClick={closeDrawer}>{children}</main>
