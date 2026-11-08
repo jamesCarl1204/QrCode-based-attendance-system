@@ -955,3 +955,21 @@
     padding-left: 0;
   }
 }
+
+
+/* ---------- Student dashboard: attendance status colors ---------- */
+.studentDashboard .statTop:has(.statAmber) .statIcon,
+.studentDashboard .statAmber {
+  color: #dc2626;
+  background: rgba(239, 68, 68, 0.12);
+}
+.studentDashboard .statTop:has(.statIndigo) .statIcon,
+.studentDashboard .statIndigo {
+  color: #d97706;
+  background: rgba(245, 158, 11, 0.14);
+}
+.studentDashboard .statTop:has(.statGreen) .statIcon,
+.studentDashboard .statGreen {
+  color: #16a34a;
+  background: rgba(34, 197, 94, 0.13);
+}
