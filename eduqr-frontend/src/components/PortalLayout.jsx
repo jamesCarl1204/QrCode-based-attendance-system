@@ -47,9 +47,13 @@ export default function PortalLayout({ role, brand, links, active, onSelect, tit
           {title && <h1 className={s.pageTitle}>{title}</h1>}
         </div>
         <div className={s.navbarRight}>
-          <button className={s.themeBtn} onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))} aria-label="Toggle theme">
-            <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} style={{ color: theme === 'dark' ? '#f59e0b' : '#6366f1' }} />
-            <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
+          <button
+            className={s.themeBtn}
+            onClick={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+          >
+            <i className={`fa-solid ${theme === 'dark' ? 'fa-sun' : 'fa-moon'}`} />
           </button>
           <div className={s.navClock} title="Philippine time">
             <i className="fa-regular fa-clock" /> <span>{clock || '--:--:-- --'}</span>
