@@ -755,3 +755,203 @@
     padding-left: 0;
   }
 }
+
+
+/* ---------- Student and Admin dashboards: minimalist visual refinement ---------- */
+.studentDashboard,
+.adminDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.studentDashboard .statGrid,
+.adminDashboard .statGrid {
+  gap: 14px;
+  margin-bottom: 0;
+}
+.studentDashboard .panel,
+.adminDashboard .panel {
+  padding: 19px 20px;
+  border-radius: 13px;
+  border-color: var(--border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
+}
+.studentDashboard .statTop,
+.adminDashboard .statTop {
+  margin-bottom: 12px;
+  gap: 10px;
+}
+.studentDashboard .statLabel,
+.adminDashboard .statLabel {
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.studentDashboard .statIcon,
+.adminDashboard .statIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: var(--brand-text);
+  background: var(--brand-soft);
+  font-size: 0.88rem;
+}
+.studentDashboard .statGreen,
+.studentDashboard .statIndigo,
+.studentDashboard .statEmerald,
+.studentDashboard .statAmber,
+.adminDashboard .statGreen,
+.adminDashboard .statIndigo,
+.adminDashboard .statEmerald,
+.adminDashboard .statAmber {
+  background: var(--brand-soft);
+}
+.studentDashboard .statValue,
+.adminDashboard .statValue {
+  font-size: 1.8rem;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.studentDashboard .dashRow,
+.adminDashboard .dashRow {
+  gap: 16px;
+  margin-bottom: 0;
+}
+.studentDashboard .panelTitle,
+.adminDashboard .panelTitle {
+  font-size: 0.94rem;
+  letter-spacing: -0.015em;
+  font-weight: 650;
+}
+.studentDashboard .panelSub,
+.adminDashboard .panelSub {
+  font-size: 0.76rem;
+  line-height: 1.5;
+  margin-top: 4px;
+  margin-bottom: 15px;
+}
+.studentDashboard .chartBox,
+.adminDashboard .chartBox {
+  height: 225px;
+}
+.studentDashboard .chartBoxSm,
+.adminDashboard .chartBoxSm {
+  height: 180px;
+}
+.studentDashboard .statusLegend,
+.adminDashboard .statusLegend {
+  margin-top: 12px;
+  padding-top: 12px;
+}
+.studentDashboard .statusLegend span,
+.adminDashboard .statusLegend span {
+  font-size: 0.69rem;
+  font-weight: 500;
+}
+.studentDashboard .statusLegend strong,
+.adminDashboard .statusLegend strong {
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+}
+.studentDashboard .activityFeed,
+.adminDashboard .activityFeed {
+  gap: 0;
+}
+.studentDashboard .activityItem,
+.adminDashboard .activityItem {
+  padding: 12px 0;
+  gap: 14px;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+.studentDashboard .activityItem:first-child,
+.adminDashboard .activityItem:first-child { padding-top: 3px; }
+.studentDashboard .activityItem:last-child,
+.adminDashboard .activityItem:last-child { padding-bottom: 3px; }
+.studentDashboard .activityTime,
+.adminDashboard .activityTime {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+.studentDashboard .panelCta,
+.adminDashboard .panelCta {
+  border-color: var(--border);
+  background: var(--panel);
+}
+.studentDashboard .ctaIcon,
+.adminDashboard .ctaIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  margin-bottom: 13px;
+  background: var(--brand-soft);
+  color: var(--brand-text);
+  font-size: 1rem;
+}
+.studentDashboard .panelCta .panelSub,
+.adminDashboard .panelCta .panelSub { line-height: 1.6; }
+.studentDashboard .btn,
+.adminDashboard .btn {
+  border-radius: 9px;
+  font-size: 0.82rem;
+  padding: 0.62rem 1rem;
+}
+@media (max-width: 1024px) {
+  .studentDashboard .statGrid,
+  .adminDashboard .statGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .studentDashboard,
+  .adminDashboard { gap: 14px; }
+  .studentDashboard .statGrid,
+  .adminDashboard .statGrid { gap: 10px; }
+  .studentDashboard .panel,
+  .adminDashboard .panel {
+    padding: 15px;
+    border-radius: 12px;
+  }
+  .studentDashboard .dashRow,
+  .adminDashboard .dashRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .studentDashboard .chartBox,
+  .adminDashboard .chartBox { height: 210px; }
+  .studentDashboard .chartBoxSm,
+  .adminDashboard .chartBoxSm { height: 190px; }
+  .studentDashboard .panelCta .btn,
+  .adminDashboard .panelCta .btn { width: 100%; }
+}
+@media (max-width: 480px) {
+  .studentDashboard .statGrid,
+  .adminDashboard .statGrid { gap: 8px; }
+  .studentDashboard .panel,
+  .adminDashboard .panel { padding: 13px; }
+  .studentDashboard .statLabel,
+  .adminDashboard .statLabel { font-size: 0.67rem; }
+  .studentDashboard .statIcon,
+  .adminDashboard .statIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+  .studentDashboard .statValue,
+  .adminDashboard .statValue { font-size: 1.55rem; }
+  .studentDashboard .activityItem,
+  .adminDashboard .activityItem {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .studentDashboard .activityTime,
+  .adminDashboard .activityTime {
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
