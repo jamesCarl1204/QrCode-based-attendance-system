@@ -19,14 +19,13 @@ async function ask(req, res) {
   try {
     const teacherId = req.session.user.id;
     const history = await aiModel.recent(teacherId, 20);
-    // Gemini requires the first history item to be a user message
     while (history.length && history[0].role !== 'user') history.shift();
 
     const contextData = await buildTeacherAIContext(teacherId);
-    const answer = await askAssistant({ question: question.trim(), contextData, history });
+    const { answer, actions } = await askAssistant({ question: question.trim(), contextData, history });
 
     await aiModel.saveExchange(teacherId, question.trim(), answer);
-    return res.json({ success: true, answer });
+    return res.json({ success: true, answer, actions });
   } catch (err) {
     return serverError(res, 'AI ask error', err, 'The AI assistant could not respond right now. Please try again.');
   }

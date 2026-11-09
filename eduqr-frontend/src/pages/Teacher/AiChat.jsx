@@ -4,6 +4,14 @@ import s from '../../styles/Portal.module.css';
 
 const GREETING = 'Hi! How can I help you?';
 
+// Whitelist: the AI only picks a type; the actual question is built here.
+const ACTION_PROMPTS = {
+  summary: (a) => `Give me the attendance summary of ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}.`,
+  absent: (a) => `Who was absent in ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}?`,
+  late: (a) => `Who was late in ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}?`,
+  low_attendance: (a) => `Which students in ${a.subject_name} have low attendance?`,
+};
+
 // Strip markdown the chat can't render (tables, headers, backticks); keep **bold**.
 function clean(text) {
   return text
@@ -32,7 +40,6 @@ export default function AiChat() {
   const [msgs, setMsgs] = useState([{ role: 'assistant', content: GREETING }]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [error, setError] = useState('');
   const logRef = useRef(null);
 
   useEffect(() => {
@@ -43,19 +50,24 @@ export default function AiChat() {
 
   useEffect(() => { if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight; }, [msgs, sending]);
 
-  const send = async () => {
-    const q = input.trim();
-    setError('');
+  const send = async (text) => {
+    const q = (text ?? input).trim();
     if (!q || sending) return;
-    setMsgs((m) => [...m, { role: 'user', content: q }]);
+    // hide buttons on older messages so only the latest set is clickable
+    setMsgs((m) => [...m.map((x) => ({ ...x, actions: undefined })), { role: 'user', content: q }]);
     setInput(''); setSending(true);
     try {
       const d = await api('/api/ai/ask', { method: 'POST', body: { question: q } });
       if (!d.success) setMsgs((m) => [...m, { role: 'error', content: d.generalError || 'The AI assistant could not respond right now.' }]);
-      else setMsgs((m) => [...m, { role: 'assistant', content: d.answer }]);
+      else setMsgs((m) => [...m, { role: 'assistant', content: d.answer, actions: d.actions || [] }]);
     } catch {
       setMsgs((m) => [...m, { role: 'error', content: 'Something went wrong. Please try again.' }]);
     } finally { setSending(false); }
+  };
+
+  const handleAction = (a) => {
+    const build = ACTION_PROMPTS[a.type];
+    if (build) send(build(a));
   };
 
   const clear = async () => {
@@ -67,22 +79,31 @@ export default function AiChat() {
   const cls = { assistant: s.aiAssistant, user: s.aiUser, error: s.aiError };
 
   return (
-    <>
-      <div className={s.panel}>
-        <div className={s.aiLog} ref={logRef}>
-          {msgs.map((m, i) => (
-            <div key={i} className={`${s.aiMsg} ${cls[m.role]}`}>{m.role === 'assistant' ? <Rich text={m.content} /> : m.content}</div>
-          ))}
-          {sending && <div className={`${s.aiMsg} ${s.aiAssistant}`}>Thinking…</div>}
-        </div>
-        <p className={s.fieldError}>{error}</p>
-        <div className={s.aiInputRow}>
-          <input placeholder="Ask about attendance in your classes…" value={input} onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && send()} />
-          <button className={`${s.btn} ${s.btnPrimary}`} disabled={sending} onClick={send}>Send</button>
-        </div>
-        <div className={s.aiFooter}><button className={`${s.btn} ${s.btnOutline}`} onClick={clear}>Clear history</button></div>
+    <div className={s.panel}>
+      <div className={s.aiLog} ref={logRef}>
+        {msgs.map((m, i) => (
+          <div key={i} className={`${s.aiMsg} ${cls[m.role]}`}>
+            {m.role === 'assistant' ? <Rich text={m.content} /> : m.content}
+            {m.actions?.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+                {m.actions.map((a, j) => (
+                  <button key={j} className={`${s.btn} ${s.btnOutline}`} style={{ padding: '0.35rem 0.8rem', fontSize: '0.78rem' }}
+                    disabled={sending} onClick={() => handleAction(a)}>
+                    {a.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+        {sending && <div className={`${s.aiMsg} ${s.aiAssistant}`}>Thinking…</div>}
       </div>
-    </>
+      <div className={s.aiInputRow}>
+        <input placeholder="Ask about attendance in your classes…" value={input} onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && send()} />
+        <button className={`${s.btn} ${s.btnPrimary}`} disabled={sending} onClick={() => send()}>Send</button>
+      </div>
+      <div className={s.aiFooter}><button className={`${s.btn} ${s.btnOutline}`} onClick={clear}>Clear history</button></div>
+    </div>
   );
 }

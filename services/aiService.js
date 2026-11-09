@@ -66,7 +66,13 @@ STRICT RULES — follow all of these at all times:
 9. When asked who was absent, list ONLY the names in that session's "absent" list.
    Never include names from "present" or "late". "not_yet_recorded" means the
    session has not ended yet, so those students are NOT absent.
-   `.trim();
+  
+10. ACTIONS: Along with "answer", you may return up to 3 "actions" (follow-up buttons).
+   Allowed types only: "summary", "absent", "late", "low_attendance".
+   Always set "subject_name" exactly as it appears in the data. Set "session_date"
+   only if your answer refers to one specific session. After answering who was
+   absent, include a "summary" action with a short label like "View summary".
+   If no button is useful, return an empty "actions" array.  `.trim();
 
 /**
  * @param {Object} params
@@ -75,6 +81,8 @@ STRICT RULES — follow all of these at all times:
  * @param {Array<{role: 'user'|'assistant', content: string}>} [params.history]
  * @returns {Promise<string>}
  */
+const ALLOWED_ACTIONS = ['summary', 'absent', 'late', 'low_attendance'];
+
 async function askAssistant({ question, contextData, history = [] }) {
   if (!process.env.GEMINI_API_KEY) {
     throw new Error('GEMINI_API_KEY is not set in the environment (.env).');
@@ -104,7 +112,31 @@ async function askAssistant({ question, contextData, history = [] }) {
     body: JSON.stringify({
       system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
       contents,
-      generationConfig: { maxOutputTokens: 1024, temperature: 0 },
+      generationConfig: {
+        maxOutputTokens: 1024,
+        temperature: 0,
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: 'OBJECT',
+          properties: {
+            answer: { type: 'STRING' },
+            actions: {
+              type: 'ARRAY',
+              items: {
+                type: 'OBJECT',
+                properties: {
+                  label: { type: 'STRING' },
+                  type: { type: 'STRING', enum: ALLOWED_ACTIONS },
+                  subject_name: { type: 'STRING' },
+                  session_date: { type: 'STRING' },
+                },
+                required: ['label', 'type', 'subject_name'],
+              },
+            },
+          },
+          required: ['answer'],
+        },
+      },
     }),
   });
 
@@ -114,12 +146,31 @@ async function askAssistant({ question, contextData, history = [] }) {
   }
 
   const data = await res.json();
-  const text = (data.candidates?.[0]?.content?.parts || [])
+  const raw = (data.candidates?.[0]?.content?.parts || [])
     .map((p) => p.text || '')
-    .join('\n')
+    .join('')
     .trim();
 
-  return text || "I wasn't able to generate a response. Please try rephrasing your question.";
+  let answer = raw;
+  let actions = [];
+  try {
+    const parsed = JSON.parse(raw);
+    answer = typeof parsed.answer === 'string' ? parsed.answer.trim() : '';
+    actions = (Array.isArray(parsed.actions) ? parsed.actions : [])
+      .filter((a) => a && ALLOWED_ACTIONS.includes(a.type) && a.label && a.subject_name)
+      .slice(0, 3)
+      .map((a) => ({
+        label: String(a.label).slice(0, 40),
+        type: a.type,
+        subject_name: String(a.subject_name),
+        session_date: a.session_date ? String(a.session_date) : '',
+      }));
+  } catch { /* not JSON: use raw text, no buttons */ }
+
+  return {
+    answer: answer || "I wasn't able to generate a response. Please try rephrasing your question.",
+    actions,
+  };
 }
 
 module.exports = { askAssistant };
