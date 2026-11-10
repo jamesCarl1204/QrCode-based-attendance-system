@@ -266,7 +266,7 @@ export default function Landing() {
           <div className={s.heroGrid}>
             <div className={s.heroText}>
               <p className={s.pill}><span className={s.pillDot} /> Built for Regis Marie College</p>
-              <h1>Smarter <span className={s.heroAccent}>attendance.</span><br /><span className={s.heroAccent}>Better school</span> connections.</h1>
+              <h1>Smarter <span className={s.heroAccent}>attendance.</span><br /><span className={s.heroAccent}>Better school connections.</span></h1>
               <p className={s.lead}>
                 Students scan a QR code to check in. Teachers see attendance live, and parents get an email automatically.
               </p>

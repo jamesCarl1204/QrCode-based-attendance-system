@@ -38,8 +38,8 @@
 .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--soft); font-size: 0.78rem; font-weight: 500; margin-bottom: 20px; }
 .pillDot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-.heroText h1 { font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; color: var(--ink); }
-.heroAccent { color: #0ea5e9; }
+.heroText h1 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: clamp(2.35rem, 4.8vw, 3.85rem); font-weight: 900; letter-spacing: -0.055em; line-height: 1.02; color: #0f172a; }
+.heroAccent { color: #2563eb; }
 .lead { margin-top: 18px; max-width: 480px; font-size: 1.05rem; line-height: 1.65; color: var(--soft); }
 .heroBtns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
 .heroFacts { list-style: none; margin: 32px 0 0; padding: 22px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 0.86rem; color: var(--soft); }
@@ -281,20 +281,4 @@
 @media (prefers-reduced-motion: reduce) {
   .loaderLogo, .loaderBar::after { animation: none; }
   .loaderBar::after { width: 100%; }
-}
-
-/* ---------- Route transition (Landing -> Login, etc.) ---------- */
-.routeFade { animation: routeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
-@keyframes routeIn {
-  from { opacity: 0; transform: translateY(18px) scale(0.99); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* ---------- Login page with the shared navbar ---------- */
-.loginShell { display: flex; flex-direction: column; min-height: 100vh; }
-/* the Login page fills what's left under the 68px navbar, so it doesn't overflow */
-.loginShell > :last-child { flex: 1 1 auto; min-height: calc(100vh - 68px); }
-
-@media (prefers-reduced-motion: reduce) {
-  .routeFade { animation: none; }
 }
