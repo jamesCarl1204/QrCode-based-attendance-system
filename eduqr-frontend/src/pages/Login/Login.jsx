@@ -101,7 +101,7 @@ function BackButton({ onClick }) {
 }
 
 /* ---------- page ---------- */
-export default function Login() {
+export default function Login({ embedded = false } = {}) {
   const navigate = useNavigate();
   const { refresh } = useAuth();
 
@@ -164,8 +164,8 @@ export default function Login() {
   const solo = view === 'register'; // register gets a single wider card (no banner)
 
   return (
-    <div className={s.page}>
-      <SiteNav hideAuth />
+    <div className={`${s.page} ${embedded ? s.embeddedPage : ''}`}>
+      {!embedded && <SiteNav hideAuth />}
       <div className={s.stage}>
         <div className={`${s.shell} ${solo ? s.shellSolo : ''}`}>
 
@@ -304,7 +304,7 @@ export default function Login() {
         </div>
       </div>
 
-      <footer className={s.footer}>&copy; 2026 Regis Marie College. QR Code-Based Attendance Monitoring System.</footer>
+      {!embedded && <footer className={s.footer}>&copy; 2026 Regis Marie College. QR Code-Based Attendance Monitoring System.</footer>}
     </div>
   );
 }
