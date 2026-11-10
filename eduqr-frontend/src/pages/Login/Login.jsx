@@ -2,6 +2,7 @@ import { useEffect, useId, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api, homeFor } from '../../api.js';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { SiteNav } from '../Landing/Landing.jsx';
 import s from './Login.module.css';
 
 /* ---------- constants ---------- */
@@ -164,6 +165,7 @@ export default function Login() {
 
   return (
     <div className={s.page}>
+      <SiteNav hideAuth />
       <div className={s.stage}>
         <div className={`${s.shell} ${solo ? s.shellSolo : ''}`}>
 
