@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { homeFor } from '../../api.js';
 import { useAuth } from '../../context/AuthContext.jsx';
+import Login from '../Login/Login.jsx';
 import s from './Landing.module.css';
 
 // Fill this in if you want contact info in the footer. Empty values are hidden.
@@ -182,7 +183,7 @@ export function SiteNav({ onSection, hideAuth = false }) {
 
   const loggedIn = !!user;
   const ctaTo = loggedIn ? homeFor(user.role) : '/login';
-  const ctaLabel = loggedIn ? 'Open dashboard' : 'Get started';
+  const ctaLabel = loggedIn ? 'Open dashboard' : 'Log in';
 
   const item = (n) => (onSection
     ? <button key={n.id} onClick={() => { setMenu(false); onSection(n.id); }}>{n.label}</button>
@@ -190,12 +191,7 @@ export function SiteNav({ onSection, hideAuth = false }) {
 
   const actions = hideAuth
     ? <Link to="/" className={s.btnOutline}><i className="fa-solid fa-arrow-left" /> Back to home</Link>
-    : (
-      <>
-        {!loggedIn && <Link to="/login" className={s.btnGhost}>Log in</Link>}
-        <Link to={ctaTo} className={s.btnPrimary}>{ctaLabel}</Link>
-      </>
-    );
+    : <Link to={loggedIn ? ctaTo : '#login-card'} onClick={(e) => { if (!loggedIn) { e.preventDefault(); onSection ? onSection('login-card') : window.location.assign('/#login-card'); } }} className={s.btnPrimary}>{ctaLabel}</Link>;
 
   const brandInner = (
     <>
@@ -261,28 +257,7 @@ export default function Landing() {
       <SiteNav onSection={go} />
 
       <main id="top">
-        {/* ---------- Hero ---------- */}
-        <section className={s.hero}>
-          <div className={s.heroGrid}>
-            <div className={s.heroText}>
-              <p className={s.pill}><span className={s.pillDot} /> Built for Regis Marie College</p>
-              <h1>Smarter <span className={s.heroAccent}>attendance.</span><br /><span className={s.heroAccent}>Better school connections.</span></h1>
-              <p className={s.lead}>
-                Students scan a QR code to check in. Teachers see attendance live, and parents get an email automatically.
-              </p>
-              <div className={s.heroBtns}>
-                <Link to="/login" className={`${s.btnPrimary} ${s.btnLg}`}>Log in <i className="fa-solid fa-arrow-right" /></Link>
-                <button className={`${s.btnOutline} ${s.btnLg}`} onClick={() => go('features')}>Learn more</button>
-              </div>
-              <ul className={s.heroFacts}>
-                <li><i className="fa-solid fa-users" /> Student, teacher, and admin portals</li>
-                <li><i className="fa-solid fa-envelope" /> Automatic parent emails</li>
-                <li><i className="fa-solid fa-mobile-screen" /> Works on phones and desktops</li>
-              </ul>
-            </div>
-            <DemoCard />
-          </div>
-        </section>
+        <section id="login-card" className={s.loginLanding}><Login embedded /></section>
 
         {/* ---------- Features ---------- */}
         <section id="features" className={s.section}>
@@ -378,16 +353,6 @@ export default function Landing() {
             </p>
           </div>
         </section>
-
-        {/* ---------- CTA ---------- */}
-        <section className={s.ctaSection}>
-          <div className={s.ctaBox} data-reveal>
-            <h2>Ready to take attendance in seconds?</h2>
-            <p>Log in to your portal, or create a student account to join your classes.</p>
-            <Link to={ctaTo} className={`${s.btnWhite} ${s.btnLg}`}>{ctaLabel} <i className="fa-solid fa-arrow-right" /></Link>
-          </div>
-        </section>
-      </main>
 
       {/* ---------- Footer ---------- */}
       <footer className={s.footer}>
