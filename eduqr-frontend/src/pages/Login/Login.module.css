@@ -3,11 +3,11 @@
   --line: #e2e8f0; --field: #f8fafc;
   --sky: #0ea5e9; --sky-dark: #0284c7; --blue: #2563eb;
   --err: #dc2626; --err-bg: #fee2e2; --err-ink: #b91c1c; --ok-bg: #dcfce7; --ok-ink: #166534;
-  min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between;
-  padding: 16px;
-  position: relative; isolation: isolate; overflow: hidden;
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-start;
+  padding: 0;
+  position: relative; isolation: isolate; overflow-x: hidden;
   font-family: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
-  background: var(--bg);
+  background: #ffffff;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
   animation: loginPageEnter 0.42s ease both;
@@ -18,22 +18,10 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Dark navy outer background with the subtle grid from the reference */
-.page::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  background:
-    linear-gradient(rgba(8, 20, 52, 0.18), rgba(8, 20, 52, 0.18)),
-    linear-gradient(to right, rgba(125, 170, 255, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(125, 170, 255, 0.09) 1px, transparent 1px),
-    radial-gradient(ellipse at 50% 0%, #203b78 0%, #142653 48%, #0b1735 100%);
-  background-size: auto, 40px 40px, 40px 40px, cover;
-}
+.page::before { content: none; }
 
 /* ---------- Shell (dual-pane card) ---------- */
-.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px 0; }
+.stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
 .shell { width: 100%; max-width: 1120px; min-height: 620px; display: flex; flex-direction: row-reverse; background: var(--card); border: 1px solid #f1f5f9; border-radius: 24px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25); }
 .shellSolo { max-width: 680px; min-height: 0; }
 
@@ -140,7 +128,7 @@
 .bannerFoot { display: flex; align-items: center; justify-content: space-between; padding-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.6875rem; color: rgba(255, 255, 255, 0.6); }
 .bannerFoot i { margin-right: 4px; }
 
-.footer { text-align: center; padding: 8px 0; font-size: 0.75rem; font-weight: 500; color: var(--muted); }
+.footer { text-align: center; padding: 12px 16px; font-size: 0.75rem; font-weight: 500; color: var(--muted); }
 
 .page > :global(header) { flex: 0 0 auto; }
 
