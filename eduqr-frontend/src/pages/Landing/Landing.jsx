@@ -254,7 +254,7 @@ export default function Landing() {
 
   const loggedIn = !!user;
   const ctaTo = loggedIn ? homeFor(user.role) : '/login';
-  const ctaLabel = loggedIn ? 'Open dashboard' : 'Get started';
+  const ctaLabel = loggedIn ? 'Open dashboard' : 'Log in';
 
   return (
     <div className={s.page} ref={rootRef}>
