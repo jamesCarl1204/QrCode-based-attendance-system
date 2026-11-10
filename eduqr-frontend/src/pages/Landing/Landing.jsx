@@ -168,7 +168,7 @@ export function PageLoader() {
 
 // onSection(id): pass it on the landing page to smooth-scroll in place.
 // Without it (e.g. login page) the links go to /#section on the landing page.
-// hideAuth: shows a single "Back to home" button instead of Log in / Get started.
+// hideAuth: shows a single "Back to home" button instead of the login actions.
 export function SiteNav({ onSection, hideAuth = false }) {
   const { user } = useAuth();
   const [scrolled, setScrolled] = useState(false);
@@ -247,6 +247,10 @@ export default function Landing() {
   const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   if (loading) return <PageLoader />;
+
+  const loggedIn = !!user;
+  const ctaTo = loggedIn ? homeFor(user.role) : '/login';
+  const ctaLabel = loggedIn ? 'Open dashboard' : 'Log in';
 
   const loggedIn = !!user;
   const ctaTo = loggedIn ? homeFor(user.role) : '/login';
