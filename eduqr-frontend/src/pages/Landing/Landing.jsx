@@ -30,7 +30,6 @@ export function PageLoader() {
 }
 
 export function SiteNav({ hideAuth = false }) {
-  const { user } = useAuth();
   return (
     <header className={s.nav}>
       <div className={s.navInner}>
