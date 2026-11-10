@@ -252,10 +252,6 @@ export default function Landing() {
   const ctaTo = loggedIn ? homeFor(user.role) : '/login';
   const ctaLabel = loggedIn ? 'Open dashboard' : 'Log in';
 
-  const loggedIn = !!user;
-  const ctaTo = loggedIn ? homeFor(user.role) : '/login';
-  const ctaLabel = loggedIn ? 'Open dashboard' : 'Log in';
-
   return (
     <div className={s.page} ref={rootRef}>
       <SiteNav onSection={go} />
