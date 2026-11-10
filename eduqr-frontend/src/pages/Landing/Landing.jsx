@@ -271,7 +271,7 @@ export default function Landing() {
                 Students scan a QR code to check in. Teachers see attendance live, and parents get an email automatically.
               </p>
               <div className={s.heroBtns}>
-                <Link to={ctaTo} className={`${s.btnPrimary} ${s.btnLg}`}>{ctaLabel} <i className="fa-solid fa-arrow-right" /></Link>
+                <Link to="/login" className={`${s.btnPrimary} ${s.btnLg}`}>Log in <i className="fa-solid fa-arrow-right" /></Link>
                 <button className={`${s.btnOutline} ${s.btnLg}`} onClick={() => go('features')}>Learn more</button>
               </div>
               <ul className={s.heroFacts}>
