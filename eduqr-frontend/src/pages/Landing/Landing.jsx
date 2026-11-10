@@ -80,7 +80,7 @@ function useReveal(rootRef, ready) {
   }, [rootRef, ready]);
 }
 
-/* ---------- Demo card: class card that "opens" to show records ---------- */
+/* ---------- Demo card: class is always shown open with records ---------- */
 function DemoCard() {
   return (
     <div className={s.demoWrap} aria-hidden="true">
@@ -99,13 +99,12 @@ function DemoCard() {
         </div>
         <p className={s.demoCode}>Code: <span>MAT-7K2QP</span></p>
 
-        {/* Open class button with animated cursor */}
+        {/* Static open status; records are visible by default */}
         <div className={s.demoOpenBtn}>
-          Open class <span className={s.demoArrow}><i className="fa-solid fa-chevron-right" /></span>
+          <i className="fa-solid fa-circle-check" /> Class is open
         </div>
-        <span className={s.demoCursor}><i className="fa-solid fa-arrow-pointer" /></span>
 
-        {/* Records panel that slides open after the "click" */}
+        {/* Always-visible session records */}
         <div className={s.demoRecords}>
           <div className={s.demoRecordsInner}>
             <div className={s.demoStatRow}>
