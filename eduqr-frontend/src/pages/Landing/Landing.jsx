@@ -80,54 +80,30 @@ function useReveal(rootRef, ready) {
   }, [rootRef, ready]);
 }
 
-/* ---------- Demo card: class is always shown open with records ---------- */
 function DemoCard() {
   return (
-    <div className={s.demoWrap} aria-hidden="true">
-      <div className={s.demoCard}>
-        {/* Class card header */}
-        <div className={s.demoHeader}>
-          <span className={s.demoIcon}>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" /><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-            </svg>
-          </span>
-          <div>
-            <h3>Mathematics</h3>
-            <p className={s.demoSub}>Grade 10 &ndash; Section A</p>
-          </div>
-        </div>
-        <p className={s.demoCode}>Code: <span>MAT-7K2QP</span></p>
+    <div className={s.heroVisual} aria-hidden="true">
+      <div className={s.heroPhoto} />
 
-        {/* Static open status; records are visible by default */}
-        <div className={s.demoOpenBtn}>
-          <i className="fa-solid fa-circle-check" /> Class is open
-        </div>
-
-        {/* Always-visible session records */}
-        <div className={s.demoRecords}>
-          <div className={s.demoRecordsInner}>
-            <div className={s.demoStatRow}>
-              {[['Present', '1', 'present'], ['Late', '1', 'late'], ['Absent', '1', 'absent']].map(([label, val, cls]) => (
-                <div key={label} className={`${s.demoStatBox} ${s[cls]}`}>
-                  <strong>{val}</strong><small>{label}</small>
-                </div>
-              ))}
-            </div>
-            <p className={s.demoRecLabel}>Session records</p>
-            {SAMPLE.map((r) => (
-              <div key={r.name} className={s.pvRow}>
-                <span className={s.pvAvatar}>{r.name.split(' ').map((p) => p[0]).slice(0, 2).join('')}</span>
-                <span className={s.pvName}>{r.name}<small>{r.time}</small></span>
-                <span className={`${s.badge} ${s[r.cls]}`}>{r.status}</span>
-              </div>
-            ))}
-          </div>
+      <div className={`${s.floatCard} ${s.floatScan}`}>
+        <span className={`${s.floatIcon} ${s.floatIconGreen}`}><i className="fa-solid fa-qrcode" /></span>
+        <div>
+          <strong className={s.floatTitle}><span className={s.liveDotG} /> Live QR Scan</strong>
+          <small className={s.floatSub}>Maria Santos scanned</small>
         </div>
       </div>
 
-      <div className={`${s.chip} ${s.chipDemo}`}><i className="fa-solid fa-circle-check" /> Maria Santos marked Present</div>
-      <div className={`${s.chip} ${s.chipDemo2}`}><i className="fa-solid fa-envelope" /> Parent email sent</div>
+      <div className={`${s.floatCard} ${s.floatRate}`}>
+        <span className={`${s.floatIcon} ${s.floatIconBlue}`}><i className="fa-solid fa-bolt" /></span>
+        <div>
+          <small className={s.rateLabel}>ATTENDANCE RATE</small>
+          <div className={s.rateValue}>98.4% <em><i className="fa-solid fa-arrow-trend-up" /> Real-time</em></div>
+        </div>
+      </div>
+
+      <div className={`${s.floatCard} ${s.floatVerified}`}>
+        <span className={s.checkCircle}><i className="fa-solid fa-check" /></span> Verified &amp; Synced
+      </div>
     </div>
   );
 }
