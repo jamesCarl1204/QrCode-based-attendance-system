@@ -17,7 +17,7 @@ const LINKS = [
   { key: 'archivedClasses', icon: 'fa-box-archive', label: 'Archived Classes' },
   { key: 'createTeacher', icon: 'fa-user-plus', label: 'Create Teacher' },
   { key: 'announcements', icon: 'fa-bullhorn', label: 'Announcements' },
-  { key: 'createTeacher', icon: 'fa-user-plus', label: 'Create Teacher' },
+
 ];
 const TITLES = { dashboard: 'Dashboard', students: 'Students', teachers: 'Teachers', classes: 'Classes', archivedClasses: 'Archived Classes', createTeacher: 'Create Teacher', announcements: 'Announcements'};
 
