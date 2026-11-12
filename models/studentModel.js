@@ -38,6 +38,11 @@ async function count() {
   return row.n;
 }
 
+async function listContactEmails() {
+  const [rows] = await pool.query('SELECT email, parent_email FROM students');
+  return rows;
+}
+
 const deleteCascade = (id) =>
   withTransaction(async (conn) => {
     await conn.query('DELETE FROM attendance_records WHERE student_id = ?', [id]);
@@ -45,7 +50,9 @@ const deleteCascade = (id) =>
     await conn.query('DELETE FROM students WHERE id = ?', [id]);
   });
 
+
+
 module.exports = {
   findForLogin, findIdByEmail, findIdByStudentNumber, findContactById, findById,
-  create, updatePasswordByEmail, listAll, count, deleteCascade,
+  create, updatePasswordByEmail, listAll, count, deleteCascade, listContactEmails
 };

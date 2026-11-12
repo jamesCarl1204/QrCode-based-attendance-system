@@ -6,7 +6,7 @@ const sessionModel = require('../models/sessionModel');
 const attendanceModel = require('../models/attendanceModel');
 const { isValidEmail, toPHDate, calcRate } = require('../utils/helpers');
 const { fail, fieldErrors, serverError } = require('../utils/response');
-
+const emailService = require('../services/emailService');
 /* ---------- students ---------- */
 async function listStudents(req, res) {
   try {
@@ -170,7 +170,40 @@ async function deleteClass(req, res) {
   }
 }
 
+/* ---------- announcements ---------- */
+async function sendAnnouncement(req, res) {
+  const { title, message, toStudents, toParents } = req.body || {};
+  const t = typeof title === 'string' ? title.trim() : '';
+  const m = typeof message === 'string' ? message.trim() : '';
+
+  if (!t) return fail(res, 400, 'Title is required.');
+  if (t.length > 150) return fail(res, 400, 'Title is too long (max 150 characters).');
+  if (!m) return fail(res, 400, 'Message is required.');
+  if (m.length > 2000) return fail(res, 400, 'Message is too long (max 2000 characters).');
+  if (!toStudents && !toParents) return fail(res, 400, 'Select at least one recipient.');
+  if (!emailService.isEmailConfigured()) return fail(res, 500, 'Email service is not configured.');
+
+  try {
+    const rows = await studentModel.listContactEmails();
+
+    const set = new Set();
+    rows.forEach((r) => {
+      if (toStudents && r.email) set.add(r.email.trim().toLowerCase());
+      if (toParents && r.parent_email) set.add(r.parent_email.trim().toLowerCase());
+    });
+    const recipients = [...set];
+
+    if (recipients.length === 0) return fail(res, 400, 'No recipients found.');
+
+    res.json({ success: true, recipients: recipients.length });
+
+    emailService.sendAnnouncementBulk(recipients, { title: t, message: m })
+      .catch((err) => console.error('Announcement bulk error:', err));
+  } catch (err) {
+    return serverError(res, 'Send announcement error', err);
+  }
+}
 module.exports = {
   listStudents, deleteStudent, listTeachers, deleteTeacher, createTeacher,
-  listClasses, classDetail, deleteClass,
+  listClasses, classDetail, deleteClass, sendAnnouncement
 };

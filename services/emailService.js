@@ -110,4 +110,50 @@ async function sendClassEndedNotification({
   }
 }
 
-module.exports = { sendAttendanceNotification, sendClassEndedNotification };
+const escapeHtml = (str) =>
+  String(str ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+async function sendAnnouncementEmail({ to, title, message }) {
+  const safeTitle = escapeHtml(title);
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+
+  await sendMail({
+    to,
+    subject: `Announcement: ${title}`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+        <h2 style="color: #2563eb;">${safeTitle}</h2>
+        <p style="font-size: 0.95rem; line-height: 1.6; color: #111827;">${safeMessage}</p>
+        <p style="margin-top: 20px; font-size: 0.85rem; color: #6b7280;">
+          This is an announcement from Regis Marie College. This is an automated message.
+        </p>
+      </div>
+    `,
+  });
+}
+
+// Sends in small batches so we don't hammer Brevo. Never throws; returns counts.
+async function sendAnnouncementBulk(recipients, { title, message }) {
+  let sent = 0;
+  let failed = 0;
+  const BATCH = 5;
+
+  for (let i = 0; i < recipients.length; i += BATCH) {
+    const results = await Promise.allSettled(
+      recipients.slice(i, i + BATCH).map((to) => sendAnnouncementEmail({ to, title, message }))
+    );
+    results.forEach((r) => {
+      if (r.status === 'fulfilled') sent++;
+      else { failed++; console.error('Announcement email failed:', r.reason?.message); }
+    });
+  }
+
+  console.log(`Announcement "${title}": ${sent} sent, ${failed} failed`);
+  return { sent, failed };
+}
+
+const isEmailConfigured = () => !!(process.env.BREVO_API_KEY && process.env.MAIL_FROM);
+
+module.exports = { sendAttendanceNotification, sendClassEndedNotification, sendAnnouncementBulk, isEmailConfigured };

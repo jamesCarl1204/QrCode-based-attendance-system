@@ -13,4 +13,6 @@ module.exports = {
   registerLimiter: make(60 * 60 * 1000, 10, 'Too many registration attempts. Please try again later.'),
   scanLimiter: make(5 * 60 * 1000, 30, 'Too many scan attempts. Please slow down and try again.'),
   forgotPasswordLimiter: make(15 * 60 * 1000, 10, 'Too many attempts. Please try again later.'),
+  announcementLimiter: make(10 * 60 * 1000, 5, 'Too many announcements sent. Please wait a few minutes.'),
 };
+
