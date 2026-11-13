@@ -9,35 +9,9 @@ import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import StudentDashboard from './StudentDashboard.jsx';
 import s from '../../styles/Portal.module.css';
+import { TITLES, LINKS, TABS } from './student.constants.js';
+import { mapClass, statusClass, rateClass, ownRecord } from './student.helpers.js';
 
-const TITLES = { dashboard: 'Dashboard', active: 'My Classes', archived: 'Archived Classes' };
-
-const LINKS = [
-  { key: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
-  { key: 'active', icon: 'fa-book-open', label: 'My Classes' },
-  { key: 'archived', icon: 'fa-box-archive', label: 'Archived Classes' },
-  { key: 'scan', icon: 'fa-camera', label: 'Scan' },
-];
-
-const TABS = [
-  { key: 'attendance', label: 'Attendance' },
-  { key: 'summary', label: 'Summary' },
-  { key: 'members', label: 'Members' },
-];
-
-const mapClass = (c) => ({
-  id: c.id, subject: c.subject_name, section: c.section, code: c.class_code, color: c.color,
-  archived: !!c.archived, teacherFirstName: c.teacher_first_name, teacherEmail: c.teacher_email,
-});
-
-const statusClass = (st) =>
-  st === 'Present' ? s.recordStatusPresent : st === 'Late' ? s.recordStatusLate : st === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending;
-
-const rateClass = (r) => (r === null ? '' : r >= 85 ? s.rateGood : r >= 75 ? s.rateWarn : s.rateLow);
-
-// Pick only the logged-in student's own row (backend already filters; this is a second guard).
-const ownRecord = (data, userId) =>
-  data && data.success ? (data.records || []).find((r) => String(r.student_id) === String(userId)) || null : null;
 
 function ScanModal({ open, onClose, onDone }) {
   const [err, setErr] = useState('');
@@ -130,7 +104,7 @@ function RecordsPage({ session, onBack }) {
                     </div>
                   </td>
                   <td><span className={s.recordTime}>{mine.time_in ? fmt12(mine.time_in) : '—'}</span></td>
-                  <td><span className={`${s.recordStatus} ${statusClass(mine.status)}`}>{mine.status || 'Not yet'}</span></td>
+                  <td><span className={`${s.recordStatus} ${statusClass(mine.status, s)}`}>{mine.status || 'Not yet'}</span></td>
                 </tr>
               </tbody>
             </table>
@@ -145,7 +119,7 @@ function RecordsPage({ session, onBack }) {
                 </div>
               </div>
               <div className={s.studentRecordStatus}>
-                <span className={`${s.recordStatus} ${statusClass(mine.status)}`}>{mine.status || 'Not yet'}</span>
+                <span className={`${s.recordStatus} ${statusClass(mine.status, s)}`}>{mine.status || 'Not yet'}</span>
               </div>
             </article>
           </div>
@@ -194,7 +168,7 @@ function SummaryTab({ sessions, mine }) {
             <div className={s.statPill}><div className={`${s.statValue} ${s.cPresent}`}>{stats.present}</div><div className={s.statLabel}>Present</div></div>
             <div className={s.statPill}><div className={`${s.statValue} ${s.cLate}`}>{stats.late}</div><div className={s.statLabel}>Late</div></div>
             <div className={s.statPill}><div className={`${s.statValue} ${s.cAbsent}`}>{stats.absent}</div><div className={s.statLabel}>Absent</div></div>
-            <div className={s.statPill}><div className={`${s.statValue} ${rateClass(stats.rate)}`}>{stats.rate !== null ? `${stats.rate}%` : '—'}</div><div className={s.statLabel}>Attendance Rate</div></div>
+            <div className={s.statPill}><div className={`${s.statValue} ${rateClass(stats.rate, s)}`}>{stats.rate !== null ? `${stats.rate}%` : '—'}</div><div className={s.statLabel}>Attendance Rate</div></div>
           </div>
           {stats.rate !== null && stats.rate < 75 && (
             <p className={s.fieldError} style={{ marginBottom: 12 }}>Your attendance is below 75%. Please talk to your teacher.</p>
@@ -203,7 +177,7 @@ function SummaryTab({ sessions, mine }) {
             {stats.history.map((h) => (
               <div key={h.id} className={s.historyItem}>
                 <span>{h.date}</span>
-                <span className={`${s.recordStatus} ${statusClass(h.status)}`}>{h.status || 'Not yet'}</span>
+                <span className={`${s.recordStatus} ${statusClass(h.status, s)}`}>{h.status || 'Not yet'}</span>
               </div>
             ))}
           </div>
@@ -292,7 +266,7 @@ function ClassDetail({ cls, onBack, onLeft }) {
                     <div className={s.sessionDate}>{x.session_date}</div>
                     <div className={s.sessionTime}>{fmt12(x.start_time)} – {fmt12(x.end_time)} · Late after {fmt12(x.late_after)}</div>
                   </div>
-                  {mine && <span className={`${s.recordStatus} ${statusClass(st)}`}>{st || 'Not yet'}</span>}
+                  {mine && <span className={`${s.recordStatus} ${statusClass(st, s)}`}>{st || 'Not yet'}</span>}
                 </div>
               );
             })}
