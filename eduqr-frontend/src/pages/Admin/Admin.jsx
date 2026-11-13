@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { LINKS, TITLES } from './admin.constants.js';
 import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassesGrid from './ClassesGrid.jsx';
@@ -30,8 +30,6 @@ export default function Admin() {
   const [detailId, setDetailId] = useState(null);
   const [delClass, setDelClass] = useState(null);
 
-  const studentRows = useMemo(() => students, [students]);
-
   if (detailId) {
     const selectedClass = classes.find((item) => item.id === detailId);
     if (selectedClass) {
@@ -52,7 +50,7 @@ export default function Admin() {
         {(tab === 'students' || tab === 'teachers') && (
           <AdminUserTables
             tab={tab}
-            studentRows={studentRows}
+            studentRows={students}
             teachers={teachers}
             onViewStudent={setViewStudent}
             onDeleteStudent={setDelStudent}
