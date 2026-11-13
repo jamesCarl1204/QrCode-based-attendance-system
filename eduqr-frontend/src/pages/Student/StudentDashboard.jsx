@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../api.js';
 import s from '../../styles/Portal.module.css';
-
-const rateClass = (r) => (r === null ? '' : r >= 85 ? s.rateGood : r >= 75 ? s.rateWarn : s.rateLow);
+import { rateClass } from './student.helpers.js';
 
 export default function StudentDashboard({ onOpenClass }) {
   const [d, setD] = useState(null); // null = loading, false = error
@@ -63,7 +62,7 @@ export default function StudentDashboard({ onOpenClass }) {
                     {c.section || 'No section set'} · Present {c.present} · Late {c.late} · Absent {c.absent}
                   </div>
                 </div>
-                <span className={rateClass(c.rate)} style={{ fontWeight: 700 }}>
+                <span className={rateClass(c.rate, s)} style={{ fontWeight: 700 }}>
                   {c.rate !== null ? `${c.rate}%` : '—'}
                 </span>
               </div>
