@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LINKS, TITLES, STUDENT_COLS, TEACHER_COLS } from './admin.constants.js';
+import { activityIcon } from './admin.helpers.js';
 import { api } from '../../api.js';
 import { fmt12, timeAgo } from '../../utils.js';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -9,16 +10,6 @@ import DataTable from '../../components/DataTable.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import s from '../../styles/Portal.module.css';
-
-function activityIcon(msg = '') {
-  const m = msg.toLowerCase();
-  if (m.includes('marked late')) return [s.actOrange, 'fa-clock'];
-  if (m.includes('marked absent')) return [s.actRed, 'fa-circle-xmark'];
-  if (m.includes('marked present')) return [s.actGreen, 'fa-user-check'];
-  if (m.includes('teacher account')) return [s.actBlue, 'fa-user-plus'];
-  if (m.includes('class')) return [s.actBlue, 'fa-calendar'];
-  return [s.actBlue, 'fa-circle-info'];
-}
 
 function Dashboard({ goTo }) {
   const [d, setD] = useState(null);
