@@ -1,7 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { LINKS, TITLES } from './admin.constants.js';
-import { api } from '../../api.js';
-import { useToast } from '../../context/ToastContext.jsx';
 import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassesGrid from './ClassesGrid.jsx';
 import AdminClassDetailPage from './AdminClassDetailPage.jsx';
@@ -10,44 +8,27 @@ import Announcements from './Announcements.jsx';
 import Dashboard from './Dashboard.jsx';
 import AdminUserTables from './AdminUserTables.jsx';
 import AdminModals from './AdminModals.jsx';
+import useAdminData from './useAdminData.js';
 
 export default function Admin() {
-  const toast = useToast();
+  const {
+    students,
+    teachers,
+    classes,
+    busy,
+    loadStudents,
+    loadTeachers,
+    loadClasses,
+    remove,
+  } = useAdminData();
+
   const [tab, setTab] = useState('dashboard');
-  const [students, setStudents] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [classes, setClasses] = useState([]);
   const [viewStudent, setViewStudent] = useState(null);
   const [viewTeacher, setViewTeacher] = useState(null);
   const [delStudent, setDelStudent] = useState(null);
   const [delTeacher, setDelTeacher] = useState(null);
   const [detailId, setDetailId] = useState(null);
   const [delClass, setDelClass] = useState(null);
-  const [busy, setBusy] = useState(false);
-
-  const loadStudents = useCallback(async () => {
-    const d = await api('/api/admin/students');
-    if (d.success) setStudents(d.students.map((x) => ({ id: x.id, studentIdNumber: x.student_id_number, name: `${x.first_name} ${x.last_name}`, email: x.email, parentEmail: x.parent_email, createdAt: x.created_at })));
-  }, []);
-  const loadTeachers = useCallback(async () => {
-    const d = await api('/api/admin/teachers');
-    if (d.success) setTeachers(d.teachers.map((x) => ({ id: x.id, teacherIdNumber: x.teacher_id_number, name: `${x.first_name} ${x.last_name}`, email: x.email, createdAt: x.created_at })));
-  }, []);
-  const loadClasses = useCallback(async () => {
-    const d = await api('/api/admin/classes');
-    if (d.success) setClasses(d.classes);
-  }, []);
-
-  useEffect(() => { loadStudents(); loadTeachers(); loadClasses(); }, [loadStudents, loadTeachers, loadClasses]);
-
-  const remove = async (url, reload, done) => {
-    setBusy(true);
-    try {
-      const d = await api(url, { method: 'DELETE' });
-      if (!d.success) { toast(d.generalError || 'Could not delete.', 'error'); return; }
-      done(); await reload();
-    } catch { toast('Something went wrong. Please try again.', 'error'); } finally { setBusy(false); }
-  };
 
   const studentRows = useMemo(() => students, [students]);
 
