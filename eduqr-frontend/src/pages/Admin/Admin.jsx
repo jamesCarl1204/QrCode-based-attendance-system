@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { LINKS, TITLES, STUDENT_COLS, TEACHER_COLS } from './admin.constants.js';
+import { LINKS, TITLES } from './admin.constants.js';
 import InfoModal from './InfoModal.jsx';
 import ConfirmDelete from './ConfirmDelete.jsx';
 import { api } from '../../api.js';
@@ -9,8 +9,8 @@ import ClassesGrid from './ClassesGrid.jsx';
 import AdminClassDetailPage from './AdminClassDetailPage.jsx';
 import CreateTeacher from './CreateTeacher.jsx';
 import Announcements from './Announcements.jsx';
-import DataTable from '../../components/DataTable.jsx';
 import Dashboard from './Dashboard.jsx';
+import AdminUserTables from './AdminUserTables.jsx';
 
 export default function Admin() {
   const toast = useToast();
@@ -69,18 +69,16 @@ export default function Admin() {
       <PortalLayout role="admin" brand="Admin Portal" links={LINKS} active={tab} title={TITLES[tab]} onSelect={setTab}>
         {tab === 'dashboard' && <Dashboard goTo={setTab} />}
 
-        {tab === 'students' && (
-          <>
-            <DataTable columns={STUDENT_COLS} rows={studentRows} searchKeys={['name', 'studentIdNumber']} placeholder="Search by name or student ID…"
-              emptyText="No students found." onView={setViewStudent} onDelete={setDelStudent} />
-          </>
-        )}
-
-        {tab === 'teachers' && (
-          <>
-            <DataTable columns={TEACHER_COLS} rows={teachers} searchKeys={['name', 'teacherIdNumber']} placeholder="Search by name or teacher ID…"
-              emptyText="No teachers found." onView={setViewTeacher} onDelete={setDelTeacher} />
-          </>
+        {(tab === 'students' || tab === 'teachers') && (
+          <AdminUserTables
+            tab={tab}
+            studentRows={studentRows}
+            teachers={teachers}
+            onViewStudent={setViewStudent}
+            onDeleteStudent={setDelStudent}
+            onViewTeacher={setViewTeacher}
+            onDeleteTeacher={setDelTeacher}
+          />
         )}
 
         {tab === 'classes' && <ClassesGrid classes={classes} archived={false} onOpen={setDetailId} />}
