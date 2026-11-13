@@ -8,17 +8,8 @@ import Dashboard from './Dashboard.jsx';
 import AiChat from './AiChat.jsx';
 import ClassDetail from './ClassDetail.jsx';
 import s from '../../styles/Portal.module.css';
-
-const LINKS = [
-  { key: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
-  { key: 'active', icon: 'fa-book-open', label: 'My Classes' },
-  { key: 'archived', icon: 'fa-box-archive', label: 'Archived Classes' },
-  { key: 'ai', icon: 'fa-robot', label: 'AI Assistant', tag: 'AI' },
-];
-const TITLES = { dashboard: 'Dashboard', active: 'My Classes', archived: 'Archived Classes', ai: 'AI Assistant' };
-const COLORS = { blue: '#2563eb', green: '#16a34a', pink: '#db2777', orange: '#ea580c', purple: '#7c3aed', teal: '#0d9488' };
-
-const mapClass = (c) => ({ id: c.id, subject: c.subject_name, section: c.section, code: c.class_code, color: c.color, archived: !!c.archived });
+import { LINKS, TITLES, COLORS } from './teacher.constants.js';
+import { mapClass } from './teacher.helpers.js';
 
 export default function Teacher() {
   const toast = useToast();

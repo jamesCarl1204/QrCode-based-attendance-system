@@ -6,19 +6,8 @@ import { useToast } from '../../context/ToastContext.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import s from '../../styles/Portal.module.css';
-
-const timeRange = (x) => `${fmt12(x.start_time)} – ${fmt12(x.end_time)} · Late after ${fmt12(x.late_after)}`;
-
-const TABS = [
-  { key: 'attendance', label: 'Attendance' },
-  { key: 'summary', label: 'Summary' },
-  { key: 'members', label: 'Members' },
-];
-
-const statusClass = (st) =>
-  st === 'Present' ? s.recordStatusPresent : st === 'Late' ? s.recordStatusLate : st === 'Absent' ? s.recordStatusAbsent : s.recordStatusPending;
-
-const rateClass = (r) => (r === null ? '' : r >= 85 ? s.rateGood : r >= 75 ? s.rateWarn : s.rateLow);
+import { TABS } from './teacher.constants.js';
+import { timeRange, statusClass, rateClass } from './teacher.helpers.js';
 
 /* ---------- Overall attendance per student ---------- */
 function SummaryTab({ sessions }) {
@@ -138,7 +127,7 @@ function SummaryTab({ sessions }) {
                         <td><span className={s.cPresent}>{r.present}</span></td>
                         <td><span className={s.cLate}>{r.late}</span></td>
                         <td><span className={s.cAbsent}>{r.absent}</span></td>
-                        <td><span className={rateClass(r.rate)}>{r.rate !== null ? `${r.rate}%` : '—'}</span></td>
+                        <td><span className={rateClass(r.rate, s)}>{r.rate !== null ? `${r.rate}%` : '—'}</span></td>
                       </tr>
                       {open === r.id && (
                         <tr>
@@ -147,7 +136,7 @@ function SummaryTab({ sessions }) {
                               {r.history.map((h, i) => (
                                 <div key={i} className={s.historyItem}>
                                   <span>{h.date}</span>
-                                  <span className={`${s.recordStatus} ${statusClass(h.status)}`}>{h.status || 'Not yet'}</span>
+                                  <span className={`${s.recordStatus} ${statusClass(h.status, s)}`}>{h.status || 'Not yet'}</span>
                                 </div>
                               ))}
                             </div>
@@ -266,7 +255,7 @@ function RecordsPage({ session, onBack, onChanged }) {
                       <span className={s.recordStudentName}>{r.first_name} {r.last_name}</span>
                       <span className={s.teacherRecordTime}>{r.time_in ? `Time In · ${fmt12(r.time_in)}` : 'Time In · —'}</span>
                     </div>
-                    <span className={`${s.recordStatus} ${statusClass(r.status)}`}>{r.status || 'Not yet'}</span>
+                    <span className={`${s.recordStatus} ${statusClass(r.status, s)}`}>{r.status || 'Not yet'}</span>
                   </div>
                   <div className={s.teacherRecordActions}>
                     {['Present', 'Late', 'Absent'].map((st) => (
@@ -284,7 +273,7 @@ function RecordsPage({ session, onBack, onChanged }) {
                     <tr key={r.student_id}>
                       <td><div className={s.recordStudentCell}><span className={s.recordAvatar} aria-label="Student profile"><i className="fa-solid fa-user" aria-hidden="true" /></span><span className={s.recordStudentName}>{r.first_name} {r.last_name}</span></div></td>
                       <td><span className={s.recordTime}>{r.time_in ? fmt12(r.time_in) : '—'}</span></td>
-                      <td><span className={`${s.recordStatus} ${statusClass(r.status)}`}>{r.status || 'Not yet'}</span></td>
+                      <td><span className={`${s.recordStatus} ${statusClass(r.status, s)}`}>{r.status || 'Not yet'}</span></td>
                       <td>
                         <div className={s.recordActions}>
                           {['Present', 'Late', 'Absent'].map((st) => (
