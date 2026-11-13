@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LINKS, TITLES } from './admin.constants.js';
-import InfoModal from './InfoModal.jsx';
-import ConfirmDelete from './ConfirmDelete.jsx';
 import { api } from '../../api.js';
 import { useToast } from '../../context/ToastContext.jsx';
 import PortalLayout from '../../components/PortalLayout.jsx';
@@ -11,6 +9,7 @@ import CreateTeacher from './CreateTeacher.jsx';
 import Announcements from './Announcements.jsx';
 import Dashboard from './Dashboard.jsx';
 import AdminUserTables from './AdminUserTables.jsx';
+import AdminModals from './AdminModals.jsx';
 
 export default function Admin() {
   const toast = useToast();
@@ -87,27 +86,22 @@ export default function Admin() {
         {tab === 'createTeacher' && <CreateTeacher onCreated={loadTeachers} />}
       </PortalLayout>
 
-      <InfoModal item={viewStudent} eyebrow="STUDENT INFORMATION" idLabel="Student ID" idKey="studentIdNumber" onClose={() => setViewStudent(null)} />
-      <InfoModal item={viewTeacher} eyebrow="TEACHER INFORMATION" idLabel="Teacher ID" idKey="teacherIdNumber" onClose={() => setViewTeacher(null)} />
-
-      <ConfirmDelete open={!!delStudent} eyebrow="DELETE STUDENT" title="Delete this student?" label="Delete student" busy={busy}
-        onCancel={() => setDelStudent(null)}
-        onConfirm={() => remove(`/api/admin/students/${delStudent.id}`, loadStudents, () => setDelStudent(null))}>
-        You're about to permanently delete <strong>{delStudent?.name}</strong> and all of their attendance records. This cannot be undone.
-      </ConfirmDelete>
-
-      <ConfirmDelete open={!!delTeacher} eyebrow="DELETE TEACHER" title="Delete this teacher?" label="Delete teacher" busy={busy}
-        onCancel={() => setDelTeacher(null)}
-        onConfirm={() => remove(`/api/admin/teachers/${delTeacher.id}`, async () => { await loadTeachers(); await loadClasses(); }, () => setDelTeacher(null))}>
-        You're about to permanently delete <strong>{delTeacher?.name}</strong> along with all of their classes, sessions, and attendance records. This cannot be undone.
-      </ConfirmDelete>
-
-
-      <ConfirmDelete open={!!delClass} eyebrow="DELETE CLASS" title="Delete this class?" label="Delete class" busy={busy}
-        onCancel={() => setDelClass(null)}
-        onConfirm={() => remove(`/api/admin/classes/${delClass.id}`, loadClasses, () => setDelClass(null))}>
-        You're about to permanently delete <strong>{delClass?.subject_name}</strong>, including all of its sessions and attendance records. This cannot be undone.
-      </ConfirmDelete>
+      <AdminModals
+        viewStudent={viewStudent}
+        viewTeacher={viewTeacher}
+        delStudent={delStudent}
+        delTeacher={delTeacher}
+        delClass={delClass}
+        busy={busy}
+        onCloseStudent={() => setViewStudent(null)}
+        onCloseTeacher={() => setViewTeacher(null)}
+        onCancelDeleteStudent={() => setDelStudent(null)}
+        onConfirmDeleteStudent={() => remove(`/api/admin/students/${delStudent.id}`, loadStudents, () => setDelStudent(null))}
+        onCancelDeleteTeacher={() => setDelTeacher(null)}
+        onConfirmDeleteTeacher={() => remove(`/api/admin/teachers/${delTeacher.id}`, async () => { await loadTeachers(); await loadClasses(); }, () => setDelTeacher(null))}
+        onCancelDeleteClass={() => setDelClass(null)}
+        onConfirmDeleteClass={() => remove(`/api/admin/classes/${delClass.id}`, loadClasses, () => setDelClass(null))}
+      />
     </>
   );
 }
