@@ -1,30 +1,8 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { api } from '../../api.js';
 import s from '../../styles/Portal.module.css';
-
-const GREETING = 'Hi! How can I help you?';
-
-// Whitelist: the AI only picks a type; the actual question is built here.
-const ACTION_PROMPTS = {
-  summary: (a) => `Give me the attendance summary of ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}.`,
-  absent: (a) => `Who was absent in ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}?`,
-  late: (a) => `Who was late in ${a.subject_name}${a.session_date ? ` on ${a.session_date}` : ''}?`,
-  low_attendance: (a) => `Which students in ${a.subject_name} have low attendance?`,
-};
-
-// Strip markdown the chat can't render (tables, headers, backticks); keep **bold**.
-function clean(text) {
-  return text
-    .split('\n')
-    .filter((l) => !/^[\s|:\-]+$/.test(l))
-    .map((l) => (l.trim().startsWith('|') ? l.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((c) => c.trim()).filter(Boolean).join(', ') : l))
-    .join('\n')
-    .replace(/^#{1,6}\s*/gm, '')
-    .replace(/^>\s?/gm, '')
-    .replace(/`{1,3}([^`]*)`{1,3}/g, '$1')
-    .replace(/\|/g, '')
-    .replace(/\n{3,}/g, '\n\n');
-}
+import { GREETING, ACTION_PROMPTS } from './teacher.constants.js';
+import { clean } from './teacher.helpers.js';
 
 function Rich({ text }) {
   return clean(text).split('\n').map((line, i) => (
