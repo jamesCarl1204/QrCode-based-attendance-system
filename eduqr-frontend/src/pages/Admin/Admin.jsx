@@ -52,7 +52,7 @@ function Dashboard({ goTo }) {
             {!d && <p className={s.mutedText}>Loading…</p>}
             {d && d.recentActivity.length === 0 && <p className={s.mutedText}>No recent activity yet.</p>}
             {d?.recentActivity.map((a, i) => {
-              const [color, icon] = activityIcon(a.message);
+              const [color, icon] = activityIcon(a.message, s);
               return (
                 <div key={i} className={s.activityItem}>
                   <span className={`${s.activityIcon} ${color}`}><i className={`fa-solid ${icon}`} /></span>
