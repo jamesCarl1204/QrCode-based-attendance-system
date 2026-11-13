@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LINKS, TITLES, STUDENT_COLS, TEACHER_COLS } from './admin.constants.js';
 import { activityIcon } from './admin.helpers.js';
+import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import InfoModal from './InfoModal.jsx';
 import ConfirmDelete from './ConfirmDelete.jsx';
 import { api } from '../../api.js';
