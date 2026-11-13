@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { LINKS, TITLES, STUDENT_COLS, TEACHER_COLS } from './admin.constants.js';
 import { api } from '../../api.js';
 import { fmt12, timeAgo } from '../../utils.js';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -8,28 +9,6 @@ import DataTable from '../../components/DataTable.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
 import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import s from '../../styles/Portal.module.css';
-
-const LINKS = [
-  { key: 'dashboard', icon: 'fa-chart-pie', label: 'Dashboard' },
-  { key: 'students', icon: 'fa-user-graduate', label: 'Students' },
-  { key: 'teachers', icon: 'fa-chalkboard-user', label: 'Teachers' },
-  { key: 'classes', icon: 'fa-book-open', label: 'Classes' },
-  { key: 'archivedClasses', icon: 'fa-box-archive', label: 'Archived Classes' },
-  { key: 'createTeacher', icon: 'fa-user-plus', label: 'Create Teacher' },
-  { key: 'announcements', icon: 'fa-bullhorn', label: 'Announcements' },
-
-];
-const TITLES = { dashboard: 'Dashboard', students: 'Students', teachers: 'Teachers', classes: 'Classes', archivedClasses: 'Archived Classes', createTeacher: 'Create Teacher', announcements: 'Announcements'};
-
-
-const STUDENT_COLS = [
-  { key: 'name', label: 'Name', sortable: true }, { key: 'studentIdNumber', label: 'Student ID', sortable: true },
-  { key: 'email', label: 'Email', sortable: true }, { key: 'parentEmail', label: "Parent's Email" },
-];
-const TEACHER_COLS = [
-  { key: 'name', label: 'Name', sortable: true }, { key: 'teacherIdNumber', label: 'Teacher ID', sortable: true },
-  { key: 'email', label: 'Email', sortable: true },
-];
 
 function activityIcon(msg = '') {
   const m = msg.toLowerCase();
