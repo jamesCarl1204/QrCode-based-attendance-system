@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { LINKS, TITLES, STUDENT_COLS, TEACHER_COLS } from './admin.constants.js';
 import { activityIcon } from './admin.helpers.js';
+import InfoModal from './InfoModal.jsx';
+import ConfirmDelete from './ConfirmDelete.jsx';
 import { api } from '../../api.js';
 import { fmt12, timeAgo } from '../../utils.js';
 import { useToast } from '../../context/ToastContext.jsx';
@@ -8,7 +10,6 @@ import PortalLayout from '../../components/PortalLayout.jsx';
 import ClassCard from '../../components/ClassCard.jsx';
 import DataTable from '../../components/DataTable.jsx';
 import DetailFrame from '../../components/DetailFrame.jsx';
-import Modal, { ModalHeader, ModalFooter } from '../../components/Modal.jsx';
 import s from '../../styles/Portal.module.css';
 
 function Dashboard({ goTo }) {
@@ -440,36 +441,6 @@ function Announcements() {
         </ModalFooter>
       </Modal>
     </>
-  );
-}
-
-function InfoModal({ item, eyebrow, idLabel, idKey, onClose }) {
-  return (
-    <Modal open={!!item} onClose={onClose}>
-      {item && (
-        <>
-          <ModalHeader eyebrow={eyebrow} title={item.name} onClose={onClose} />
-          <p style={{ marginBottom: 10 }}><strong>{idLabel}:</strong> {item[idKey] || '—'}</p>
-          <p style={{ marginBottom: 10 }}><strong>Email:</strong> {item.email}</p>
-          {item.parentEmail !== undefined && <p style={{ marginBottom: 10 }}><strong>Parent's Email:</strong> {item.parentEmail || '—'}</p>}
-          <p><strong>Registered:</strong> {item.createdAt || '—'}</p>
-          <ModalFooter><button className={`${s.btn} ${s.btnOutline}`} onClick={onClose}>Close</button></ModalFooter>
-        </>
-      )}
-    </Modal>
-  );
-}
-
-function ConfirmDelete({ open, eyebrow, title, children, busy, label, onCancel, onConfirm }) {
-  return (
-    <Modal open={open} small onClose={onCancel}>
-      <ModalHeader danger eyebrow={eyebrow} title={title} onClose={onCancel} />
-      <p className={s.modalDesc}>{children}</p>
-      <ModalFooter>
-        <button className={`${s.btn} ${s.btnOutline}`} onClick={onCancel}>Cancel</button>
-        <button className={`${s.btn} ${s.btnDanger}`} disabled={busy} onClick={onConfirm}>{busy ? 'Deleting…' : label}</button>
-      </ModalFooter>
-    </Modal>
   );
 }
 
