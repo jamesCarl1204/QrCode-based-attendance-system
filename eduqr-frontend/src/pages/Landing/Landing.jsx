@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import s from './Landing.module.css';
 import { CONTACT, FEATURES, STEPS, BENEFITS, PORTALS, NAV } from './landing.constants.js';
 import { useReveal } from './landing.hooks.js';
-import { SchoolLogo, PageLoader, SiteNav } from './LandingComponents.jsx';
+import { DemoCard, SchoolLogo, PageLoader, SiteNav } from './LandingComponents.jsx';
 
 export { PageLoader, SiteNav, NAV };
 
@@ -60,6 +60,7 @@ export default function Landing() {
                 <li><i className="fa-solid fa-mobile-screen" /> Works on phones and desktops</li>
               </ul>
             </div>
+            <DemoCard />
           </div>
         </section>
 
