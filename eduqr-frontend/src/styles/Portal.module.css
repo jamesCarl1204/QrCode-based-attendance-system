@@ -4,13 +4,13 @@
 .navbar { display: flex; justify-content: space-between; align-items: center; height: var(--nav-h); background: var(--navbar-bg); backdrop-filter: blur(12px); padding: 0 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 60; }
 .navbarLeft { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .navbarRight { display: flex; align-items: center; gap: 10px; }
-.pageTitle { font-size: 1.15rem; font-weight: 700; color: var(--text-strong); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.toggleBtn { width: 38px; height: 38px; flex-shrink: 0; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.pageTitle { font-size: 1.15rem; font-weight: 800; color: var(--text-strong); letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.toggleBtn { width: 40px; height: 40px; flex-shrink: 0; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; }
 .toggleBtn:hover { background: var(--hover); color: var(--brand-text); }
-.themeBtn { width: 36px; height: 36px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-soft); font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
+.themeBtn { width: 40px; height: 40px; padding: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); font-family: inherit; font-size: 0.9rem; cursor: pointer; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; }
 .themeBtn:hover { color: var(--text-strong); background: var(--hover); border-color: var(--border-strong); }
 .themeBtn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
-.navClock { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; }
+.navClock { display: flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); color: var(--text-soft); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; font-weight: 600; }
 .navClock i { color: var(--brand-text); }
 
 /* ---------- Buttons ---------- */
@@ -23,9 +23,8 @@
 .btnOutline:hover { background: var(--hover); }
 .btnDanger { background: #e11d48; color: #fff; }
 .btnDanger:hover { background: #be123c; }
-.logoutBtn { color: #fb7185; background: rgba(244,63,94,0.12); border-color: rgba(244,63,94,0.35); }
-.logoutBtn:hover { background: rgba(244,63,94,0.22); }
-:global(html[data-theme="light"]) .logoutBtn { color: #e11d48; }
+.logoutBtn { color: #fff; background: #dc2626; border: 1px solid #b91c1c; }
+.logoutBtn:hover { background: #b91c1c; }
 .bannerBtn { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
 .bannerBtn:hover { background: rgba(255,255,255,0.25); }
 
@@ -40,13 +39,14 @@
 .sidebar { width: 250px; flex-shrink: 0; background: var(--sidebar-bg); border-right: 1px solid var(--border); padding: 18px 14px; display: flex; flex-direction: column; overflow: hidden; white-space: nowrap; transition: width 0.2s ease, padding 0.2s ease, opacity 0.15s ease, border-color 0.2s ease; z-index: 50; position: sticky; top: var(--nav-h); height: calc(100vh - var(--nav-h)); }
 .collapsed { width: 0; padding-left: 0; padding-right: 0; opacity: 0; border-right-color: transparent; }
 .sidebarBrand { display: flex; align-items: center; gap: 12px; padding: 4px 6px 18px; margin-bottom: 14px; border-bottom: 1px solid var(--border); }
-.brandIcon { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--brand); color: var(--on-brand); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
+.brandIcon { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--brand-strong); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 1.15rem; flex-shrink: 0; }
 .brandName { display: block; font-weight: 700; font-size: 1rem; color: var(--text-strong); line-height: 1.1; }
 .brandSub { display: block; font-size: 0.7rem; color: var(--muted); margin-top: 3px; }
-.sidebarLinks { display: flex; flex-direction: column; gap: 4px; }
-.sidebarLink { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid transparent; background: transparent; font-family: inherit; font-size: 0.88rem; font-weight: 500; color: var(--muted); cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.sidebarLinks { display: flex; flex-direction: column; gap: 6px; }
+.sidebarLink { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 10px 14px; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--panel-2); font-family: inherit; font-size: 0.88rem; font-weight: 500; color: var(--text); cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
 .sidebarLink:hover { background: var(--hover); color: var(--text-strong); }
 .active, .active:hover { background: var(--brand-soft); border-color: var(--brand-line); color: var(--brand-text); }
+.sidebarLink.active, .sidebarLink.active:hover { background: var(--brand-strong); border-color: var(--brand-strong); color: #fff; font-weight: 600; }
 .linkIcon { width: 20px; text-align: center; font-size: 0.95rem; }
 .sidebarTag { margin-left: auto; font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: rgba(99,102,241,0.18); color: #818cf8; border: 1px solid rgba(99,102,241,0.3); }
 .sidebarProfile { margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: var(--radius-md); background: var(--panel-2); border: 1px solid var(--border); }
@@ -94,8 +94,8 @@
 /* ---------- Class cards ---------- */
 .subjectGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
 .subjectGrid > .mutedText { grid-column: 1 / -1; }
-.subjectCard { --accent-text: color-mix(in srgb, var(--accent, #2563eb) var(--accent-mix), var(--accent-mix-color)); background: color-mix(in srgb, var(--accent, #2563eb) 8%, var(--panel)); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 22px 20px; color: var(--text); position: relative; min-height: 188px; display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease; min-width: 0; }
-.subjectCard:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent, #2563eb) 45%, var(--border)); }
+.subjectCard { --accent-text: color-mix(in srgb, var(--accent, #2563eb) var(--accent-mix), var(--accent-mix-color)); background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 22px 22px 20px; color: var(--text); position: relative; min-height: 188px; display: flex; flex-direction: column; cursor: pointer; transition: border-color 0.2s ease; min-width: 0; }
+.subjectCard:hover { border-color: var(--border-strong); }
 .cardIcon { position: absolute; top: 20px; right: 20px; width: 42px; height: 42px; background: var(--accent, #2563eb); color: #fff; border-radius: 13px; display: flex; align-items: center; justify-content: center; }
 .subjectCard h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 4px; color: var(--text-strong); padding-right: 50px; overflow-wrap: anywhere; }
 .sectionLabel { font-size: 0.85rem; color: var(--muted); }
@@ -182,7 +182,7 @@
 .markBtn { padding: 4px 10px; font-size: 0.75rem; margin-right: 4px; }
 
 /* ---------- Tables (admin) ---------- */
-.tableToolbar { margin-bottom: 16px; }
+.tableToolbar { margin-bottom: 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 14px 16px; }
 .tableWrap { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow-x: auto; }
 .dataTable { width: 100%; border-collapse: collapse; }
 .dataTable th, .dataTable td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 0.86rem; color: var(--text-soft); }
@@ -520,48 +520,7 @@
 
 
 /* ---------- Teacher dashboard: minimalist visual refinement ---------- */
-/* Scoped to the teacher portal so shared student/admin screens stay unchanged. */
-:global(html[data-portal="teacher"]) .mainContent {
-  padding: 30px 32px 44px;
-  max-width: 1320px;
-}
-:global(html[data-portal="teacher"]) .navbar {
-  padding-inline: 26px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
-}
-:global(html[data-portal="teacher"]) .pageTitle {
-  font-size: 1.05rem;
-  letter-spacing: -0.025em;
-}
-:global(html[data-portal="teacher"]) .sidebar {
-  padding: 20px 13px;
-}
-:global(html[data-portal="teacher"]) .sidebarBrand {
-  padding: 3px 7px 17px;
-  margin-bottom: 17px;
-}
-:global(html[data-portal="teacher"]) .brandIcon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  font-size: 1rem;
-}
-:global(html[data-portal="teacher"]) .sidebarLinks {
-  gap: 5px;
-}
-:global(html[data-portal="teacher"]) .sidebarLink {
-  padding: 10px 12px;
-  border-radius: 9px;
-  font-size: 0.84rem;
-}
-:global(html[data-portal="teacher"]) .linkIcon {
-  width: 19px;
-  font-size: 0.88rem;
-}
-:global(html[data-portal="teacher"]) .sidebarProfile {
-  padding: 9px;
-  border-radius: 10px;
-}
+/* Scoped to the teacher dashboard only. Shell (navbar/sidebar) now uses the shared styles above. */
 :global(html[data-portal="teacher"]) .teacherDashboard {
   display: flex;
   flex-direction: column;
@@ -681,22 +640,12 @@
   font-size: 0.82rem;
   padding: 0.62rem 1rem;
 }
-:global(html[data-portal="teacher"]) .navbar .btn,
-:global(html[data-portal="teacher"]) .navbar .themeBtn {
-  border-radius: 9px;
-}
 @media (max-width: 1024px) {
-  :global(html[data-portal="teacher"]) .mainContent {
-    padding: 24px 22px 36px;
-  }
   :global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 @media (max-width: 768px) {
-  :global(html[data-portal="teacher"]) .mainContent {
-    padding: 18px 16px 30px;
-  }
   :global(html[data-portal="teacher"]) .teacherDashboard {
     gap: 14px;
   }
@@ -722,12 +671,6 @@
   }
 }
 @media (max-width: 480px) {
-  :global(html[data-portal="teacher"]) .mainContent {
-    padding: 15px 12px 26px;
-  }
-  :global(html[data-portal="teacher"]) .navbar {
-    padding-inline: 12px;
-  }
   :global(html[data-portal="teacher"]) .teacherDashboard .statGrid {
     gap: 8px;
   }
