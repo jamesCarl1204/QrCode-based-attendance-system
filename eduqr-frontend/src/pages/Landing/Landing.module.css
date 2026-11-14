@@ -31,19 +31,18 @@
 .page :is(a, button):focus-visible { outline: 3px solid rgba(14,165,233,0.45); outline-offset: 2px; }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; isolation: isolate; overflow: hidden; min-height: min(680px, calc(100svh - 68px)); display: flex; align-items: center; padding: clamp(38px, 5.5vw, 64px) 24px clamp(44px, 6vw, 72px); color: var(--ink); background: #f8fafc; }
+.hero { position: relative; isolation: isolate; overflow: hidden; padding: 56px 24px 88px; color: var(--ink); background: #f8fafc; }
 /* Landing hero uses a clean neutral background; decorative image and blue overlays removed. */
 .hero::before, .hero::after { content: none; }
-.heroGrid { width: 100%; max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; }
+.heroGrid { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 56px; align-items: center; }
 .pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: #fff; border: 1px solid var(--line); color: var(--soft); font-size: 0.78rem; font-weight: 500; margin-bottom: 20px; }
 .pillDot { width: 8px; height: 8px; border-radius: 50%; background: #16a34a; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
-.heroText { width: 100%; max-width: 1080px; margin: 0 auto; text-align: center; }
-.heroText h1 { max-width: 1080px; margin: 0 auto; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: clamp(2.15rem, 5.1vw, 4.05rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1.06; text-wrap: balance; color: #0f172a; }
+.heroText h1 { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: clamp(2.35rem, 4.8vw, 3.85rem); font-weight: 900; letter-spacing: -0.055em; line-height: 1.02; color: #0f172a; }
 .heroAccent { color: #2563eb; }
-.lead { margin: clamp(16px, 2vw, 22px) auto 0; max-width: 760px; font-size: clamp(0.98rem, 1.35vw, 1.08rem); line-height: 1.65; color: var(--soft); }
-.heroBtns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
-.heroFacts { list-style: none; max-width: 980px; margin: clamp(26px, 3vw, 34px) auto 0; padding: 20px 0 0; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 30px; font-size: 0.86rem; color: var(--soft); }
+.lead { margin-top: 18px; max-width: 480px; font-size: 1.05rem; line-height: 1.65; color: var(--soft); }
+.heroBtns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.heroFacts { list-style: none; margin: 32px 0 0; padding: 22px 0 0; border-top: 1px solid var(--line); display: grid; gap: 10px; font-size: 0.86rem; color: var(--soft); }
 .heroFacts li { display: flex; align-items: center; gap: 10px; }
 .heroFacts i { width: 18px; text-align: center; color: #64748b; }
 /* Hero buttons on the neutral background */
@@ -197,8 +196,8 @@
 
 /* ---------- Responsive ---------- */
 @media (max-width: 960px) {
-  .heroGrid { grid-template-columns: minmax(0, 1fr); gap: 0; }
-  .hero { min-height: auto; padding: 52px 20px 60px; }
+  .heroGrid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+  .hero { padding: 40px 20px 64px; }
   .heroVisual { max-width: 480px; margin: 0 auto; width: 100%; order: 2; }
   .heroText { order: 1; }
   .featureGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -208,12 +207,6 @@
 @media (max-width: 640px) {
   .container { padding: 0 18px; }
   .section { padding: 64px 0; }
-  .hero { padding: 42px 18px 48px; }
-  .heroText h1 { font-size: clamp(2rem, 8.2vw, 2.8rem); letter-spacing: -0.045em; line-height: 1.08; }
-  .lead { max-width: 540px; margin-top: 16px; font-size: 0.96rem; }
-  .pill { margin-bottom: 18px; }
-  .heroFacts { margin-top: 26px; padding-top: 18px; gap: 12px 18px; font-size: 0.8rem; }
-  .heroFacts li { justify-content: center; }
   .featureGrid, .steps, .benefitCards, .portalGrid { grid-template-columns: minmax(0, 1fr); }
   .portals { padding: 22px; }
   .heroBtns .btnLg { flex: 1 1 100%; }
